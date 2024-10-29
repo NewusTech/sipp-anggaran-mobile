@@ -1,6 +1,5 @@
 import { useAppTheme } from "@/context/theme-context";
-import View, { ViewProps } from "../../view";
-
+import View, { ViewProps } from "../view";
 
 export type SeparatorProps = {
   orientation?: "horizontal" | "vertical";
@@ -23,11 +22,10 @@ export default function Separator(props: SeparatorProps) {
         {
           width: orientation === "horizontal" ? width : thickness,
           height: orientation === "horizontal" ? thickness : width,
-          backgroundColor: Colors["line-stroke-30"],
+          backgroundColor: Colors["Line 400"],
         },
         style,
       ]}
-    >
-    </View>
+    ></View>
   );
 }

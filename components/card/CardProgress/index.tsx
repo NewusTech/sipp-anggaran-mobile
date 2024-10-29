@@ -24,6 +24,7 @@ export default function CardProgress(props: cardProgres) {
         showsHorizontalScrollIndicator={false}
         scrollEnabled={true}
         data={["", ""]}
+        removeClippedSubviews={true}
         renderItem={({ item }) => (
           <View
             style={{

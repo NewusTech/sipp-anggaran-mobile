@@ -1,37 +1,147 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from '@/constants';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { IconHome } from "@/components/icons/IconHome";
+import { Typography } from "@/components/ui/typography";
+import View from "@/components/ui/view";
+import { useAppTheme } from "@/context";
+import { Tabs } from "expo-router";
+import { useState } from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import Animated, { LinearTransition } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const { Colors } = useAppTheme();
+  const insets = useSafeAreaInsets();
+
+  const [activePage, setActivePage] = useState<number>(0);
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-      }}>
+      }}
+      tabBar={({ state, descriptors, navigation }) => {
+        setActivePage(state.index);
+        return (
+          <Animated.View
+            layout={LinearTransition}
+            style={[
+              style.container,
+              {
+                paddingBottom: insets.bottom,
+                backgroundColor: Colors["Background 100"],
+              },
+            ]}
+          >
+            {state.routes.map((route, index) => {
+              const { options } = descriptors[route.key];
+              const label =
+                options.tabBarLabel !== undefined
+                  ? options.tabBarLabel
+                  : options.title !== undefined
+                  ? options.title
+                  : route.name;
+
+              const isFocused = state.index === index;
+
+              const onPress = () => {
+                const event = navigation.emit({
+                  type: "tabPress",
+                  target: route.key,
+                  canPreventDefault: true,
+                });
+                // setActivePage(label as string);
+                if (!isFocused && !event.defaultPrevented) {
+                  navigation.navigate(route.name, route.params);
+                }
+              };
+
+              const onLongPress = () => {
+                navigation.emit({
+                  type: "tabLongPress",
+                  target: route.key,
+                });
+              };
+
+              return (
+                <TouchableOpacity
+                  key={route.key}
+                  onPress={onPress}
+                  onLongPress={onLongPress}
+                >
+                  <Animated.View
+                    style={[style.tabBarWrapper]}
+                    layout={LinearTransition}
+                  >
+                    <View style={style.navIconWrapper}>
+                      {options?.tabBarIcon?.({
+                        focused: isFocused,
+                        color: "",
+                        size: 0,
+                      })}
+                    </View>
+                    <Typography
+                      fontFamily="Poppins-Medium"
+                      color={isFocused ? "Info 500" : "Text 300"}
+                      fontSize={14}
+                    >
+                      {label as string}
+                    </Typography>
+                  </Animated.View>
+                </TouchableOpacity>
+              );
+            })}
+          </Animated.View>
+        );
+      }}
+    >
       <Tabs.Screen
         name="home"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
+          title: "Home",
+          tabBarIcon: ({ focused }) => (
+            <IconHome
+              color={focused ? "Info 500" : "Text 300"}
+              width={24}
+              height={24}
+            />
           ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="activities"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+          title: "Kegiatan",
+          tabBarIcon: ({ focused }) => (
+            <IconHome
+              color={focused ? "Info 500" : "Text 300"}
+              width={24}
+              height={24}
+            />
           ),
         }}
       />
     </Tabs>
   );
 }
+
+const style = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    padding: 10,
+    justifyContent: "space-between",
+  },
+  tabBarWrapper: {
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
+    padding: 10,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  navIconWrapper: {
+    justifyContent: "flex-start",
+    alignItems: "center",
+    height: 24,
+  },
+});

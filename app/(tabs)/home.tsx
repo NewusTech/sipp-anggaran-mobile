@@ -12,9 +12,10 @@ import SectionFinancialRealization from "@/components/screen/home/SectionFinanci
 import SectionPhysicalProgress from "@/components/screen/home/SectionPhysicalProgress";
 import SectionPackage from "@/components/screen/home/SectionPackage";
 import SectionMap from "@/components/screen/home/SectionMap";
+import SectionTable from "@/components/screen/home/SectionTable";
+import Header from "@/components/header";
 
 export default function home() {
-  const { Colors } = useAppTheme();
   const inset = useSafeAreaInsets();
 
   const [filterYear, setFilterYear] = useState<number | string>("");
@@ -27,32 +28,14 @@ export default function home() {
       }}
       backgroundColor="Background 100"
     >
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          paddingHorizontal: 20,
-          paddingTop: 20,
-          alignItems: "center",
-        }}
-      >
-        <Image
-          source={require("@/assets/images/logo-pupr.png")}
-          width={200}
-          height={100}
-          style={{ width: 200, height: 40 }}
-        />
-        <Image
-          source={require("@/assets/images/dummy1.jpg")}
-          style={{ width: 50, height: 50, borderRadius: 100 }}
-        />
-      </View>
+      <Header />
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: inset.left + 20,
-          marginTop: 30,
+          marginTop: 10,
           paddingBottom: 60,
         }}
+        removeClippedSubviews={true}
       >
         <SelectInput
           data={getLastYears(24).map((d) => {
@@ -71,6 +54,7 @@ export default function home() {
         <SectionPhysicalProgress />
         <SectionPackage />
         <SectionMap />
+        <SectionTable />
       </ScrollView>
     </View>
   );
