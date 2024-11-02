@@ -1,10 +1,10 @@
-import View from "@/components/view";
 import React from "react";
 import { Modal, TouchableOpacity } from "react-native";
 import { Typography } from "../typography";
 import { useAppTheme } from "@/context/theme-context";
 import Loader from "../loader";
 import Animated, { SlideInDown } from "react-native-reanimated";
+import View from "../view";
 
 type ModalAction = {
   visible: boolean;
@@ -45,7 +45,7 @@ export default function ModalAction({
             borderRadius: 15,
             justifyContent: "center",
             gap: 20,
-            backgroundColor: Colors.white,
+            backgroundColor: Colors["Background 100"],
           }}
         >
           <Typography
@@ -66,7 +66,7 @@ export default function ModalAction({
             <TouchableOpacity
               style={{
                 width: "50%",
-                backgroundColor: Colors["primary-50"],
+                backgroundColor: Colors["Info 500"],
                 borderRadius: 15,
                 padding: 10,
               }}
@@ -76,16 +76,20 @@ export default function ModalAction({
               <Typography
                 fontFamily="Poppins-Medium"
                 fontSize={16}
-                color="white"
+                color="Background 100"
                 style={{ textAlign: "center" }}
               >
-                {isLoading ? <Loader color="white" size={24} /> : "Ya!"}
+                {isLoading ? (
+                  <Loader color="Background 100" size={24} />
+                ) : (
+                  "Ya!"
+                )}
               </Typography>
             </TouchableOpacity>
             <TouchableOpacity
               style={{
                 width: "50%",
-                backgroundColor: Colors["error-60"],
+                backgroundColor: Colors["Error 600"],
                 borderRadius: 15,
                 padding: 10,
               }}
@@ -97,7 +101,7 @@ export default function ModalAction({
               <Typography
                 fontFamily="Poppins-Medium"
                 fontSize={16}
-                color="white"
+                color="Background 100"
                 style={{ textAlign: "center" }}
               >
                 Tidak

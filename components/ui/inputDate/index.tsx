@@ -1,17 +1,21 @@
 import { useState } from "react";
-import { Modal, Pressable, StyleSheet } from "react-native";
+import {
+  Modal,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
+} from "react-native";
 import { BlurView } from "expo-blur";
-import { Calendar, CalendarProps } from "react-native-calendars";
 
-import { AppColor, AppColorUnion } from "@/constants/Colors";
 import { useAppTheme } from "@/context/theme-context";
 import { TextInputV2, TextInputV2Props } from "../textInputV2";
 import { Typography } from "../typography";
 import React from "react";
-import View from "@/components/view";
-import { formatDate, formatDateDMY } from "@/constants/dateTime";
-import { IconCross } from "@/components/icons/IconCsross";
+import { AppColor, AppColorUnion, formatDate } from "@/constants";
+import { IconCross } from "@/components/icons";
 import DateTimePicker from "react-native-ui-datepicker";
+import View from "../view";
 
 export type DateInputProps = {
   value: Date | string;
@@ -22,11 +26,12 @@ export type DateInputProps = {
   color?: AppColorUnion;
   errorMessage?: string;
   disabled?: boolean;
+  style?: StyleProp<ViewStyle>;
 } & Pick<
   TextInputV2Props,
   "placeholder" | "trailingIcon" | "leadingIcon" | "withBorder"
-> &
-  CalendarProps;
+>;
+
 export type dateInnputDayProp = {
   dateString: string;
   day: number;
@@ -45,10 +50,10 @@ export function DateInput(props: DateInputProps) {
     withBorder = false,
     label,
     disabledDates,
-    minDate,
-    color = "line-stroke-30",
+    color = "Line 300",
     errorMessage = "",
     disabled = false,
+    style,
   } = props;
 
   const { Colors } = useAppTheme();
@@ -59,7 +64,7 @@ export function DateInput(props: DateInputProps) {
       disabled: true,
       disableTouchEvent: true,
       selected: true,
-      selectedColor: Colors["line-stroke-30"],
+      selectedColor: Colors["Line 300"],
     };
     return acc;
   }, {});
@@ -69,14 +74,14 @@ export function DateInput(props: DateInputProps) {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   return (
-    <View style={{ gap: 5 }}>
+    <View style={[style, { gap: 5 }]}>
       {label && (
         <Typography fontFamily="Poppins-Medium" fontSize={14}>
           {label}
         </Typography>
       )}
       <View
-        backgroundColor={disabled ? "black-10" : "transparent"}
+        backgroundColor={disabled ? "Text 100" : "transparent"}
         style={[
           styles.container,
           {
@@ -90,7 +95,7 @@ export function DateInput(props: DateInputProps) {
           <Typography
             fontFamily="OpenSans-Regular"
             fontSize={12}
-            color={value ? "black-80" : "black-50"}
+            color={value ? "Text 800" : "Text 900"}
             style={styles.textPlaceholder}
           >
             {placeholder}
@@ -101,7 +106,7 @@ export function DateInput(props: DateInputProps) {
           leadingIcon={leadingIcon}
           value={formatDate(new Date(value), {
             day: "2-digit",
-            month: "long",
+            month: "short",
             year: "numeric",
           })}
           placeholder={placeholder}
@@ -113,7 +118,7 @@ export function DateInput(props: DateInputProps) {
         />
       </View>
       {!!errorMessage && (
-        <Typography fontFamily="Poppins-Light" fontSize={10} color="error-50">
+        <Typography fontFamily="Poppins-Light" fontSize={10} color="Error 600">
           {errorMessage}
         </Typography>
       )}
@@ -156,7 +161,7 @@ export function DateInput(props: DateInputProps) {
                 <View
                   style={[
                     styles.rounded,
-                    { backgroundColor: Colors["line-stroke-30"] },
+                    { backgroundColor: Colors["Line 300"] },
                   ]}
                 />
                 <Typography
@@ -185,7 +190,7 @@ const styles = StyleSheet.create({
   },
   textPlaceholder: {
     flex: 1,
-    color: AppColor.light["black-50"],
+    color: AppColor.light["Text 500"],
   },
   dropdownItemStyle: {
     padding: 8,

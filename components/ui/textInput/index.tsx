@@ -8,10 +8,10 @@ import {
 
 import { useAppTheme } from "@/context/theme-context";
 
-import View from "../../view";
 import { Typography } from "../typography";
 import { IconEye, IconEyeSlice } from "../../icons";
 import { AppColorUnion } from "@/constants/Colors";
+import View from "../view";
 
 export type TextInputProps = {
   label?: string;
@@ -31,7 +31,7 @@ export default function TextInput(props: TextInputProps) {
     trailingIcon,
     borderRadius = 100,
     textAlignVertical = "center",
-    color = "line-stroke-50",
+    color = "Text 900",
     ...rest
   } = props;
 
@@ -48,25 +48,25 @@ export default function TextInput(props: TextInputProps) {
         </Typography>
       )}
       <View
-        backgroundColor={editable ? "transparent" : "line-stroke-20"}
+        backgroundColor={editable ? "transparent" : "Line 200"}
         style={[
           styles.inputWrapper,
           {
             borderColor:
               errorMessage.trim() !== ""
-                ? Colors["error-60"]
+                ? Colors["Error 600"]
                 : focused
                 ? Colors[color]
-                : Colors["line-stroke-30"],
+                : Colors["Line 300"],
             borderRadius,
           },
         ]}
       >
         <View style={{ flex: 1 }}>
           <RNTextInput
-            placeholderTextColor={Colors["line-stroke-30"]}
+            placeholderTextColor={Colors["Text 500"]}
             editable={editable}
-            style={[{ color: Colors["black-80"], textAlignVertical }, style]}
+            style={[{ color: Colors["Text 900"], textAlignVertical }, style]}
             secureTextEntry={secureTextEntry && hidePassword}
             {...rest}
             onFocus={() => setFocused(true)}
@@ -79,9 +79,9 @@ export default function TextInput(props: TextInputProps) {
             <TouchableOpacity onPress={() => setHidePassword(!hidePassword)}>
               <View>
                 {hidePassword ? (
-                  <IconEye color="primary-50" />
+                  <IconEye color="Text 500" />
                 ) : (
-                  <IconEyeSlice color="primary-50" />
+                  <IconEyeSlice color="Text 500" />
                 )}
               </View>
             </TouchableOpacity>
@@ -89,7 +89,7 @@ export default function TextInput(props: TextInputProps) {
       </View>
 
       {!!errorMessage && (
-        <Typography fontFamily="Poppins-Light" fontSize={10} color="error-50">
+        <Typography fontFamily="Poppins-Light" fontSize={10} color="Error 600">
           {errorMessage}
         </Typography>
       )}

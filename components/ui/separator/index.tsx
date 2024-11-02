@@ -1,10 +1,12 @@
 import { useAppTheme } from "@/context/theme-context";
 import View, { ViewProps } from "../view";
+import { AppColorUnion } from "@/constants";
 
 export type SeparatorProps = {
   orientation?: "horizontal" | "vertical";
   thickness?: number;
   width?: any;
+  color?: AppColorUnion;
 } & ViewProps;
 export default function Separator(props: SeparatorProps) {
   const {
@@ -12,6 +14,7 @@ export default function Separator(props: SeparatorProps) {
     thickness = 1,
     style,
     width = "100%",
+    color = "Line 400",
   } = props;
 
   const { Colors } = useAppTheme();
@@ -22,7 +25,7 @@ export default function Separator(props: SeparatorProps) {
         {
           width: orientation === "horizontal" ? width : thickness,
           height: orientation === "horizontal" ? thickness : width,
-          backgroundColor: Colors["Line 400"],
+          backgroundColor: Colors[color],
         },
         style,
       ]}

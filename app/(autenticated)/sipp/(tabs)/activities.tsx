@@ -1,4 +1,4 @@
-import Accordion from "@/components/accordion";
+import Accordion from "@/components/ui/accordion";
 import Header from "@/components/header";
 import { IconCaretDown, IconPlus } from "@/components/icons";
 import { SelectInput } from "@/components/ui/selectInput";
@@ -10,11 +10,15 @@ import { getLastYears } from "@/helper";
 import React, { useState } from "react";
 import { Pressable, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Modals from "@/components/ui/modal";
+import { Button } from "@/components/ui/button";
 
 export default function Activities() {
   const inset = useSafeAreaInsets();
   const [filterYear, setFilterYear] = useState<number | string>("");
   const { Colors } = useAppTheme();
+
+  const [modalTambah, setModalTambah] = useState<boolean>(false);
 
   return (
     <View
@@ -46,17 +50,9 @@ export default function Activities() {
           trailingIcon={<IconCaretDown />}
         />
         <View style={{ marginTop: 20 }}>
-          <Pressable
-            style={{
-              padding: 10,
-              backgroundColor: Colors["Info 500"],
-              borderRadius: 15,
-              paddingHorizontal: 20,
-              gap: 10,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+          <Button
+            style={{ borderRadius: 15 }}
+            onPress={() => setModalTambah(true)}
           >
             <IconPlus color="Background 100" />
             <Typography
@@ -67,7 +63,7 @@ export default function Activities() {
             >
               Tambah
             </Typography>
-          </Pressable>
+          </Button>
           <View style={{ marginVertical: 10 }} />
           <Accordion
             header={(isOpen) => (
@@ -315,6 +311,16 @@ export default function Activities() {
           </Accordion>
         </View>
       </ScrollView>
+      <Modals visible={modalTambah} setVisible={setModalTambah}>
+        <Button style={{ borderRadius: 15 }}>Manual</Button>
+        <Button
+          style={{ borderRadius: 15 }}
+          variant="secondary"
+          textColor="Info 500"
+        >
+          Import
+        </Button>
+      </Modals>
     </View>
   );
 }

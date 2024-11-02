@@ -4,10 +4,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { AppColorUnion } from "@/constants/Colors";
 import { useAppTheme } from "@/context/theme-context";
-import View, { ViewProps } from "../../view";
 import { IconCaretLeft } from "../../icons";
 import { Typography } from "../typography";
-
+import View, { ViewProps } from "../view";
 
 export type AppbarProps = {
   backgroundColor?: AppColorUnion | "transparent";
@@ -44,7 +43,7 @@ export default function Appbar(props: AppbarProps) {
           backgroundColor:
             Colors[backgroundColor as AppColorUnion] || backgroundColor,
           borderBottomWidth: hasBorder ? 1 : 0,
-          borderBottomColor: Colors["line-stroke-30"],
+          borderBottomColor: Colors["Line 300"],
         },
       ]}
     >
@@ -52,11 +51,7 @@ export default function Appbar(props: AppbarProps) {
         {!!backIconPress && (
           <TouchableWithoutFeedback onPress={backIconPress}>
             <View style={style.iconWrapper}>
-              {backIcon || (
-                <IconCaretLeft
-                  color={"black-80"}
-                />
-              )}
+              {backIcon || <IconCaretLeft color={"Text 900"} />}
             </View>
           </TouchableWithoutFeedback>
         )}
@@ -67,8 +62,8 @@ export default function Appbar(props: AppbarProps) {
                 variant === "bold" ? "Poppins-Bold" : "Poppins-Regular"
               }
               fontSize={18}
-              color={"black-80"}
-              style={{textAlign:"center", width:"100%"}}
+              color={"Text 900"}
+              style={{ textAlign: "left", width: "100%" }}
             >
               {title}
             </Typography>
@@ -85,7 +80,7 @@ export default function Appbar(props: AppbarProps) {
             <Typography
               fontFamily="OpenSans-Regular"
               fontSize={14}
-              color="black-80"
+              color="Text 900"
             >
               {subtitle}
             </Typography>

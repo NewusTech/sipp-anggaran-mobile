@@ -120,6 +120,45 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="physicalProgress"
+        options={{
+          title: "Fisik",
+          tabBarIcon: ({ focused }) => (
+            <IconHome
+              color={focused ? "Info 500" : "Text 300"}
+              width={24}
+              height={24}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="financialRealization"
+        options={{
+          title: "Keuangan",
+          tabBarIcon: ({ focused }) => (
+            <IconHome
+              color={focused ? "Info 500" : "Text 300"}
+              width={24}
+              height={24}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="report"
+        options={{
+          title: "Laporan",
+          tabBarIcon: ({ focused }) => (
+            <IconHome
+              color={focused ? "Info 500" : "Text 300"}
+              width={24}
+              height={24}
+            />
+          ),
+        }}
+      />
     </Tabs>
   );
 }

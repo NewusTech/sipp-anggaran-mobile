@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
+import { router } from "expo-router";
 import React from "react";
 import { Dimensions } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
@@ -80,7 +81,11 @@ export default function SectionPhysicalProgress() {
         />
       </View>
       <CardProgress label="Progres Fisik" />
-      <Button>Selengkapnya</Button>
+      <Button
+        onPress={() => router.push("/(autenticated)/sipp/physicalProgress")}
+      >
+        Selengkapnya
+      </Button>
     </>
   );
 }

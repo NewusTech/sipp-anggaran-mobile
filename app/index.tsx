@@ -40,14 +40,14 @@ export default function InitialScreen() {
     const initAuth = async () => {
       const storageAccessToken = await getItem("accesstoken");
 
-    //   if (storageAccessToken) {
-    //     setAccessToken(storageAccessToken);
-    //     router.replace("/(autenticated)/(tabs)/home");
-    //     // router.replace("/(autenticated)/skm")
-    //   } else {
-    //     router.replace("/(public)/onboard");
-    //   }
-    router.replace("/(tabs)/home")
+      //   if (storageAccessToken) {
+      //     setAccessToken(storageAccessToken);
+      //     router.replace("/(autenticated)/(tabs)/home");
+      //     // router.replace("/(autenticated)/skm")
+      //   } else {
+      //     router.replace("/(public)/onboard");
+      //   }
+      router.replace("/(autenticated)/sipp/(tabs)/home");
     };
 
     initAuth();

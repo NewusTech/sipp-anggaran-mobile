@@ -14,9 +14,11 @@ import SectionPackage from "@/components/screen/home/SectionPackage";
 import SectionMap from "@/components/screen/home/SectionMap";
 import SectionTable from "@/components/screen/home/SectionTable";
 import Header from "@/components/header";
+import { useRouter } from "expo-router";
 
 export default function home() {
   const inset = useSafeAreaInsets();
+  const router = useRouter();
 
   const [filterYear, setFilterYear] = useState<number | string>("");
 
