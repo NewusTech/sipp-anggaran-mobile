@@ -118,6 +118,8 @@ export const AppColor = {
     "Text 900": "#473D3D",
     //
     transparent: "#00000000",
+    // custom
+    "Primary Blue": "#394674",
   },
   dark: {
     "Primary 100": "#EDE7FF",
@@ -211,6 +213,8 @@ export const AppColor = {
     "Text 900": "#473D3D",
     //
     transparent: "#00000000",
+    // custom
+    "Primary Blue": "#394674",
   },
 };
 
