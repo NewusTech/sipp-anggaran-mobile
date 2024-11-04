@@ -1,7 +1,6 @@
 import { Image, ScrollView } from "react-native";
 
 import View from "@/components/ui/view";
-import { useAppTheme } from "@/context";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SelectInput } from "@/components/ui/selectInput";
 import { useState } from "react";
@@ -15,12 +14,18 @@ import SectionMap from "@/components/screen/home/SectionMap";
 import SectionTable from "@/components/screen/home/SectionTable";
 import Header from "@/components/header";
 import { useRouter } from "expo-router";
+import { useGetDashoardCart, useGetDashoardRealisasi } from "@/services/sipp";
 
 export default function home() {
   const inset = useSafeAreaInsets();
   const router = useRouter();
 
   const [filterYear, setFilterYear] = useState<number | string>("");
+
+  const getCart = useGetDashoardCart(filterYear ? "year=" + filterYear : "");
+  const getRealisasi = useGetDashoardRealisasi(
+    filterYear ? "year=" + filterYear : ""
+  );
 
   return (
     <View
@@ -51,12 +56,29 @@ export default function home() {
           placeholder="Pilih Tahun"
           trailingIcon={<IconCaretDown />}
         />
-        <SectionCard />
-        <SectionFinancialRealization />
-        <SectionPhysicalProgress />
-        <SectionPackage />
+        <SectionCard filterYear={filterYear.toString()} />
+        <SectionFinancialRealization
+          chartLabel={getCart.data?.data.chart_data.labels || []}
+          chartDdata={getCart.data?.data.chart_data.data_keuangan || []}
+          data={getRealisasi.data?.data.realisasi_keuangan || []}
+        />
+        <SectionPhysicalProgress
+          chartLabel={getCart.data?.data.chart_data.labels || []}
+          chartDdata={getCart.data?.data.chart_data.data_fisik || []}
+          data={getRealisasi.data?.data.realisasi_fisik || []}
+        />
+        <SectionPackage
+          total_paket={getRealisasi.data?.data.total_paket || 0}
+          total_paket_belum_mulai={
+            getRealisasi.data?.data.total_paket_belum_mulai || 0
+          }
+          total_paket_dikerjakan={
+            getRealisasi.data?.data.total_paket_dikerjakan || 0
+          }
+          total_paket_selesai={getRealisasi.data?.data.total_paket_selesai || 0}
+        />
         <SectionMap />
-        <SectionTable />
+        <SectionTable filterYear={filterYear.toString()} />
       </ScrollView>
     </View>
   );

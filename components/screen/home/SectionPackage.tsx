@@ -4,7 +4,19 @@ import { useAppTheme } from "@/context";
 import React from "react";
 import { Dimensions } from "react-native";
 
-export default function SectionPackage() {
+type SectionPackage = {
+  total_paket: number;
+  total_paket_belum_mulai: number;
+  total_paket_dikerjakan: number;
+  total_paket_selesai: number;
+};
+export default function SectionPackage(props: SectionPackage) {
+  const {
+    total_paket,
+    total_paket_belum_mulai,
+    total_paket_dikerjakan,
+    total_paket_selesai,
+  } = props;
   const { Colors } = useAppTheme();
 
   return (
@@ -54,7 +66,7 @@ export default function SectionPackage() {
             color="Info 500"
             fontSize={20}
           >
-            24
+            {total_paket}
           </Typography>
         </View>
       </View>
@@ -74,7 +86,7 @@ export default function SectionPackage() {
         <Typography
           color="Background 100"
           fontSize={16}
-          style={{ textAlign: "center" }}
+          style={{ textAlign: "center", height: 50 }}
         >
           Paket Belum Mulai
         </Typography>
@@ -93,7 +105,7 @@ export default function SectionPackage() {
             color="Text 700"
             fontSize={20}
           >
-            24
+            {total_paket_belum_mulai}
           </Typography>
         </View>
       </View>
@@ -132,7 +144,7 @@ export default function SectionPackage() {
             color="Secondary 500"
             fontSize={20}
           >
-            24
+            {total_paket_dikerjakan}
           </Typography>
         </View>
       </View>
@@ -152,7 +164,7 @@ export default function SectionPackage() {
         <Typography
           color="Background 100"
           fontSize={16}
-          style={{ textAlign: "center" }}
+          style={{ textAlign: "center", height: 50 }}
         >
           Paket Selesai
         </Typography>
@@ -171,7 +183,7 @@ export default function SectionPackage() {
             color="Success 700"
             fontSize={20}
           >
-            24
+            {total_paket_selesai}
           </Typography>
         </View>
       </View>

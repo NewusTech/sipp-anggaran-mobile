@@ -1,15 +1,25 @@
-import CardProgress from "@/components/card/CardProgress";
+import { dashboardRealisasiResponseSuccess } from "@/api/sipp";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
+import { getMonthName, substring } from "@/utils";
 import { router } from "expo-router";
 import React from "react";
-import { Dimensions } from "react-native";
+import { Dimensions, FlatList } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
 
-export default function SectionPhysicalProgress() {
+type SectionPhysicalProgress = {
+  chartLabel: number[];
+  chartDdata: number[];
+  data: dashboardRealisasiResponseSuccess["data"]["realisasi_fisik"] | [];
+};
+
+export default function SectionPhysicalProgress(
+  props: SectionPhysicalProgress
+) {
   const { Colors } = useAppTheme();
+  const { chartDdata, chartLabel, data } = props;
 
   return (
     <>
@@ -51,20 +61,12 @@ export default function SectionPhysicalProgress() {
           <Typography>Progres Fisik (%)</Typography>
         </View>
         <LineChart
-          data={[
-            { value: 30, label: "jan" },
-            { value: 40, label: "feb" },
-            { value: 50, label: "mar" },
-            { value: 30, label: "apr" },
-            { value: 10, label: "mei" },
-            { value: 10, label: "jun" },
-            { value: 10, label: "jul" },
-            { value: 10, label: "agu" },
-            { value: 10, label: "sep" },
-            { value: 10, label: "okt" },
-            { value: 10, label: "nov" },
-            { value: 10, label: "des" },
-          ]}
+          data={chartLabel.map((label, index) => {
+            return {
+              value: chartDdata[index],
+              label: getMonthName(label),
+            };
+          })}
           noOfSections={10}
           showYAxisIndices
           areaChart
@@ -80,7 +82,89 @@ export default function SectionPhysicalProgress() {
           startFillColor={Colors["Info 200"]}
         />
       </View>
-      <CardProgress label="Progres Fisik" />
+      <View style={{ marginTop: 20 }}>
+        <Typography fontSize={18} fontFamily="Poppins-Medium">
+          Progress Fisik
+        </Typography>
+        <FlatList
+          horizontal
+          numColumns={1}
+          showsHorizontalScrollIndicator={false}
+          scrollEnabled={true}
+          data={data || []}
+          removeClippedSubviews={true}
+          renderItem={({ item }) => (
+            <View
+              style={{
+                backgroundColor: Colors["Background 100"],
+                marginTop: 20,
+                width: Dimensions.get("window").width - 90,
+                height: 280,
+                padding: 20,
+                borderRadius: 15,
+                borderWidth: 1,
+                borderColor: Colors["Background 200"],
+              }}
+            >
+              <Typography
+                fontFamily="Poppins-Light"
+                fontSize={14}
+                color="Text 500"
+              >
+                Nama Pekerjaan
+              </Typography>
+              <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                {substring(item.title, 47)}
+              </Typography>
+              <View style={{ marginVertical: 5, marginTop: 10 }}>
+                <Typography
+                  fontFamily="Poppins-Light"
+                  fontSize={14}
+                  color="Text 500"
+                >
+                  Bulan
+                </Typography>
+                <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                  {getMonthName(
+                    Number.parseInt(item.progres[0]?.bulan),
+                    "Normal"
+                  ) || "-"}
+                </Typography>
+              </View>
+              <View style={{ marginVertical: 5 }}>
+                <Typography
+                  fontFamily="Poppins-Light"
+                  fontSize={14}
+                  color="Text 500"
+                >
+                  Minggu-Ke
+                </Typography>
+                <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                  {item.progres[0]?.minggu || "-"}
+                </Typography>
+              </View>
+              <View style={{ marginVertical: 5 }}>
+                <Typography
+                  fontFamily="Poppins-Light"
+                  fontSize={14}
+                  color="Text 500"
+                >
+                  Fisik%
+                </Typography>
+                <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                  {item.progres[0]?.nilai || "-"}%
+                </Typography>
+              </View>
+            </View>
+          )}
+          style={{ width: "100%", paddingBottom: 20 }}
+          contentContainerStyle={{
+            alignItems: "center",
+            paddingHorizontal: 0,
+            gap: 20,
+          }}
+        />
+      </View>
       <Button
         onPress={() => router.push("/(autenticated)/sipp/physicalProgress")}
       >
