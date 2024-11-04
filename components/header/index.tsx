@@ -1,8 +1,10 @@
 import React from "react";
-import { Image } from "react-native";
+import { Image, Pressable } from "react-native";
 import View from "../ui/view";
+import { useRouter } from "expo-router";
 
 export default function Header() {
+  const router = useRouter()
   return (
     <View
       style={{
@@ -20,10 +22,12 @@ export default function Header() {
         height={100}
         style={{ width: 200, height: 40 }}
       />
-      <Image
-        source={require("@/assets/images/dummy1.jpg")}
-        style={{ width: 50, height: 50, borderRadius: 100 }}
-      />
+      <Pressable onPress={()=>router.push("/(autenticated)/sipp/profile")}>
+        <Image
+          source={require("@/assets/images/dummy1.jpg")}
+          style={{ width: 50, height: 50, borderRadius: 100 }}
+        />
+      </Pressable>
     </View>
   );
 }
