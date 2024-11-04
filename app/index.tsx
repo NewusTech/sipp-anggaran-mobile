@@ -47,7 +47,7 @@ export default function InitialScreen() {
       //   } else {
       //     router.replace("/(public)/onboard");
       //   }
-      router.replace("/(autenticated)/sipp/(tabs)/home");
+      router.replace("/(autenticated)/survey/(tabs)/home");
     };
 
     initAuth();

@@ -1,2 +1,2 @@
-export * from "@/constants/colors";
+export * from "@/constants/Colors";
 export * from "./formatDate"
