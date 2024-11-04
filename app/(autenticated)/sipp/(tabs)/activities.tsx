@@ -12,6 +12,7 @@ import { Pressable, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Modals from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
+import { router } from "expo-router";
 
 export default function Activities() {
   const inset = useSafeAreaInsets();
@@ -312,7 +313,12 @@ export default function Activities() {
         </View>
       </ScrollView>
       <Modals visible={modalTambah} setVisible={setModalTambah}>
-        <Button style={{ borderRadius: 15 }}>Manual</Button>
+        <Button
+          style={{ borderRadius: 15 }}
+          onPress={() => router.push("(autenticated)/sipp/activities/add")}
+        >
+          Manual
+        </Button>
         <Button
           style={{ borderRadius: 15 }}
           variant="secondary"

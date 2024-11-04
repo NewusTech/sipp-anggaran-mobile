@@ -15,3 +15,8 @@ export * from "./IconPencil";
 export * from "./IconUpload";
 export * from "./IconCross";
 export * from "./IconCalender";
+export * from "./IconAddBox";
+export * from "./IconFisik";
+export * from "./IconMonyBag";
+export * from "./IconFileReport";
+export * from "./IconCamera";

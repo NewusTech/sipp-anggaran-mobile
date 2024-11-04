@@ -95,14 +95,20 @@ export default function report() {
         <Accordion
           header={(isOpen) => (
             <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                padding: 15,
-                backgroundColor: Colors["Text 700"],
-                borderTopLeftRadius: 15,
-                borderTopRightRadius: 15,
-              }}
+              style={[
+                {
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  padding: 15,
+                  backgroundColor: Colors["Text 700"],
+                  borderTopLeftRadius: 15,
+                  borderTopRightRadius: 15,
+                },
+                !isOpen && {
+                  borderBottomRightRadius: 15,
+                  borderBottomLeftRadius: 15,
+                },
+              ]}
             >
               <Typography
                 fontFamily="Poppins-Medium"
@@ -118,7 +124,11 @@ export default function report() {
               )}
             </View>
           )}
-          style={{ borderWidth: 1 }}
+          style={{
+            borderWidth: 1,
+            borderRadius: 16,
+            borderColor: Colors["Text 700"],
+          }}
         >
           <View style={{ padding: 20 }}>
             <Accordion
@@ -165,7 +175,120 @@ export default function report() {
                 </View>
               )}
             >
-              <View></View>
+              <View>
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor: Colors["Text 700"],
+                    padding: 10,
+                    borderTopWidth: 0,
+                  }}
+                >
+                  <Typography fontFamily="Poppins-Medium" fontSize={15}>
+                    Nomor Kontrak
+                  </Typography>
+                  <Typography fontSize={15}>
+                    600/01/KONTRAK/DPUPR/TUBABA/VI/2024
+                  </Typography>
+                </View>
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor: Colors["Text 700"],
+                    padding: 10,
+                    borderTopWidth: 0,
+                  }}
+                >
+                  <Typography fontFamily="Poppins-Medium" fontSize={15}>
+                    Nama Pekerjaan
+                  </Typography>
+                  <Typography fontSize={15}>
+                    Peningkatan Rekonstruksi Mulyo Jadi - Setia Bumi (DAK)
+                  </Typography>
+                </View>
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor: Colors["Text 700"],
+                    padding: 10,
+                    borderTopWidth: 0,
+                  }}
+                >
+                  <Typography fontFamily="Poppins-Medium" fontSize={15}>
+                    Perusahaan
+                  </Typography>
+                  <Typography fontSize={15}>
+                    CV. NUANSA KARYA KONSTRUKSI
+                  </Typography>
+                </View>
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor: Colors["Text 700"],
+                    padding: 10,
+                    borderTopWidth: 0,
+                  }}
+                >
+                  <Typography fontFamily="Poppins-Medium" fontSize={15}>
+                    Tanggal Kontrak
+                  </Typography>
+                  <Typography fontSize={15}>14-06-2024</Typography>
+                </View>
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor: Colors["Text 700"],
+                    padding: 10,
+                    borderTopWidth: 0,
+                  }}
+                >
+                  <Typography fontFamily="Poppins-Medium" fontSize={15}>
+                    Nilai Kontrak
+                  </Typography>
+                  <Typography fontSize={15}>Rp.12,639,534,000</Typography>
+                </View>
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor: Colors["Text 700"],
+                    padding: 10,
+                    borderTopWidth: 0,
+                  }}
+                >
+                  <Typography fontFamily="Poppins-Medium" fontSize={15}>
+                    Nomor SPMK
+                  </Typography>
+                  <Typography fontSize={15}>
+                    600/01/SPMK/DPUPR/TUBABA/VI/2024
+                  </Typography>
+                </View>
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor: Colors["Text 700"],
+                    padding: 10,
+                    borderTopWidth: 0,
+                  }}
+                >
+                  <Typography fontFamily="Poppins-Medium" fontSize={15}>
+                    Tanggal Akhir Kontrak
+                  </Typography>
+                  <Typography fontSize={15}>16-11-2024</Typography>
+                </View>
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor: Colors["Text 700"],
+                    padding: 10,
+                    borderTopWidth: 0,
+                  }}
+                >
+                  <Typography fontFamily="Poppins-Medium" fontSize={15}>
+                    Progress
+                  </Typography>
+                  <Typography fontSize={15}>23%</Typography>
+                </View>
+              </View>
             </Accordion>
           </View>
         </Accordion>
