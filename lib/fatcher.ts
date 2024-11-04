@@ -1,14 +1,18 @@
 import { API_URL_SIPP, API_URL_SURVEY } from "@/constants";
-import { handleLogoutSession } from "@/services/auth.service";
-import { getAccessToken } from "@/store/userStore";
+import { handleLogoutSession } from "@/services";
+import { getAccessToken } from "@/store/sipp";
 import axios, {
   AxiosError,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
 
-const apiClient = axios.create({
+const apiClientSIPP = axios.create({
   baseURL: API_URL_SIPP,
+});
+
+const apiClientSurvey = axios.create({
+  baseURL: API_URL_SURVEY,
 });
 
 const requestInterceptor = (config: InternalAxiosRequestConfig<any>) => {
@@ -39,10 +43,15 @@ const responseInterceptorError = (error: AxiosError) => {
   return Promise.reject(error);
 };
 
-apiClient.interceptors.request.use(requestInterceptor);
-apiClient.interceptors.response.use(
+apiClientSIPP.interceptors.request.use(requestInterceptor);
+apiClientSIPP.interceptors.response.use(
+  responseInterceptorSuccess,
+  responseInterceptorError
+);
+apiClientSurvey.interceptors.request.use(requestInterceptor);
+apiClientSurvey.interceptors.response.use(
   responseInterceptorSuccess,
   responseInterceptorError
 );
 
-export default apiClient;
+export { apiClientSIPP, apiClientSurvey };

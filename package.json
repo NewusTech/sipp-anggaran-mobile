@@ -18,6 +18,7 @@
     "@expo-google-fonts/open-sans": "^0.2.3",
     "@expo-google-fonts/poppins": "^0.2.3",
     "@expo/vector-icons": "^14.0.2",
+    "@hookform/resolvers": "^3.9.1",
     "@openspacelabs/react-native-zoomable-view": "^2.1.6",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/netinfo": "^11.4.1",
@@ -26,6 +27,7 @@
     "axios": "^1.7.7",
     "dayjs": "^1.11.13",
     "expo": "~51.0.28",
+    "expo-blur": "~13.0.2",
     "expo-constants": "~16.0.2",
     "expo-document-picker": "^12.0.2",
     "expo-font": "~12.0.9",
@@ -41,6 +43,7 @@
     "lottie-react-native": "^7.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.53.1",
     "react-native": "0.74.5",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-gifted-charts": "^1.4.47",
@@ -57,8 +60,7 @@
     "react-native-web": "~0.19.10",
     "react-native-webview": "^11.26.0",
     "zod": "^3.23.8",
-    "zustand": "^5.0.0",
-    "expo-blur": "~13.0.2"
+    "zustand": "^5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

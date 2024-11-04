@@ -1,6 +1,7 @@
 import { IconTools } from "@/components/icons/IconTools";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
+import { setItem } from "@/lib/async-storage";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Dimensions, Image, Pressable } from "react-native";
@@ -9,6 +10,15 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function index() {
   const inset = useSafeAreaInsets();
   const router = useRouter();
+
+  const handleSIPP = async () => {
+    router.push("/auth/sipp/login");
+    await setItem("app_name", "SIPP-Anggaran");
+  };
+  const handleSurvey = async () => {
+    router.push("/auth/survey/login");
+    await setItem("app_name", "SIPP-Survey");
+  };
 
   return (
     <View
@@ -93,7 +103,7 @@ export default function index() {
             justifyContent: "center",
             alignItems: "center",
           }}
-          onPress={() => router.push("/auth/sipp/login")}
+          onPress={handleSIPP}
         >
           <IconTools width={70} height={70} />
           <Typography
@@ -114,7 +124,7 @@ export default function index() {
             justifyContent: "center",
             alignItems: "center",
           }}
-          onPress={() => router.push("/auth/survey/login")}
+          onPress={handleSurvey}
         >
           <IconTools width={70} height={70} />
           <Typography
