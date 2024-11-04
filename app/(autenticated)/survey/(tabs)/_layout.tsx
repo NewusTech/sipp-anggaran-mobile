@@ -111,19 +111,6 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="verification"
-                options={{
-                    title: "Verifikasi",
-                    tabBarIcon: ({ focused }) => (
-                        <IconVerification
-                            color={focused ? "Info 500" : "Text 300"}
-                            width={24}
-                            height={24}
-                        />
-                    ),
-                }}
-            />
-            <Tabs.Screen
                 name="survey"
                 options={{
                     title: "Survey",
@@ -136,19 +123,19 @@ export default function TabLayout() {
                     ),
                 }}
             />
-            {/* <Tabs.Screen
-                name="financialRealization"
+            <Tabs.Screen
+                name="verification"
                 options={{
-                    title: "Keuangan",
+                    title: "Verifikasi",
                     tabBarIcon: ({ focused }) => (
-                        <IconHome
+                        <IconVerification
                             color={focused ? "Info 500" : "Text 300"}
                             width={24}
                             height={24}
                         />
                     ),
                 }}
-            /> */}
+            />
             <Tabs.Screen
                 name="report"
                 options={{
