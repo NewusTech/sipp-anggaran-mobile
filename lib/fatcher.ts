@@ -1,4 +1,4 @@
-import { API_URL } from "@/constants";
+import { API_URL_SIPP, API_URL_SURVEY } from "@/constants";
 import { handleLogoutSession } from "@/services/auth.service";
 import { getAccessToken } from "@/store/userStore";
 import axios, {
@@ -8,7 +8,7 @@ import axios, {
 } from "axios";
 
 const apiClient = axios.create({
-  baseURL: API_URL,
+  baseURL: API_URL_SIPP,
 });
 
 const requestInterceptor = (config: InternalAxiosRequestConfig<any>) => {

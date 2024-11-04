@@ -1,3 +1,9 @@
+import {
+  IconAddBox,
+  IconFileReport,
+  IconFisik,
+  IconMonyBag,
+} from "@/components/icons";
 import { IconHome } from "@/components/icons/IconHome";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
@@ -112,7 +118,7 @@ export default function TabLayout() {
         options={{
           title: "Kegiatan",
           tabBarIcon: ({ focused }) => (
-            <IconHome
+            <IconAddBox
               color={focused ? "Info 500" : "Text 300"}
               width={24}
               height={24}
@@ -125,7 +131,7 @@ export default function TabLayout() {
         options={{
           title: "Fisik",
           tabBarIcon: ({ focused }) => (
-            <IconHome
+            <IconFisik
               color={focused ? "Info 500" : "Text 300"}
               width={24}
               height={24}
@@ -138,7 +144,7 @@ export default function TabLayout() {
         options={{
           title: "Keuangan",
           tabBarIcon: ({ focused }) => (
-            <IconHome
+            <IconMonyBag
               color={focused ? "Info 500" : "Text 300"}
               width={24}
               height={24}
@@ -151,7 +157,7 @@ export default function TabLayout() {
         options={{
           title: "Laporan",
           tabBarIcon: ({ focused }) => (
-            <IconHome
+            <IconFileReport
               color={focused ? "Info 500" : "Text 300"}
               width={24}
               height={24}
