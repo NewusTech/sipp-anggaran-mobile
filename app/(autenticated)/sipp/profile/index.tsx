@@ -1,15 +1,14 @@
-import { IconCalender, IconCamera, IconCaretDown } from "@/components/icons";
+import { IconCamera } from "@/components/icons";
 import TabInformasi from "@/components/screen/profile/tabInformasi";
 import TabPassword from "@/components/screen/profile/tabPassword";
 import { Button } from "@/components/ui/button";
 import ImageModal from "@/components/ui/imageModal";
-import { DateInput } from "@/components/ui/inputDate";
-import { SelectInput } from "@/components/ui/selectInput";
+import ModalAction from "@/components/ui/modalAction";
 import Separator from "@/components/ui/separator";
-import TextInput from "@/components/ui/textInput";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
+import { handleLogoutSession, useGetProfile } from "@/services";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Dimensions, Pressable, ScrollView } from "react-native";
@@ -23,6 +22,14 @@ export default function index() {
   const [activeTab, setActiveTab] = useState<"informasi" | "password">(
     "informasi"
   );
+
+  const [modalLogout, setModalLogout] = useState<boolean>(false);
+
+  const getUser = useGetProfile();
+
+  const handleLogout = () => {
+    handleLogoutSession();
+  };
 
   useEffect(() => {
     setActiveTab("informasi");
@@ -45,7 +52,11 @@ export default function index() {
       >
         <View style={{ position: "relative" }}>
           <ImageModal
-            source={require("@/assets/images/dummy1.jpg")}
+            source={
+              getUser.data?.data
+                ? { uri: getUser.data.data.image }
+                : require("@/assets/images/dummy1.jpg")
+            }
             style={{
               width: 80,
               height: 80,
@@ -75,7 +86,7 @@ export default function index() {
           style={{ textAlign: "center", marginTop: 20 }}
           color="Background 100"
         >
-          PUPR Tulang Bawang Barat
+          {getUser.data?.data.name || "-"}
         </Typography>
         <Typography
           fontSize={14}
@@ -83,7 +94,7 @@ export default function index() {
           style={{ textAlign: "center" }}
           color="Background 100"
         >
-          pupr@gmail.com
+          {getUser.data?.data.email || "-"}
         </Typography>
       </View>
       {/*  */}
@@ -188,8 +199,29 @@ export default function index() {
           </View>
           {activeTab === "informasi" && <TabInformasi />}
           {activeTab === "password" && <TabPassword />}
+          {/*  */}
+        </View>
+        <View
+          style={{
+            marginTop: 20,
+            borderWidth: 1,
+            borderColor: Colors["Line 300"],
+            borderRadius: 15,
+            padding: 10,
+          }}
+        >
+          <Button color="Error 600" onPress={() => setModalLogout(true)}>
+            Logout
+          </Button>
         </View>
       </View>
+      <ModalAction
+        title="Yakin Ingin Keluar dari akun ini?"
+        isLoading={false}
+        onAction={handleLogout}
+        setVisible={setModalLogout}
+        visible={modalLogout}
+      />
     </ScrollView>
   );
 }

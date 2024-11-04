@@ -3,26 +3,30 @@ import View from "../../ui/view";
 import { useAppTheme } from "@/context";
 import { IconMedical } from "../../icons";
 import { Typography } from "../../ui/typography";
+import { useGetDashoardKegiatan } from "@/services/sipp";
+import { formatCurrency } from "@/utils";
 
-export default function SectionCard() {
+export default function SectionCard({ filterYear }: { filterYear: string }) {
   const { Colors } = useAppTheme();
+
+  const getKegiatan = useGetDashoardKegiatan("year=" + filterYear);
 
   const dataCard = [
     {
       title: "Total Pagu",
-      content: "Rp. 67,821,237,900 ",
+      content: formatCurrency(getKegiatan.data?.data.total_pagu || 0),
       icon: <IconMedical color="Info 500" width={30} height={30} />,
       color: "#396AFF",
     },
     {
       title: "Total Realisasi",
-      content: "Rp. 0",
+      content: formatCurrency(getKegiatan.data?.data.total_realisasi || 0),
       icon: <IconMedical color="Error 500" width={30} height={30} />,
       color: "#DF1212",
     },
     {
       title: "Total Sisa Anggaran",
-      content: "Rp. 67,821,237,900 ",
+      content: formatCurrency(getKegiatan.data?.data.total_sisa || 0),
       icon: <IconMedical color="Success 700" width={30} height={30} />,
       color: "#399918",
     },
