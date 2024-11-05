@@ -9,6 +9,8 @@ import TabSectionRoad from '@/components/survey/home/tabRoadSection';
 import Separator from '@/components/ui/separator';
 import TabSectionBridege from '../home/tabBridgeSection';
 import TabSurveyDrainase from './tabSurveyDrainase';
+import TabSurveyRoad from './tabSurveyRoad';
+import TabSurveyBridge from './tabSurveyBridge';
 
 export default function SectionTab() {
     const { Colors } = useAppTheme();
@@ -20,7 +22,7 @@ export default function SectionTab() {
     >();
 
     useEffect(() => {
-        setTabDetail("Survey Jalan");
+        setTabDetail("Survey Drainase");
     }, []);
     return (
         <View
@@ -148,8 +150,8 @@ export default function SectionTab() {
                 style={{}}
             >
                 {tabDetail === "Survey Drainase" && <TabSurveyDrainase />}
-                {tabDetail === "Survey Jalan" && <TabSectionRoad />}
-                {tabDetail === "Survey Jembatan" && <TabSectionBridege />}
+                {tabDetail === "Survey Jalan" && <TabSurveyRoad />}
+                {tabDetail === "Survey Jembatan" && <TabSurveyBridge />}
             </ScrollView>
             {/*  */}
         </View>

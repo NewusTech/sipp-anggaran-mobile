@@ -13,9 +13,9 @@ import React from "react";
 import { Dimensions, Pressable, StyleSheet } from "react-native";
 import { Button } from "@/components/ui/button";
 import { IconCaretUp } from "@/components/icons/IconCaretUp";
-import { router } from "expo-router";
+import Separator from "@/components/ui/separator";
 
-export default function SectionTableBridge() {
+export default function SectionTableRoad() {
     const { Colors } = useAppTheme();
 
     return (
@@ -69,7 +69,7 @@ export default function SectionTableBridge() {
                                 }}
                             >
                                 <Typography color="Primary Blue" fontSize={15}>
-                                    TOTO KATON - TOTO MAKMUR
+                                    Sp. Panaragan - Panaragan (Kantor Camat)
                                 </Typography>
                                 {isOpen ? <IconCaretFillDown /> : <IconCaretUp />}
                             </View>
@@ -83,18 +83,17 @@ export default function SectionTableBridge() {
                                         fontSize: 16,
                                     }}
                                 >
-                                    No Jembatan
+                                    Kecamatan
                                 </Typography>
                                 <Typography
                                     style={{
                                         fontSize: 16,
                                     }}
                                 >
-                                    18.12.163.2
+                                    Tulang Bawang Tengah
                                 </Typography>
                             </View>
                         </View>
-                        {/*  */}
                         <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
                             <View >
                                 <Typography
@@ -103,18 +102,17 @@ export default function SectionTableBridge() {
                                         fontSize: 16,
                                     }}
                                 >
-                                    Asal
+                                    Panjang Ruas
                                 </Typography>
                                 <Typography
                                     style={{
                                         fontSize: 16,
                                     }}
                                 >
-                                    MARGA SARI
+                                    1.08
                                 </Typography>
                             </View>
                         </View>
-                        {/*  */}
                         <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
                             <View >
                                 <Typography
@@ -123,117 +121,49 @@ export default function SectionTableBridge() {
                                         fontSize: 16,
                                     }}
                                 >
-                                    Nama Jembatan
+                                    Lebar Ruas
                                 </Typography>
                                 <Typography
                                     style={{
                                         fontSize: 16,
                                     }}
                                 >
-                                    WAY DAM
+                                    3
                                 </Typography>
                             </View>
                         </View>
-                        {/*  */}
-                        <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                            <View >
-                                <Typography
-                                    style={{
-                                        color: "#757575",
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    KMPOST (km)
-                                </Typography>
-                                <Typography
-                                    style={{
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    0+205
-                                </Typography>
-                            </View>
+                        {/* status */}
+                        <View style={{
+                            marginTop: 5,
+                            marginBottom: 15,
+                            paddingHorizontal: 10,
+                            display: "flex",
+                            gap: 5,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "column",
+                        }}>
+                            <Typography
+                                style={{
+                                    fontSize: 15,
+                                }}
+                            >
+                                Status
+                            </Typography>
+                            <Button
+                                style={{
+                                    width: Dimensions.get("window").width / 1 - 70,
+                                }}
+                                color="Success 600"
+                            >
+                                Diterima
+                            </Button>
                         </View>
-                        {/*  */}
-                        <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                            <View >
-                                <Typography
-                                    style={{
-                                        color: "#757575",
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    Panjang
-                                </Typography>
-                                <Typography
-                                    style={{
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    10,5
-                                </Typography>
-                            </View>
-                        </View>
-                        {/*  */}
-                        <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                            <View >
-                                <Typography
-                                    style={{
-                                        color: "#757575",
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    Lebar
-                                </Typography>
-                                <Typography
-                                    style={{
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    5
-                                </Typography>
-                            </View>
-                        </View>
-                        {/*  */}
-                        <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                            <View >
-                                <Typography
-                                    style={{
-                                        color: "#757575",
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    Nilai Kondisi
-                                </Typography>
-                                <Typography
-                                    style={{
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    1
-                                </Typography>
-                            </View>
-                        </View>
-                        {/*  */}
-                        <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                            <View >
-                                <Typography
-                                    style={{
-                                        color: "#757575",
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    Kondisi
-                                </Typography>
-                                <Typography
-                                    style={{
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    B
-                                </Typography>
-                            </View>
-                        </View>
+                        <Separator
+                            style={
+                                { marginTop: 10, marginBottom: 10 }
+                            }
+                        ></Separator>
                         {/* button */}
                         <View style={{
                             marginTop: 5,
@@ -244,9 +174,8 @@ export default function SectionTableBridge() {
                             justifyContent: "space-between"
                         }}>
                             <Button
-                                onPress={() => router.push("(autenticated)/survey/home/sectionBridge/detail")}
                                 style={{
-                                    width: Dimensions.get("window").width / 2 - 40,
+                                    width: Dimensions.get("window").width / 3 - 30,
                                 }}
                                 color="Primary Blue"
                             >
@@ -254,11 +183,19 @@ export default function SectionTableBridge() {
                             </Button>
                             <Button
                                 style={{
-                                    width: Dimensions.get("window").width / 2 - 40,
+                                    width: Dimensions.get("window").width / 3 - 30,
                                 }}
                                 color="Success 600"
                             >
                                 Edit
+                            </Button>
+                            <Button
+                                style={{
+                                    width: Dimensions.get("window").width / 3 - 30,
+                                }}
+                                color="Error 500"
+                            >
+                                Hapus
                             </Button>
                         </View>
                     </Accordion>

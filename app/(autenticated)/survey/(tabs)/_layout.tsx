@@ -84,7 +84,7 @@ export default function TabLayout() {
                                         </View>
                                         <Typography
                                             fontFamily="Poppins-Medium"
-                                            color={isFocused ? "Info 500" : "Text 300"}
+                                            color={isFocused ? "Primary Blue" : "Text 300"}
                                             fontSize={14}
                                         >
                                             {label as string}
@@ -103,7 +103,7 @@ export default function TabLayout() {
                     title: "Home",
                     tabBarIcon: ({ focused }) => (
                         <IconHome
-                            color={focused ? "Info 500" : "Text 300"}
+                            color={focused ? "Primary Blue" : "Text 300"}
                             width={24}
                             height={24}
                         />
@@ -116,7 +116,7 @@ export default function TabLayout() {
                     title: "Survey",
                     tabBarIcon: ({ focused }) => (
                         <IconSurvey
-                            color={focused ? "Info 500" : "Text 300"}
+                            color={focused ? "Primary Blue" : "Text 300"}
                             width={24}
                             height={24}
                         />
@@ -129,7 +129,7 @@ export default function TabLayout() {
                     title: "Verifikasi",
                     tabBarIcon: ({ focused }) => (
                         <IconVerification
-                            color={focused ? "Info 500" : "Text 300"}
+                            color={focused ? "Primary Blue" : "Text 300"}
                             width={24}
                             height={24}
                         />
@@ -142,7 +142,7 @@ export default function TabLayout() {
                     title: "Laporan",
                     tabBarIcon: ({ focused }) => (
                         <IconReport2
-                            color={focused ? "Info 500" : "Text 300"}
+                            color={focused ? "Primary Blue" : "Text 300"}
                             width={24}
                             height={24}
                         />

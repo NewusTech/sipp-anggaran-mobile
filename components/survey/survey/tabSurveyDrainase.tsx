@@ -1,4 +1,4 @@
-import { IconCaretDown } from '@/components/icons';
+import { IconCaretDown, IconPlus } from '@/components/icons';
 import { SelectInput } from '@/components/ui/selectInput';
 import { Typography } from '@/components/ui/typography'
 import View from '@/components/ui/view'
@@ -6,15 +6,18 @@ import { useAppTheme } from '@/context';
 import { getLastYears } from '@/helper';
 import React, { useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import SectionCardDrainase from '../home/SectionDrainaseCard';
-import SectionMapDrainase from '../home/SectionDrainaseMap';
-import SectionTableDrainase from '../home/SectionTableDrainase';
+import { Button } from '@/components/ui/button';
+import SurveyTableDrainase from './tableDrainaseSurvey';
+import { SearchBox } from '@/components/ui/searchBox';
+import { router } from 'expo-router';
 
 
 export default function TabSurveyDrainase() {
     const inset = useSafeAreaInsets();
     const { Colors } = useAppTheme();
     const [filterYear, setFilterYear] = useState<number | string>("");
+    const [search, setSearch] = useState<string>("");
+
 
     return (
         <View
@@ -28,57 +31,25 @@ export default function TabSurveyDrainase() {
                 style={{
                     padding: 20,
                     paddingHorizontal: 20,
-                    gap: 5,
+                    gap: 15,
+                    display: "flex",
+                    flexDirection: "column",
                     backgroundColor: Colors["Background 100"],
                 }}
             >
-                <SelectInput
-                    data={getLastYears(24).map((d) => {
-                        return {
-                            title: d,
-                        };
-                    })}
-                    color='Primary Blue'
-                    value={filterYear}
-                    onSelect={(data) => setFilterYear(data.title)}
-                    label="Filter Tahun"
-                    placeholder="Pilih Tahun"
-                    trailingIcon={<IconCaretDown />}
+                <SearchBox
+                    placeholder="Cari Desa"
+                    width={"100%"}
+                    value={search}
+                    onChangeText={setSearch}
                 />
-                <View
-                    style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        marginTop: 10,
-                        gap: 0,
-                        justifyContent: "space-between"
-                    }}
+                <Button
+                color='Primary Blue'
+                onPress={() => router.push("(autenticated)/survey/home/sectionDrainase/addFoto")}
                 >
-                    <Typography
-                        style={{
-                            borderWidth: 1,
-                            borderColor: Colors["Primary Blue"],
-                            borderRadius: 10,
-                            padding: 10,
-                            fontSize: 14,
-                            width: "48%",
-                            textAlign: 'center'
-                        }}>
-                        Provinsi Lampung
-                    </Typography>
-                    <Typography
-                        style={{
-                            borderWidth: 1,
-                            borderColor: Colors["Primary Blue"],
-                            borderRadius: 10,
-                            padding: 10,
-                            textAlign: 'center',
-                            fontSize: 14,
-                            width: "50%"
-                        }}>
-                        Tulang Bawang Barat
-                    </Typography>
-                </View>
+                    <IconPlus color='Background 100' />
+                    <Typography color='Background 100'>Tambah Foto</Typography>
+                </Button>
             </View>
             {/* card */}
             <View
@@ -87,9 +58,7 @@ export default function TabSurveyDrainase() {
                     gap: 5,
                 }}
             >
-                <SectionCardDrainase />
-                <SectionMapDrainase />
-                <SectionTableDrainase />
+                <SurveyTableDrainase />
             </View>
             {/* card */}
         </View>
