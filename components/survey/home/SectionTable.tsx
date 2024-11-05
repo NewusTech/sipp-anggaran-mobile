@@ -13,6 +13,7 @@ import React from "react";
 import { Dimensions, Pressable, StyleSheet } from "react-native";
 import { Button } from "@/components/ui/button";
 import { IconCaretUp } from "@/components/icons/IconCaretUp";
+import { router } from "expo-router";
 
 export default function SectionTableSurvey() {
     const { Colors } = useAppTheme();
@@ -53,7 +54,6 @@ export default function SectionTableSurvey() {
                             borderBottomRightRadius: index === 0 ? 10 : undefined,
                             borderRadius: index !== 0 ? 10 : undefined,
                             overflow: "hidden",
-                            padding: 3,
                         }}
                         header={(isOpen) => (
                             <View
@@ -146,6 +146,7 @@ export default function SectionTableSurvey() {
                                 width: Dimensions.get("window").width / 2 - 40,
                             }}
                             color="Primary Blue"
+                            onPress={() => router.push("(autenticated)/survey/home/SectionRoad/detail")}
                             >
                                 Lihat
                             </Button>
