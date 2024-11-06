@@ -253,6 +253,7 @@ export default function SectionTableBridge() {
                                 Lihat
                             </Button>
                             <Button
+                                onPress={() => router.push("(autenticated)/survey/home/sectionBridge/edit")}
                                 style={{
                                     width: Dimensions.get("window").width / 2 - 40,
                                 }}

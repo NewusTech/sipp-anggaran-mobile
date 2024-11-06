@@ -11,8 +11,6 @@ import { Dimensions } from 'react-native';
 import { SearchBox } from '@/components/ui/searchBox';
 import { Button } from "@/components/ui/button";
 import IconFile from '@/components/icons/IconFile';
-import SectionTableRoad from './tableRoadSurvey';
-import SurveyTableBridge from './tableBridgeSurvey';
 import { router } from 'expo-router';
 
 // Sample kecamatan data; replace with actual data source
@@ -23,7 +21,7 @@ const kecamatanOptions = [
     // Add more options as needed
 ];
 
-export default function TabSurveyBridge() {
+export default function TabDownload() {
     const inset = useSafeAreaInsets();
     const { Colors } = useAppTheme();
     const [filterKecamatan, setFilterKecamatan] = useState<string | number>("");
@@ -93,7 +91,7 @@ export default function TabSurveyBridge() {
                         <Typography color='Background 100'>Import</Typography>
                     </Button>
                     <Button
-                    onPress={() => router.push("(autenticated)/survey/home/sectionBridge/add")}
+                        onPress={() => router.push("(autenticated)/survey/home/SectionRoad/add")}
                         style={{
                             width: Dimensions.get("window").width / 2 - 25,
                         }}
@@ -111,7 +109,6 @@ export default function TabSurveyBridge() {
                     gap: 5,
                 }}
             >
-                <SurveyTableBridge />
             </View>
             {/* card */}
         </View>
