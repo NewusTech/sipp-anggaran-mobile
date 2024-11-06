@@ -1,5 +1,5 @@
 import { API_URL_SIPP, API_URL_SURVEY } from "@/constants";
-import { handleLogoutSession } from "@/services";
+import { handleLogoutSession } from "@/services/auth.service";
 import { getAccessToken } from "@/store/sipp";
 import axios, {
   AxiosError,

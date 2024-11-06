@@ -1,9 +1,31 @@
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
+import { formatDate } from "@/constants";
 import { useAppTheme } from "@/context";
+import { formatCurrency } from "@/utils";
 import React from "react";
 
-export default function TabDetail() {
+type TabDetail = {
+  data: {
+    title: string;
+    titleKegiatan: string;
+    titleSubPekerjaan: string;
+    noPekerjaan: number;
+    tahun: string;
+    jenisPengadaan: string;
+    nomorKontrak: string;
+    nilaiKontrak: string;
+    penyediaJasa: string;
+    noSPMK: string;
+    realisasi: string;
+    awalKontrak: string;
+    akhirKontrak: string;
+    target: string;
+  };
+};
+
+export default function TabDetail(props: TabDetail) {
+  const { data } = props;
   const { Colors } = useAppTheme();
 
   return (
@@ -22,7 +44,7 @@ export default function TabDetail() {
           Program
         </Typography>
         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-          PROGRAM PENGELOLAAN SUMBER DAYA AIR (SDA)
+          {data.title}
         </Typography>
       </View>
       <View>
@@ -30,9 +52,7 @@ export default function TabDetail() {
           Kegiatan Pekerjaan
         </Typography>
         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-          Pengembangan dan Pengelolaan Sistem Irigasi Primer dan Sekunder pada
-          Daerah Irigasi yang Luasnya di Bawah 1000 Ha dalam 1 (Satu) Daerah
-          Kabupaten/Kota
+          {data.titleKegiatan}
         </Typography>
       </View>
       <View>
@@ -40,7 +60,7 @@ export default function TabDetail() {
           Sub Kegiatan Pekerjaan
         </Typography>
         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-          Pembangunan Taman Pemancingan Wisata di Agrowisata
+          {data.titleSubPekerjaan}
         </Typography>
       </View>
       <View>
@@ -48,7 +68,7 @@ export default function TabDetail() {
           Nomor Pekerjaan
         </Typography>
         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-          22
+          {data.noPekerjaan}
         </Typography>
       </View>
       <View>
@@ -56,7 +76,7 @@ export default function TabDetail() {
           Tahun
         </Typography>
         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-          2022
+          {data.tahun}
         </Typography>
       </View>
       <View>
@@ -64,7 +84,7 @@ export default function TabDetail() {
           Jenis Pengadaan
         </Typography>
         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-          Konstruksi
+          {data.jenisPengadaan}
         </Typography>
       </View>
       <View>
@@ -72,7 +92,7 @@ export default function TabDetail() {
           Nomor Kontrak
         </Typography>
         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-          600/22/KONTRAK/DPUPR/TUBABA/X/2024
+          {data.nomorKontrak}
         </Typography>
       </View>
       <View>
@@ -80,7 +100,7 @@ export default function TabDetail() {
           Nilai Kontrak
         </Typography>
         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-          Rp. 0
+          {formatCurrency(Number.parseFloat(data.nilaiKontrak))}
         </Typography>
       </View>
       <View>
@@ -88,7 +108,7 @@ export default function TabDetail() {
           Penyedia Jasa
         </Typography>
         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-          CV. GLOBAL KONSTRUKSI
+          {data.penyediaJasa}
         </Typography>
       </View>
       <View>
@@ -96,7 +116,7 @@ export default function TabDetail() {
           Nomor SPMK
         </Typography>
         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-          600/22/SPMK/DPUPR/TUBABA/X/2024
+          {data.noSPMK}
         </Typography>
       </View>
       <View>
@@ -104,7 +124,7 @@ export default function TabDetail() {
           Realisasi
         </Typography>
         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-          Rp. 0
+          {formatCurrency(Number.parseFloat(data.realisasi))}
         </Typography>
       </View>
       <View>
@@ -112,7 +132,9 @@ export default function TabDetail() {
           Awal Kontrak
         </Typography>
         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-          2024-10-03 00:00:00
+          {data.awalKontrak !== ""
+            ? formatDate(new Date(data.awalKontrak))
+            : "-"}
         </Typography>
       </View>
       <View>
@@ -120,7 +142,9 @@ export default function TabDetail() {
           Akhir Kontrak
         </Typography>
         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-          2024-12-31 00:00:00
+          {data.akhirKontrak !== ""
+            ? formatDate(new Date(data.akhirKontrak))
+            : "-"}
         </Typography>
       </View>
       <View>
@@ -128,7 +152,7 @@ export default function TabDetail() {
           Target Pekerjaan
         </Typography>
         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-          100%
+          {data.target}%
         </Typography>
       </View>
     </View>
