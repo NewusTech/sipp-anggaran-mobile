@@ -5,14 +5,20 @@ import TabKurvaSKeuangan from "@/components/screen/activity/tabKurvaSKeuangan";
 import TabPersonInCharge from "@/components/screen/activity/tabPersonInCharge";
 import TabTitikLokasi from "@/components/screen/activity/tabTitikLokasi";
 import Appbar from "@/components/ui/appBar";
+import Loader from "@/components/ui/loader";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
-import { useRouter } from "expo-router";
+import { useGetDetailAnggaran } from "@/services/sipp";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ScrollView, TouchableOpacity } from "react-native";
 
 export default function index() {
+  const params = useLocalSearchParams<{
+    id: string;
+  }>();
+
   const router = useRouter();
   const { Colors } = useAppTheme();
 
@@ -24,6 +30,9 @@ export default function index() {
     | "Dokumentasi"
     | "Titik Lokasi"
   >();
+
+  const getDetailAnggaran = useGetDetailAnggaran(params.id);
+  const detailAnggaran = getDetailAnggaran.data?.data;
 
   useEffect(() => {
     setTabDetail("Detail");
@@ -223,13 +232,46 @@ export default function index() {
         contentContainerStyle={{ paddingBottom: 40 }}
         style={{ paddingTop: 10, marginTop: 20 }}
       >
-        {tabDetail === "Detail" && <TabDetail />}
+        {tabDetail === "Detail" && (
+          <TabDetail
+            data={{
+              awalKontrak: detailAnggaran?.awal_kontrak || "",
+              akhirKontrak: detailAnggaran?.akhir_kontrak || "",
+              jenisPengadaan: detailAnggaran?.jenis_pengadaan || "",
+              nilaiKontrak: detailAnggaran?.nilai_kontrak || "",
+              nomorKontrak: detailAnggaran?.no_kontrak || "-",
+              noPekerjaan: detailAnggaran?.no_detail_kegiatan || 0,
+              noSPMK: detailAnggaran?.no_spmk || "",
+              penyediaJasa: detailAnggaran?.penyedia_jasa || "",
+              realisasi: detailAnggaran?.realisasi || "",
+              tahun: detailAnggaran?.kegiatan.tahun || "",
+              target: detailAnggaran?.target || "",
+              title: detailAnggaran?.kegiatan.program.name || "",
+              titleKegiatan: detailAnggaran?.title || "",
+              titleSubPekerjaan: detailAnggaran?.title || "",
+            }}
+          />
+        )}
         {tabDetail === "Kurva S Fisik" && <TabKurvaSFisik />}
         {tabDetail === "Kurva S Keuangan" && <TabKurvaSKeuangan />}
         {tabDetail === "Titik Lokasi" && <TabTitikLokasi />}
         {tabDetail === "Penanggung Jawab" && <TabPersonInCharge />}
         {tabDetail === "Dokumentasi" && <TabDocumentation />}
       </ScrollView>
+      {getDetailAnggaran.isFetching && (
+        <View
+          style={{
+            height: "100%",
+            width: "100%",
+            position: "absolute",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.2)",
+          }}
+        >
+          <Loader />
+        </View>
+      )}
     </View>
   );
 }

@@ -1,33 +1,19 @@
 import Accordion from "@/components/ui/accordion";
-import {
-  IconCaretFillDown,
-  IconCaretFillLeft,
-  IconCaretLeft,
-  IconCaretRight,
-} from "@/components/icons";
+import { IconCaretFillDown, IconCaretFillLeft } from "@/components/icons";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { AppColor } from "@/constants";
 import { useAppTheme } from "@/context";
 import React, { useState } from "react";
-import { Dimensions, Pressable, StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import { useGetDashoardTableData } from "@/services/sipp";
+import PaginatedView from "@/components/ui/pagination";
 
 export default function SectionTable({ filterYear }: { filterYear: string }) {
   const { Colors } = useAppTheme();
 
   const [page, setPage] = useState<number>(1);
   const getTable = useGetDashoardTableData(`year=${filterYear}&page=${page}`);
-
-  const handlePrev = () => {
-    if (page > 1) {
-      setPage(page - 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (page < (getTable.data?.data.last_page || 1)) setPage(page + 1);
-  };
 
   return (
     <View style={{ marginTop: 20 }}>
@@ -103,48 +89,7 @@ export default function SectionTable({ filterYear }: { filterYear: string }) {
             </Accordion>
           ))}
       </View>
-
-      <View
-        style={{
-          flexDirection: "row",
-          marginTop: 20,
-          justifyContent: "space-between",
-        }}
-      >
-        <Pressable style={[style.roundedView]} onPress={handlePrev}>
-          <IconCaretLeft />
-        </Pressable>
-        <View style={{ flexDirection: "row", gap: 5 }}>
-          {Array.from({ length: getTable.data?.data.last_page || 0 }).map(
-            (_, index) => {
-              const isActive = getTable.data?.data.current_page === index + 1;
-              return (
-                <Pressable
-                  style={[
-                    style.roundedView,
-                    isActive && {
-                      backgroundColor: Colors["Info 500"],
-                      borderColor: Colors["Info 500"],
-                    },
-                  ]}
-                  key={index}
-                  onPress={() => setPage(index + 1)}
-                >
-                  <Typography
-                    fontFamily="Poppins-Medium"
-                    color={isActive ? "Background 100" : "Text 900"}
-                  >
-                    {index + 1}
-                  </Typography>
-                </Pressable>
-              );
-            }
-          )}
-        </View>
-        <Pressable style={[style.roundedView]} onPress={handleNext}>
-          <IconCaretRight />
-        </Pressable>
-      </View>
+      <PaginatedView getTable={getTable} setActivePage={setPage} />
     </View>
   );
 }
@@ -155,14 +100,5 @@ const style = StyleSheet.create({
     borderWidth: 1,
     borderColor: AppColor.light["Line 300"],
     padding: 10,
-  },
-  roundedView: {
-    width: 40,
-    height: 40,
-    borderRadius: 100,
-    borderWidth: 1,
-    borderColor: AppColor.light["Line 300"],
-    alignItems: "center",
-    justifyContent: "center",
   },
 });

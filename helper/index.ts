@@ -1,3 +1,5 @@
+export * from "./downloadFile";
+
 export function getLastYears(lastYears: number) {
   const currentYear = new Date().getFullYear();
   const years = [];

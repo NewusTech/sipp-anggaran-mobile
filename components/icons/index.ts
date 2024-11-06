@@ -20,3 +20,4 @@ export * from "./IconFisik";
 export * from "./IconMonyBag";
 export * from "./IconFileReport";
 export * from "./IconCamera";
+export * from "./IconCeretUp";

@@ -28,6 +28,7 @@ export type SelectInputProps = {
   label?: string;
   disabled?: boolean;
   color?: AppColorUnion;
+  width?: any;
 };
 export function SelectInput(props: SelectInputProps) {
   const {
@@ -46,6 +47,7 @@ export function SelectInput(props: SelectInputProps) {
     label,
     disabled = false,
     color = "Line 200",
+    width,
   } = props;
 
   const { Colors } = useAppTheme();
@@ -67,6 +69,7 @@ export function SelectInput(props: SelectInputProps) {
             style={[
               styles.container,
               {
+                width,
                 borderWidth: withBorder ? 1 : 0,
                 borderColor: isOpened ? Colors["Primary 500"] : Colors[color],
                 padding: withBorder ? padding : 0,
@@ -82,6 +85,7 @@ export function SelectInput(props: SelectInputProps) {
               fontSize={14}
               color={value ? "Text 900" : "Text 500"}
               style={styles.textInput}
+              numberOfLines={1}
             >
               {value || placeholder} {" " + suffix}
             </Typography>

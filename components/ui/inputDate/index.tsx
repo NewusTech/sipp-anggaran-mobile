@@ -104,11 +104,15 @@ export function DateInput(props: DateInputProps) {
         <TextInputV2
           trailingIcon={trailingIcon}
           leadingIcon={leadingIcon}
-          value={formatDate(new Date(value), {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          })}
+          value={
+            value !== ""
+              ? formatDate(new Date(value), {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })
+              : "tanggal"
+          }
           placeholder={placeholder}
           onTouchablePress={() =>
             !disabled && setShowDatePicker(!showDatePicker)
@@ -142,7 +146,7 @@ export function DateInput(props: DateInputProps) {
             </Pressable>
             <DateTimePicker
               mode="single"
-              date={value}
+              date={value || new Date()}
               onChange={(params) => {
                 setShowDatePicker(false);
                 onChange(params.date as Date);
