@@ -12,6 +12,7 @@ import { SearchBox } from '@/components/ui/searchBox';
 import { Button } from "@/components/ui/button";
 import IconFile from '@/components/icons/IconFile';
 import SectionTableRoad from './tableRoadSurvey';
+import { router } from 'expo-router';
 
 // Sample kecamatan data; replace with actual data source
 const kecamatanOptions = [
@@ -91,6 +92,7 @@ export default function TabSurveyRoad() {
                         <Typography color='Background 100'>Import</Typography>
                     </Button>
                     <Button
+                        onPress={() => router.push("(autenticated)/survey/home/SectionRoad/add")}
                         style={{
                             width: Dimensions.get("window").width / 2 - 25,
                         }}

@@ -9,14 +9,18 @@ import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { AppColor } from "@/constants";
 import { useAppTheme } from "@/context";
-import React from "react";
-import { Dimensions, Pressable, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { Dimensions, Modal, Pressable, StyleSheet } from "react-native";
 import { Button } from "@/components/ui/button";
 import { IconCaretUp } from "@/components/icons/IconCaretUp";
 import Separator from "@/components/ui/separator";
+import { router } from "expo-router";
+import ModalAction from "@/components/ui/modalAction";
 
 export default function SectionTableRoad() {
     const { Colors } = useAppTheme();
+    const [modalDelete, setModalDelete] = useState<boolean>(false);
+    const [modalStatus, setModalStatus] = useState(false);
 
     return (
         <View style={{ marginTop: 20 }}>
@@ -151,6 +155,7 @@ export default function SectionTableRoad() {
                                 Status
                             </Typography>
                             <Button
+                                onPress={() => setModalStatus(true)}
                                 style={{
                                     width: Dimensions.get("window").width / 1 - 70,
                                 }}
@@ -174,6 +179,7 @@ export default function SectionTableRoad() {
                             justifyContent: "space-between"
                         }}>
                             <Button
+                                onPress={() => router.push("(autenticated)/survey/home/SectionRoad/detail")}
                                 style={{
                                     width: Dimensions.get("window").width / 3 - 30,
                                 }}
@@ -182,6 +188,7 @@ export default function SectionTableRoad() {
                                 Lihat
                             </Button>
                             <Button
+                                onPress={() => router.push("(autenticated)/survey/home/SectionRoad/edit")}
                                 style={{
                                     width: Dimensions.get("window").width / 3 - 30,
                                 }}
@@ -190,6 +197,7 @@ export default function SectionTableRoad() {
                                 Edit
                             </Button>
                             <Button
+                                onPress={() => setModalDelete(true)}
                                 style={{
                                     width: Dimensions.get("window").width / 3 - 30,
                                 }}
@@ -197,6 +205,14 @@ export default function SectionTableRoad() {
                             >
                                 Hapus
                             </Button>
+                            <ModalAction
+                                setVisible={setModalDelete}
+                                visible={modalDelete}
+                                onAction={() => {
+                                    setModalDelete(false);
+                                }}
+                                isLoading={false}
+                            />
                         </View>
                     </Accordion>
                 ))}
@@ -226,6 +242,105 @@ export default function SectionTableRoad() {
                     <IconCaretRight />
                 </Pressable>
             </View>
+            {/* Modal status */}
+            <Modal transparent={true} visible={modalStatus}>
+                <Pressable
+                    style={{
+                        flex: 1,
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: "rgba(20, 21, 17, 0.5)",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                    onPress={() => setModalStatus(false)}
+                >
+                    <View
+                        backgroundColor="Background 100"
+                        style={{
+                            width: "80%",
+                            // height: 300,
+                            padding: 20,
+                            borderRadius: 15,
+                            justifyContent: "center",
+                            gap: 10,
+                            paddingBottom: 20,
+                        }}
+                    >
+                        <View
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 1,
+                            }}
+                        >
+                            <View
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    gap: 5,
+                                }}
+                            >
+                                <Typography
+                                    style={{
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    Status
+                                </Typography>
+                                <Typography>
+                                    :
+                                </Typography>
+                            </View>
+                            <View>
+                                <Typography>
+                                    Diterima
+                                </Typography>
+                            </View>
+                        </View>
+                        {/*  */}
+                        <View
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 1,
+                            }}
+                        >
+                            <View
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    gap: 5,
+                                }}
+                            >
+                                <Typography
+                                    style={{
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    Keterangan
+                                </Typography>
+                                <Typography>
+                                    :
+                                </Typography>
+                            </View>
+                            <View>
+                                <Typography>
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis quia temporibus fugit ullam quo cum sed repellendus. Placeat, eius ullam.
+                                </Typography>
+                            </View>
+                        </View>
+                        <Button
+                            color="Primary Blue"
+                            onPress={() => setModalStatus(false)}
+                        // onPress={handleUploadFotoStatus}
+                        // disabled={uploadFotoStatus.isPending}
+                        >
+                            <Typography color="Background 100">Keluar</Typography>
+                        </Button>
+                    </View>
+                </Pressable>
+            </Modal>
         </View>
     );
 }

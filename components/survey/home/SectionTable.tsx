@@ -151,6 +151,7 @@ export default function SectionTableSurvey() {
                                 Lihat
                             </Button>
                             <Button
+                            onPress={() => router.push("(autenticated)/survey/home/SectionRoad/edit")}
                             style={{
                                 width: Dimensions.get("window").width / 2 - 40,
                             }}

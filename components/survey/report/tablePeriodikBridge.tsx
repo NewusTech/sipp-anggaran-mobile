@@ -16,14 +16,53 @@ import { IconCaretUp } from "@/components/icons/IconCaretUp";
 import Separator from "@/components/ui/separator";
 import { router } from "expo-router";
 import ModalAction from "@/components/ui/modalAction";
+import { Checkbox } from "@/components/ui/checkBox";
 
-export default function SurveyTableBridge() {
+export default function PeriodikTableBridge() {
     const { Colors } = useAppTheme();
-    const [modalDelete, setModalDelete] = useState<boolean>(false);
-    const [modalStatus, setModalStatus] = useState(false);
+    const [check, setCheck] = useState(true);
 
     return (
-        <View style={{ marginTop: 20 }}>
+        <View style={{ marginTop: 0 }}>
+            {/*  */}
+            <View style={{
+                marginTop: 10,
+                marginBottom: 15,
+                display: "flex",
+                flexDirection: "row",
+            }}>
+                <Button
+                    style={{
+                        width: Dimensions.get("window").width / 1 - 40,
+                        borderColor: Colors["Primary Blue"],
+                    }}
+                    color="Background 100"
+                >
+                    <Typography color='Primary Blue'>Download</Typography>
+                </Button>
+            </View>
+            {/*  */}
+            <View
+                style={{
+                    backgroundColor: Colors["Primary Blue"],
+                    padding: 12,
+                    borderRadius: 10,
+                    marginVertical: 10,
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 10,
+                }}
+            >
+                <Checkbox selected={check} width={30} height={30} />
+                <Typography
+                    style={{
+                        color: Colors["Background 100"],
+                    }}
+                >
+                    Pilih Semua Data
+                </Typography>
+            </View>
             <View
                 style={{
                     backgroundColor: Colors["Primary Blue"],
@@ -72,11 +111,27 @@ export default function SurveyTableBridge() {
                                     justifyContent: "space-between",
                                 }}
                             >
-                                <Typography color="Primary Blue" fontSize={15}>
-                                    TOTO KATON - TOTO MAKMUR
-                                </Typography>
+                                <View
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        gap: 10,
+                                        flexWrap: "wrap",
+                                    }}
+                                >
+                                    <Checkbox selected={check} width={30} height={30} />
+                                    <Typography color="Primary Blue" fontSize={15}
+                                        style={{
+                                            width: 260,
+                                        }}
+                                    >
+                                        TOTO KATON - TOTO MAKMUR
+                                    </Typography>
+                                </View>
                                 {isOpen ? <IconCaretFillDown /> : <IconCaretUp />}
                             </View>
+
                         )}
                     >
                         <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
@@ -98,7 +153,6 @@ export default function SurveyTableBridge() {
                                 </Typography>
                             </View>
                         </View>
-                        {/*  */}
                         <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
                             <View >
                                 <Typography
@@ -118,7 +172,6 @@ export default function SurveyTableBridge() {
                                 </Typography>
                             </View>
                         </View>
-                        {/*  */}
                         <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
                             <View >
                                 <Typography
@@ -138,7 +191,6 @@ export default function SurveyTableBridge() {
                                 </Typography>
                             </View>
                         </View>
-                        {/*  */}
                         <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
                             <View >
                                 <Typography
@@ -158,7 +210,6 @@ export default function SurveyTableBridge() {
                                 </Typography>
                             </View>
                         </View>
-                        {/*  */}
                         <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
                             <View >
                                 <Typography
@@ -174,11 +225,10 @@ export default function SurveyTableBridge() {
                                         fontSize: 16,
                                     }}
                                 >
-                                    10,5
+                                    5.14
                                 </Typography>
                             </View>
                         </View>
-                        {/*  */}
                         <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
                             <View >
                                 <Typography
@@ -194,11 +244,10 @@ export default function SurveyTableBridge() {
                                         fontSize: 16,
                                     }}
                                 >
-                                    5
+                                    3.61
                                 </Typography>
                             </View>
                         </View>
-                        {/*  */}
                         <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
                             <View >
                                 <Typography
@@ -214,11 +263,10 @@ export default function SurveyTableBridge() {
                                         fontSize: 16,
                                     }}
                                 >
-                                    1
+                                    30
                                 </Typography>
                             </View>
                         </View>
-                        {/*  */}
                         <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
                             <View >
                                 <Typography
@@ -238,39 +286,6 @@ export default function SurveyTableBridge() {
                                 </Typography>
                             </View>
                         </View>
-                        {/* status */}
-                        <View style={{
-                            marginTop: 5,
-                            marginBottom: 15,
-                            paddingHorizontal: 10,
-                            display: "flex",
-                            gap: 5,
-                            justifyContent: "center",
-                            alignItems: "center",
-                            flexDirection: "column",
-                        }}>
-                            <Typography
-                                style={{
-                                    fontSize: 15,
-                                }}
-                            >
-                                Status
-                            </Typography>
-                            <Button
-                            onPress={() => setModalStatus(true)}
-                                style={{
-                                    width: Dimensions.get("window").width / 1 - 70,
-                                }}
-                                color="Success 600"
-                            >
-                                Diterima
-                            </Button>
-                        </View>
-                        <Separator
-                            style={
-                                { marginTop: 10, marginBottom: 10 }
-                            }
-                        ></Separator>
                         {/* button */}
                         <View style={{
                             marginTop: 5,
@@ -283,38 +298,12 @@ export default function SurveyTableBridge() {
                             <Button
                                 onPress={() => router.push("(autenticated)/survey/home/sectionBridge/detail")}
                                 style={{
-                                    width: Dimensions.get("window").width / 3 - 30,
+                                    width: Dimensions.get("window").width / 1 - 65,
                                 }}
                                 color="Primary Blue"
                             >
-                                Lihat
+                                Detail
                             </Button>
-                            <Button
-                                onPress={() => router.push("(autenticated)/survey/home/sectionBridge/edit")}
-                                style={{
-                                    width: Dimensions.get("window").width / 3 - 30,
-                                }}
-                                color="Success 600"
-                            >
-                                Edit
-                            </Button>
-                            <Button
-                            onPress={() => setModalDelete(true)}
-                                style={{
-                                    width: Dimensions.get("window").width / 3 - 30,
-                                }}
-                                color="Error 500"
-                            >
-                                Hapus
-                            </Button>
-                            <ModalAction
-                                setVisible={setModalDelete}
-                                visible={modalDelete}
-                                onAction={() => {
-                                    setModalDelete(false);
-                                }}
-                                isLoading={false}
-                            />
                         </View>
                     </Accordion>
                 ))}
@@ -344,105 +333,6 @@ export default function SurveyTableBridge() {
                     <IconCaretRight />
                 </Pressable>
             </View>
-            {/* Modal status */}
-            <Modal transparent={true} visible={modalStatus}>
-                <Pressable
-                    style={{
-                        flex: 1,
-                        width: "100%",
-                        height: "100%",
-                        backgroundColor: "rgba(20, 21, 17, 0.5)",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                    onPress={() => setModalStatus(false)}
-                >
-                    <View
-                        backgroundColor="Background 100"
-                        style={{
-                            width: "80%",
-                            // height: 300,
-                            padding: 20,
-                            borderRadius: 15,
-                            justifyContent: "center",
-                            gap: 10,
-                            paddingBottom: 20,
-                        }}
-                    >
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: 1,
-                            }}
-                        >
-                            <View
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    gap: 5,
-                                }}
-                            >
-                                <Typography
-                                    style={{
-                                        fontWeight: "bold",
-                                    }}
-                                >
-                                    Status
-                                </Typography>
-                                <Typography>
-                                    :
-                                </Typography>
-                            </View>
-                            <View>
-                                <Typography>
-                                    Diterima
-                                </Typography>
-                            </View>
-                        </View>
-                        {/*  */}
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: 1,
-                            }}
-                        >
-                            <View
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    gap: 5,
-                                }}
-                            >
-                                <Typography
-                                    style={{
-                                        fontWeight: "bold",
-                                    }}
-                                >
-                                    Keterangan
-                                </Typography>
-                                <Typography>
-                                    :
-                                </Typography>
-                            </View>
-                            <View>
-                                <Typography>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis quia temporibus fugit ullam quo cum sed repellendus. Placeat, eius ullam.
-                                </Typography>
-                            </View>
-                        </View>
-                        <Button
-                            color="Primary Blue"
-                            onPress={() => setModalStatus(false)}
-                        // onPress={handleUploadFotoStatus}
-                        // disabled={uploadFotoStatus.isPending}
-                        >
-                            <Typography color="Background 100">Keluar</Typography>
-                        </Button>
-                    </View>
-                </Pressable>
-            </Modal>
         </View>
     );
 }

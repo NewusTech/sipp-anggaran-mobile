@@ -11,9 +11,8 @@ import { Dimensions } from 'react-native';
 import { SearchBox } from '@/components/ui/searchBox';
 import { Button } from "@/components/ui/button";
 import IconFile from '@/components/icons/IconFile';
-import SectionTableRoad from './tableRoadSurvey';
-import SurveyTableBridge from './tableBridgeSurvey';
 import { router } from 'expo-router';
+import PeriodikTableRoad from './tablePeriodikRoad';
 
 // Sample kecamatan data; replace with actual data source
 const kecamatanOptions = [
@@ -22,12 +21,19 @@ const kecamatanOptions = [
     { title: "Kecamatan 3" },
     // Add more options as needed
 ];
+const monthOptions = [
+    { title: "Januari" },
+    { title: "Februari" },
+    { title: "Maret" },
+    { title: "April" },
+    // Add more options as needed
+];
 
-export default function TabSurveyBridge() {
+export default function TabPeriodikRoad() {
     const inset = useSafeAreaInsets();
     const { Colors } = useAppTheme();
     const [filterKecamatan, setFilterKecamatan] = useState<string | number>("");
-    const [filterDateStart, setFilterDateStart] = useState<Date>(new Date());
+    const [filterMonth, setFilterMonth] = useState<string | number>("");
     const [search, setSearch] = useState<string>("");
 
     return (
@@ -38,9 +44,9 @@ export default function TabSurveyBridge() {
         >
             <View
                 style={{
-                    padding: 20,
+                    paddingBottom: 10,
                     paddingHorizontal: 20,
-                    gap: 5,
+                    gap: 10,
                     backgroundColor: Colors["Background 100"],
                 }}
             >
@@ -50,22 +56,14 @@ export default function TabSurveyBridge() {
                     value={search}
                     onChangeText={setSearch}
                 />
-                <DateInput
-                    withBorder
-                    style={{
-                        width: Dimensions.get("window").width - 40,
-                        marginBottom: 7,
-                        marginTop: 7,
-                    }}
+                <SelectInput
+                    data={monthOptions}
                     color="Primary Blue"
-                    label="Filter Tanggal"
-                    trailingIcon={
-                        <View style={{ marginLeft: "auto" }}>
-                            <IconCalender width={21} height={21} />
-                        </View>
-                    }
-                    onChange={(date) => setFilterDateStart(date || new Date())}
-                    value={filterDateStart}
+                    value={filterMonth}
+                    onSelect={(data) => setFilterMonth(data.title)}
+                    label="Filter Bulan"
+                    placeholder="Pilih Bulan"
+                    trailingIcon={<IconCaretDown />}
                 />
                 <SelectInput
                     data={kecamatanOptions}
@@ -76,33 +74,6 @@ export default function TabSurveyBridge() {
                     placeholder="Pilih Kecamatan"
                     trailingIcon={<IconCaretDown />}
                 />
-                <View style={{
-                    marginTop: 15,
-                    marginBottom: 15,
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between"
-                }}>
-                    <Button
-                        style={{
-                            width: Dimensions.get("window").width / 2 - 25,
-                        }}
-                        color="Primary Blue"
-                    >
-                        <IconFile />
-                        <Typography color='Background 100'>Import</Typography>
-                    </Button>
-                    <Button
-                    onPress={() => router.push("(autenticated)/survey/home/sectionBridge/add")}
-                        style={{
-                            width: Dimensions.get("window").width / 2 - 25,
-                        }}
-                        color="Primary Blue"
-                    >
-                        <IconPlus color='Background 100' />
-                        <Typography color='Background 100'>Tambah</Typography>
-                    </Button>
-                </View>
             </View>
             {/* card */}
             <View
@@ -111,7 +82,7 @@ export default function TabSurveyBridge() {
                     gap: 5,
                 }}
             >
-                <SurveyTableBridge />
+                <PeriodikTableRoad />
             </View>
             {/* card */}
         </View>
