@@ -1,5 +1,4 @@
 import View from "@/components/ui/view";
-import { LeafletView } from "react-native-leaflet-maps";
 import React from "react";
 import { Typography } from "@/components/ui/typography";
 import IconLocation from "@/components/icons/IconLocation";
@@ -26,12 +25,12 @@ export default function SectionMapRoad() {
                     Ruas Jalan
                 </Typography>
             </View>
-            <LeafletView
+            {/* <LeafletView
                 mapCenterPosition={{
                     lat: -5.39714,
                     lng: 105.266792,
                 }}
-            />
+            /> */}
         </View>
     );
 }
