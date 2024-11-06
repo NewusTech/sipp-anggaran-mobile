@@ -120,6 +120,7 @@ export const AppColor = {
     transparent: "#00000000",
     // custom
     "Primary Blue": "#394674",
+    "Primary Blue-20": "#CFD2DB",
   },
   dark: {
     "Primary 100": "#EDE7FF",
@@ -215,6 +216,7 @@ export const AppColor = {
     transparent: "#00000000",
     // custom
     "Primary Blue": "#394674",
+    "Primary Blue-20": "#CFD2DB",
   },
 };
 

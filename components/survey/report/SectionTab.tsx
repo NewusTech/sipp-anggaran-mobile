@@ -5,24 +5,22 @@ import View from '@/components/ui/view'
 import { useAppTheme } from "@/context";
 import React, { useEffect, useState } from "react";
 import { Dimensions, ScrollView, TouchableOpacity } from "react-native";
-import TabSectionRoad from '@/components/survey/home/tabRoadSection';
 import Separator from '@/components/ui/separator';
-import TabSectionBridege from '../home/tabBridgeSection';
-import TabSurveyDrainase from './tabSurveyDrainase';
-import TabSurveyRoad from './tabSurveyRoad';
-import TabSurveyBridge from './tabSurveyBridge';
+import TabPeriodik from './tabPeriodik';
+import TabStatistik from './tabStatistik';
+import TabDownload from './tabDownload';
 
 export default function SectionTab() {
     const { Colors } = useAppTheme();
 
     const [tabDetail, setTabDetail] = useState<
-        | "Survey Jalan"
-        | "Survey Jembatan"
-        | "Survey Drainase"
+        | "Periodik"
+        | "Statistik"
+        | "Download"
     >();
 
     useEffect(() => {
-        setTabDetail("Survey Drainase");
+        setTabDetail("Periodik");
     }, []);
     return (
         <View
@@ -30,7 +28,6 @@ export default function SectionTab() {
             }}
         // backgroundColor="Background 100"
         >
-            {/* <HeaderSurvey /> */}
             {/*  */}
             <View style={{
                 paddingTop: 20,
@@ -39,15 +36,15 @@ export default function SectionTab() {
             }}
                 backgroundColor="Background 100"
             >
-                {/*  */}
-                <Typography
+                 {/*  */}
+                 <Typography
                     style={{
                         fontSize: 20,
                         fontFamily: "Poppins-Medium",
                         paddingHorizontal: 20
                     }}
                 >
-                    Survey
+                    Laporan
                 </Typography>
                 <Separator
                     style={{
@@ -62,94 +59,89 @@ export default function SectionTab() {
                 >
                     <View
                         style={{
-                            // height: 50,
-                            width: Dimensions.get("window").width - 40,
-                            gap: 10,
+                            height: 50,
+                            borderWidth: 1,
+                            borderColor: Colors["Primary Blue"],
+                            borderRadius: 15,
+                            width: Dimensions.get("screen").width - 40,
                             overflow: "hidden",
-                            flexDirection: "column",
+                            display: "flex",
+                            flexDirection: "row",
                         }}
                     >
-
-                        {/*  */}
                         <TouchableOpacity
                             style={{
                                 width: "auto",
+                                flex: 1,
                                 paddingHorizontal: 10,
                                 backgroundColor:
-                                    tabDetail === "Survey Drainase"
+                                    tabDetail === "Periodik"
                                         ? Colors["Primary Blue"]
                                         : Colors["Background 100"],
-                                borderWidth: 1,
-                                padding: 10,
-                                borderColor: Colors["Primary Blue"],
-                                borderRadius: 10,
+                                height: "100%",
                                 alignItems: "center",
                                 justifyContent: "center",
                             }}
-                            onPress={() => setTabDetail("Survey Drainase")}
+                            onPress={() => setTabDetail("Periodik")}
+                        >
+                            <Typography
+                                fontSize={14}
+                                style={{ textAlignVertical: "center" }}
+                                color={tabDetail === "Periodik" ? "Background 100" : "Primary Blue"}
+                            >
+                                Periodik
+                            </Typography>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{
+                                width: "auto",
+                                flex: 1,
+                                paddingHorizontal: 10,
+                                backgroundColor:
+                                    tabDetail === "Statistik"
+                                        ? Colors["Primary Blue"]
+                                        : Colors["Background 100"],
+                                height: "100%",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                            onPress={() => setTabDetail("Statistik")}
                         >
                             <Typography
                                 fontSize={14}
                                 style={{ textAlignVertical: "center" }}
                                 color={
-                                    tabDetail === "Survey Drainase"
+                                    tabDetail === "Statistik" ? "Background 100" : "Primary Blue"
+                                }
+                            >
+                                Statistik
+                            </Typography>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{
+                                width: "auto",
+                                flex: 1,
+                                paddingHorizontal: 10,
+                                backgroundColor:
+                                    tabDetail === "Download"
+                                        ? Colors["Primary Blue"]
+                                        : Colors["Background 100"],
+                                height: "100%",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                            onPress={() => setTabDetail("Download")}
+                        >
+                            <Typography
+                                fontSize={14}
+                                style={{ textAlignVertical: "center" }}
+                                color={
+                                    tabDetail === "Download"
                                         ? "Background 100"
                                         : "Primary Blue"
                                 }
                             >
-                                Survey Drainase
-                            </Typography>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={{
-                                width: "auto",
-                                paddingHorizontal: 10,
-                                backgroundColor:
-                                    tabDetail === "Survey Jalan"
-                                        ? Colors["Primary Blue"]
-                                        : Colors["Background 100"],
-                                borderWidth: 1,
-                                padding: 10,
-                                borderColor: Colors["Primary Blue"],
-                                borderRadius: 10,
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                            onPress={() => setTabDetail("Survey Jalan")}
-                        >
-                            <Typography
-                                fontSize={14}
-                                style={{ textAlignVertical: "center" }}
-                                color={tabDetail === "Survey Jalan" ? "Background 100" : "Primary Blue"}
-                            >
-                                Survey Jalan
-                            </Typography>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={{
-                                width: "auto",
-                                paddingHorizontal: 10,
-                                backgroundColor:
-                                    tabDetail === "Survey Jembatan"
-                                        ? Colors["Primary Blue"]
-                                        : Colors["Background 100"],
-                                borderWidth: 1,
-                                padding: 10,
-                                borderColor: Colors["Primary Blue"],
-                                borderRadius: 10,
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                            onPress={() => setTabDetail("Survey Jembatan")}
-                        >
-                            <Typography
-                                fontSize={14}
-                                style={{ textAlignVertical: "center" }}
-                                color={
-                                    tabDetail === "Survey Jembatan" ? "Background 100" : "Primary Blue"
-                                }
-                            >
-                                Survey Jembatan
+                                Download
                             </Typography>
                         </TouchableOpacity>
                     </View>
@@ -158,18 +150,18 @@ export default function SectionTab() {
                     style={
                         { marginTop: 10 }
                     }
-                />
+                ></Separator>
 
             </View>
             <ScrollView
                 contentContainerStyle={{
-                    paddingBottom: 40
+                    // paddingBottom: 40
                 }}
                 style={{}}
             >
-                {tabDetail === "Survey Drainase" && <TabSurveyDrainase />}
-                {tabDetail === "Survey Jalan" && <TabSurveyRoad />}
-                {tabDetail === "Survey Jembatan" && <TabSurveyBridge />}
+                {tabDetail === "Periodik" && <TabPeriodik />}
+                {tabDetail === "Statistik" && <TabStatistik />}
+                {tabDetail === "Download" && <TabDownload />}
             </ScrollView>
             {/*  */}
         </View>
