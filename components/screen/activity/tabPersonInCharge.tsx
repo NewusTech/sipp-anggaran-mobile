@@ -5,12 +5,22 @@ import { SelectInput } from "@/components/ui/selectInput";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
+import {
+  useGetDataPenanggungJawab,
+  useGetDetailAnggaranPenanggungJawab,
+} from "@/services/sipp";
 import React, { useState } from "react";
 
-export default function TabPersonInCharge() {
+export default function TabPersonInCharge({ id }: { id: string }) {
   const { Colors } = useAppTheme();
 
   const [modalPJ, setModalPJ] = useState<boolean>(false);
+  const [penanggungJawab, setPenanggungJawab] = useState<number | string>("");
+
+  const getPenanggungJawab = useGetDetailAnggaranPenanggungJawab(id);
+  const pj = getPenanggungJawab.data?.data;
+
+  const getDataPenanggungJawab = useGetDataPenanggungJawab();
 
   return (
     <View
@@ -59,7 +69,7 @@ export default function TabPersonInCharge() {
               Nama
             </Typography>
             <Typography fontFamily="Poppins-Light">
-              Irsyad Abi Izzulhaq
+              {pj?.kegiatan?.penanggung_jawab?.ppk_name || "-"}
             </Typography>
           </View>
           <View
@@ -79,7 +89,9 @@ export default function TabPersonInCharge() {
             >
               NIP
             </Typography>
-            <Typography fontFamily="Poppins-Light">-</Typography>
+            <Typography fontFamily="Poppins-Light">
+              {pj?.kegiatan?.penanggung_jawab?.ppk_nip || "-"}
+            </Typography>
           </View>
           <View
             style={[
@@ -99,7 +111,7 @@ export default function TabPersonInCharge() {
               Email
             </Typography>
             <Typography fontFamily="Poppins-Light">
-              irsyadabiizzulhaq@gmail.com
+              {pj?.kegiatan?.penanggung_jawab?.ppk_name || "-"}
             </Typography>
           </View>
           <View
@@ -119,7 +131,9 @@ export default function TabPersonInCharge() {
             >
               Telepon
             </Typography>
-            <Typography fontFamily="Poppins-Light">0895640417123</Typography>
+            <Typography fontFamily="Poppins-Light">
+              {pj?.kegiatan?.penanggung_jawab?.ppk_telpon || "-"}
+            </Typography>
           </View>
           <View
             style={[
@@ -136,7 +150,9 @@ export default function TabPersonInCharge() {
             >
               Bidang
             </Typography>
-            <Typography fontFamily="Poppins-Light">-</Typography>
+            <Typography fontFamily="Poppins-Light">
+              {pj?.kegiatan.penanggung_jawab?.bidang_ppk || "-"}
+            </Typography>
           </View>
         </View>
 
@@ -291,7 +307,7 @@ export default function TabPersonInCharge() {
               Nama
             </Typography>
             <Typography fontFamily="Poppins-Light">
-              CV. GLOBAL KONSTRUKSI
+              {pj?.penyedia_jasa || "-"}
             </Typography>
           </View>
           <View
@@ -309,7 +325,7 @@ export default function TabPersonInCharge() {
             >
               Telepon
             </Typography>
-            <Typography fontFamily="Poppins-Light">08956404171124</Typography>
+            <Typography fontFamily="Poppins-Light">belum</Typography>
           </View>
         </View>
       </View>
@@ -326,17 +342,31 @@ export default function TabPersonInCharge() {
 
           <SelectInput
             label="Pilih Pengawas"
-            data={[]}
+            data={
+              getDataPenanggungJawab?.data?.data.map((data) => {
+                return {
+                  title: data.pptk_name,
+                };
+              }) || []
+            }
             placeholder="Pelih Pengawas"
             onSelect={(dataItem: any, index: any) =>
-              // field.onChange(dataItem.title)
-              console.log("")
+              setPenanggungJawab(
+                getDataPenanggungJawab.data?.data.find(
+                  (f) => f.pptk_name === dataItem.title
+                )?.id || ""
+              )
             }
-            value={"field.value"}
+            value={
+              getDataPenanggungJawab.data?.data.find(
+                (f) => f.id === penanggungJawab
+              )?.pptk_name || ""
+            }
             trailingIcon={<IconCaretDown color="Text 900" />}
             padding={12}
             borderRadius={15}
           />
+          <Button style={{ marginTop: 20 }}>Simpan</Button>
         </View>
       </ModalSwipe>
     </View>

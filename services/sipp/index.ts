@@ -4,7 +4,13 @@ import {
   getDashboardKegiatan,
   getDashboardRealisasi,
   getDashboardTableData,
+  getDataPenanggungJawab,
   getDetailAnggaran,
+  getDetailAnggaranDokumentasi,
+  getDetailAnggaranKurvaFisik,
+  getDetailAnggaranKurvaKeuangan,
+  getDetailAnggaranPenanggungJawab,
+  getDetailAnggaranTitikLokasi,
   getKegiatan,
   getLaporan,
   getRealisasiFisik,
@@ -128,6 +134,74 @@ export const useGetDetailAnggaran = (id?: string) => {
     queryKey: ["useGetDetailAnggaran", id, accessToken],
     // TODO replace with actual get Profile API
     queryFn: () => getDetailAnggaran(id),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+
+export const useGetDetailAnggaranKurvaFisik = (id?: string) => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetDetailAnggaranKurvaFisik", id, accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getDetailAnggaranKurvaFisik(id),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+export const useGetDetailAnggaranKurvaKeuangan = (id?: string) => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetDetailAnggaranKurvaKeuangan", id, accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getDetailAnggaranKurvaKeuangan(id),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+export const useGetDetailAnggaranPenanggungJawab = (id?: string) => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetDetailAnggaranPenanggungJawab", id, accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getDetailAnggaranPenanggungJawab(id),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+export const useGetDataPenanggungJawab = (id?: string) => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetDataPenanggungJawab", id, accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getDataPenanggungJawab(),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+export const useGetDetailAnggaranDokumentasi = (id?: string) => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetDetailAnggaranDokumentasi", id, accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getDetailAnggaranDokumentasi(id),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+
+export const useGetDetailAnggaranTitikLokasi = (id?: string) => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetDetailAnggaranTitikLokasi", id, accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getDetailAnggaranTitikLokasi(id),
     enabled: !!accessToken,
     refetchOnWindowFocus: true,
   });

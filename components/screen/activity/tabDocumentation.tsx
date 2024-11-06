@@ -6,16 +6,27 @@ import TextInput from "@/components/ui/textInput";
 import { Typography } from "@/components/ui/typography";
 import UploadFoto from "@/components/ui/uploadFileFoto";
 import View from "@/components/ui/view";
+import { BASE_URL_SIPP } from "@/constants";
 import { useAppTheme } from "@/context";
+import { useGetDetailAnggaranDokumentasi } from "@/services/sipp";
 import React, { useState } from "react";
 import { Dimensions } from "react-native";
 import * as Progress from "react-native-progress";
 
-export default function TabDocumentation() {
+export default function TabDocumentation({ id }: { id: string }) {
   const { Colors } = useAppTheme();
 
   const [modalDokumentasi, setModalDokumentasi] = useState<boolean>(false);
   const [fileBukti, setFileBukti] = useState<string>("");
+
+  const getDokumentasi = useGetDetailAnggaranDokumentasi(id);
+  const dokumentasi = getDokumentasi.data?.data;
+
+  const calculateProgress =
+    dokumentasi?.dokumentasi.reduce(
+      (total, item) => total + Number.parseFloat(item.keterangan),
+      0 // Nilai awal dari total
+    ) || 0;
 
   return (
     <View
@@ -28,126 +39,139 @@ export default function TabDocumentation() {
         <IconPlus color="Background 100" />
         <Typography color="Background 100">Tambah Dokumentasi</Typography>
       </Button>
-      <View
-        style={{
-          borderRadius: 10,
-          borderWidth: 1,
-          borderColor: Colors["Line 400"],
-          overflow: "hidden",
-        }}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            backgroundColor: Colors["Line 400"],
-            padding: 15,
-          }}
-        >
-          <Typography color="Background 100">Pengawas</Typography>
-        </View>
-        <View
-          style={[
-            {
-              flexDirection: "row",
-              padding: 15,
-              alignItems: "center",
-              borderColor: Colors["Line 400"],
-              borderBottomWidth: 1,
-            },
-          ]}
-        >
-          <Typography
-            style={{ width: "33%", textAlign: "left" }}
-            fontFamily="Poppins-Light"
-          >
-            No
-          </Typography>
-          <Typography fontFamily="Poppins-Light">1</Typography>
-        </View>
-        <View
-          style={[
-            {
-              flexDirection: "row",
-              padding: 15,
-              alignItems: "center",
-              borderColor: Colors["Line 400"],
-              borderBottomWidth: 1,
-            },
-          ]}
-        >
-          <Typography
-            style={{ width: "33%", textAlign: "left" }}
-            fontFamily="Poppins-Light"
-          >
-            Minggu-Ke
-          </Typography>
-          <Typography fontFamily="Poppins-Light">1</Typography>
-        </View>
-        <View
-          style={[
-            {
-              flexDirection: "row",
-              padding: 15,
-              alignItems: "center",
-              borderColor: Colors["Line 400"],
-              borderBottomWidth: 1,
-            },
-          ]}
-        >
-          <Typography
-            style={{ width: "33%", textAlign: "left" }}
-            fontFamily="Poppins-Light"
-          >
-            Progres (%)
-          </Typography>
-          <Typography fontFamily="Poppins-Light">35.12</Typography>
-        </View>
-        <View
-          style={[
-            {
-              flexDirection: "row",
-              padding: 15,
-              alignItems: "center",
-            },
-          ]}
-        >
-          <Typography
-            style={{ width: "33%", textAlign: "left" }}
-            fontFamily="Poppins-Light"
-          >
-            Aksi
-          </Typography>
+
+      <View>
+        {dokumentasi?.dokumentasi.map((data, index) => (
           <View
+            key={index}
             style={{
-              flexDirection: "row",
-              gap: 10,
-              justifyContent: "center",
+              borderRadius: 10,
+              borderWidth: 1,
+              borderColor: Colors["Line 400"],
+              overflow: "hidden",
             }}
           >
-            <Button style={{ width: Dimensions.get("window").width / 3 - 35 }}>
-              <Typography
-                color="Background 100"
-                fontSize={12}
-                style={{ textAlignVertical: "center" }}
-              >
-                Hubungi
+            <View
+              style={{
+                flexDirection: "row",
+                backgroundColor: Colors["Line 400"],
+                padding: 15,
+              }}
+            >
+              <Typography color="Background 100">
+                Dokumentasi {index + 1}
               </Typography>
-            </Button>
-            <Button
-              color="Error 600"
-              style={{ width: Dimensions.get("window").width / 3 - 25 }}
+            </View>
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  padding: 15,
+                  alignItems: "center",
+                  borderColor: Colors["Line 400"],
+                  borderBottomWidth: 1,
+                },
+              ]}
             >
               <Typography
-                color="Background 100"
-                fontSize={12}
-                style={{ textAlignVertical: "center" }}
+                style={{ width: "33%", textAlign: "left" }}
+                fontFamily="Poppins-Light"
               >
-                Hubungi
+                No
               </Typography>
-            </Button>
+              <Typography fontFamily="Poppins-Light">{index + 1}</Typography>
+            </View>
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  padding: 15,
+                  alignItems: "center",
+                  borderColor: Colors["Line 400"],
+                  borderBottomWidth: 1,
+                },
+              ]}
+            >
+              <Typography
+                style={{ width: "33%", textAlign: "left" }}
+                fontFamily="Poppins-Light"
+              >
+                Minggu-Ke
+              </Typography>
+              <Typography fontFamily="Poppins-Light">{data.name}</Typography>
+            </View>
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  padding: 15,
+                  alignItems: "center",
+                  borderColor: Colors["Line 400"],
+                  borderBottomWidth: 1,
+                },
+              ]}
+            >
+              <Typography
+                style={{ width: "33%", textAlign: "left" }}
+                fontFamily="Poppins-Light"
+              >
+                Progres (%)
+              </Typography>
+              <Typography fontFamily="Poppins-Light">
+                {data.keterangan}
+              </Typography>
+            </View>
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  padding: 15,
+                  alignItems: "center",
+                },
+              ]}
+            >
+              <Typography
+                style={{ width: "33%", textAlign: "left" }}
+                fontFamily="Poppins-Light"
+              >
+                Aksi
+              </Typography>
+              <View
+                style={{
+                  flexDirection: "row",
+                  gap: 10,
+                  justifyContent: "center",
+                }}
+              >
+                <Button
+                  style={{ width: Dimensions.get("window").width / 3 - 35 }}
+                >
+                  <Typography
+                    color="Background 100"
+                    fontSize={12}
+                    style={{ textAlignVertical: "center" }}
+                  >
+                    Edit
+                  </Typography>
+                </Button>
+                <Button
+                  color="Error 600"
+                  style={{ width: Dimensions.get("window").width / 3 - 25 }}
+                >
+                  <Typography
+                    color="Background 100"
+                    fontSize={12}
+                    style={{ textAlignVertical: "center" }}
+                  >
+                    Hapus
+                  </Typography>
+                </Button>
+              </View>
+            </View>
           </View>
-        </View>
+        ))}
       </View>
+
       <View
         style={{
           borderRadius: 10,
@@ -190,11 +214,13 @@ export default function TabDocumentation() {
             }}
           >
             <Progress.Bar
-              progress={0.3}
+              progress={calculateProgress / 100}
               width={Dimensions.get("window").width / 2 - 50}
               height={25}
             />
-            <Typography fontFamily="Poppins-Light">65.12%</Typography>
+            <Typography fontFamily="Poppins-Light">
+              {calculateProgress}%
+            </Typography>
           </View>
         </View>
         <View
@@ -222,16 +248,22 @@ export default function TabDocumentation() {
               gap: 10,
             }}
           >
-            <ImageModal
-              source={require("@/assets/images/dummy1.jpg")}
-              style={{
-                height: 100,
-                width: Dimensions.get("window").width / 1.9,
-              }}
-            />
+            {dokumentasi?.dokumentasi.map((data, index) => (
+              <ImageModal
+                key={index}
+                source={{
+                  uri: `${BASE_URL_SIPP}/uploads/${data.files[0].path}`,
+                }}
+                style={{
+                  height: 100,
+                  width: Dimensions.get("window").width / 1.9,
+                }}
+              />
+            ))}
           </View>
         </View>
       </View>
+
       <ModalSwipe
         modalVisible={modalDokumentasi}
         setModalVisible={setModalDokumentasi}

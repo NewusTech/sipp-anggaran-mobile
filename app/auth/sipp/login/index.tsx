@@ -7,7 +7,7 @@ import { useAuthLogin } from "@/services";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useAuthActions } from "@/store/sipp";
+import { useAccessToken, useAuthActions } from "@/store/sipp";
 import { useNavigation, useRouter } from "expo-router";
 import React from "react";
 import { Image } from "react-native";
@@ -25,6 +25,7 @@ export default function index() {
 
   // store
   const { setAccessToken } = useAuthActions();
+  const token = useAccessToken();
 
   const loginMutation = useAuthLogin();
 
@@ -50,10 +51,7 @@ export default function index() {
           text1: "Login berhasil!",
           text2: "Selamat anda berhasil login",
         });
-
-        navigation.reset({
-          index: 0,
-        });
+        router.replace("/(autenticated)/sipp/(tabs)/home");
       },
       onError: (error) => {
         Toast.show({
@@ -64,6 +62,8 @@ export default function index() {
       },
     });
   });
+
+  if (token) router.replace("/(autenticated)/sipp/(tabs)/home");
 
   return (
     <View

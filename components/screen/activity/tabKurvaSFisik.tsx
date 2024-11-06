@@ -3,12 +3,19 @@ import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
+import { useGetDetailAnggaranKurvaFisik } from "@/services/sipp";
+import { getMonthName } from "@/utils";
 import React from "react";
 import { Dimensions, Pressable, TextInput } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
+import { number } from "zod";
 
-export default function TabKurvaSFisik() {
+export default function TabKurvaSFisik({ id }: { id: string }) {
   const { Colors } = useAppTheme();
+
+  const getKurvaFisik = useGetDetailAnggaranKurvaFisik(id);
+  const kuvaFisik = getKurvaFisik.data?.data;
+
   return (
     <View
       style={{
@@ -55,7 +62,7 @@ export default function TabKurvaSFisik() {
               Fisik%
             </Typography>
           </View>
-          {Array.from({ length: 8 }).map((_, index) => (
+          {kuvaFisik?.data.rencana_fisik.map((dataFisik, index) => (
             <View
               style={[
                 {
@@ -63,7 +70,7 @@ export default function TabKurvaSFisik() {
                   padding: 10,
                   alignItems: "center",
                 },
-                index !== 7 && {
+                index !== kuvaFisik.data.rencana_fisik.length - 1 && {
                   borderBottomWidth: 1,
                   borderColor: Colors["Line 400"],
                 },
@@ -73,13 +80,20 @@ export default function TabKurvaSFisik() {
                 style={{ width: "33%", textAlign: "center" }}
                 fontFamily="Poppins-Light"
               >
-                Bulan
+                {getMonthName(
+                  Number.parseInt(
+                    dataFisik.bulan.split("-").length === 1
+                      ? dataFisik.bulan
+                      : dataFisik.bulan?.split("-")[1]
+                  ),
+                  "Normal"
+                )}
               </Typography>
               <Typography
                 style={{ width: "33%", textAlign: "center" }}
                 fontFamily="Poppins-Light"
               >
-                1
+                {dataFisik.minggu}
               </Typography>
               <TextInput
                 style={{
@@ -94,6 +108,7 @@ export default function TabKurvaSFisik() {
                 }}
                 inputMode="numeric"
                 placeholder="%"
+                value={"" + dataFisik.fisik}
               />
             </View>
           ))}
@@ -140,10 +155,10 @@ export default function TabKurvaSFisik() {
               style={{ width: "33%", textAlign: "center" }}
               color="Background 100"
             >
-              Fisik%
+              Aksi
             </Typography>
           </View>
-          {Array.from({ length: 8 }).map((_, index) => (
+          {kuvaFisik?.data.realisasi_fisik.map((dataFisik, index) => (
             <View
               style={[
                 {
@@ -151,7 +166,7 @@ export default function TabKurvaSFisik() {
                   padding: 10,
                   alignItems: "center",
                 },
-                index !== 7 && {
+                index !== kuvaFisik.data.rencana_fisik.length - 1 && {
                   borderBottomWidth: 1,
                   borderColor: Colors["Line 400"],
                 },
@@ -161,13 +176,20 @@ export default function TabKurvaSFisik() {
                 style={{ width: "33%", textAlign: "center" }}
                 fontFamily="Poppins-Light"
               >
-                Bulan
+                {getMonthName(
+                  Number.parseInt(
+                    dataFisik.bulan.split("-").length === 1
+                      ? dataFisik.bulan
+                      : dataFisik.bulan?.split("-")[1]
+                  ),
+                  "Normal"
+                )}
               </Typography>
               <Typography
                 style={{ width: "33%", textAlign: "center" }}
                 fontFamily="Poppins-Light"
               >
-                1
+                {dataFisik.minggu}
               </Typography>
               <TextInput
                 style={{
@@ -182,6 +204,7 @@ export default function TabKurvaSFisik() {
                 }}
                 inputMode="numeric"
                 placeholder="%"
+                value={"" + dataFisik.nilai}
               />
             </View>
           ))}
@@ -226,34 +249,31 @@ export default function TabKurvaSFisik() {
           </Pressable>
         </View>
         <LineChart
-          data={[
-            { value: 30, label: "jan" },
-            { value: 40, label: "feb" },
-            { value: 50, label: "mar" },
-            { value: 30, label: "apr" },
-            { value: 10, label: "mei" },
-            { value: 10, label: "jun" },
-            { value: 10, label: "jul" },
-            { value: 10, label: "agu" },
-            { value: 10, label: "sep" },
-            { value: 10, label: "okt" },
-            { value: 10, label: "nov" },
-            { value: 10, label: "des" },
-          ]}
-          data2={[
-            { value: 15, label: "jan" },
-            { value: 45, label: "feb" },
-            { value: 56, label: "mar" },
-            { value: 32, label: "apr" },
-            { value: 20, label: "mei" },
-            { value: 40, label: "jun" },
-            { value: 50, label: "jul" },
-            { value: 60, label: "agu" },
-            { value: 60, label: "sep" },
-            { value: 60, label: "okt" },
-            { value: 60, label: "nov" },
-            { value: 90, label: "des" },
-          ]}
+          data={kuvaFisik?.chart.labels.map((label, index) => {
+            // Periksa apakah `label` dan `data_fisik` di indeks yang sama tersedia
+            const value = kuvaFisik.chart.data_fisik[index];
+            return {
+              value: value,
+              label: getMonthName(
+                typeof label === "number"
+                  ? label
+                  : Number.parseInt(label.split("-")[1]), // Ekstrak bulan jika format "YYYY-MM"
+                "Short"
+              ),
+            };
+          })}
+          data2={kuvaFisik?.chart.labels.map((label, index) => {
+            const value = kuvaFisik.chart.data_rencana[index];
+            return {
+              value: value,
+              label: getMonthName(
+                typeof label === "number"
+                  ? label
+                  : Number.parseInt(label.split("-")[1]), // Ekstrak bulan jika format "YYYY-MM"
+                "Short"
+              ),
+            };
+          })}
           noOfSections={10}
           showYAxisIndices
           curved

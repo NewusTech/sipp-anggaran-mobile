@@ -252,11 +252,15 @@ export default function index() {
             }}
           />
         )}
-        {tabDetail === "Kurva S Fisik" && <TabKurvaSFisik />}
-        {tabDetail === "Kurva S Keuangan" && <TabKurvaSKeuangan />}
-        {tabDetail === "Titik Lokasi" && <TabTitikLokasi />}
-        {tabDetail === "Penanggung Jawab" && <TabPersonInCharge />}
-        {tabDetail === "Dokumentasi" && <TabDocumentation />}
+        {tabDetail === "Kurva S Fisik" && <TabKurvaSFisik id={params.id} />}
+        {tabDetail === "Kurva S Keuangan" && (
+          <TabKurvaSKeuangan id={params.id} />
+        )}
+        {tabDetail === "Penanggung Jawab" && (
+          <TabPersonInCharge id={params.id} />
+        )}
+        {tabDetail === "Dokumentasi" && <TabDocumentation id={params.id} />}
+        {tabDetail === "Titik Lokasi" && <TabTitikLokasi id={params.id} />}
       </ScrollView>
       {getDetailAnggaran.isFetching && (
         <View

@@ -3,12 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
+import { useGetDetailAnggaranKurvaKeuangan } from "@/services/sipp";
+import { getMonthName } from "@/utils";
 import React from "react";
 import { Dimensions, Pressable, TextInput } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
 
-export default function TabKurvaSKeuangan() {
+export default function TabKurvaSKeuangan({ id }: { id: string }) {
   const { Colors } = useAppTheme();
+
+  const getKurvaKeuangan = useGetDetailAnggaranKurvaKeuangan();
+  const kurvaKeuangan = getKurvaKeuangan.data?.data;
 
   return (
     <View
@@ -56,7 +61,7 @@ export default function TabKurvaSKeuangan() {
               Fisik%
             </Typography>
           </View>
-          {Array.from({ length: 8 }).map((_, index) => (
+          {kurvaKeuangan?.data.relaisasi_keuangan.map((data, index) => (
             <View
               style={[
                 {
@@ -64,7 +69,7 @@ export default function TabKurvaSKeuangan() {
                   padding: 10,
                   alignItems: "center",
                 },
-                index !== 7 && {
+                index !== kurvaKeuangan.data.relaisasi_keuangan.length - 1 && {
                   borderBottomWidth: 1,
                   borderColor: Colors["Line 400"],
                 },
@@ -74,13 +79,20 @@ export default function TabKurvaSKeuangan() {
                 style={{ width: "33%", textAlign: "center" }}
                 fontFamily="Poppins-Light"
               >
-                Bulan
+                {getMonthName(
+                  Number.parseInt(
+                    data.bulan.split("-").length === 1
+                      ? data.bulan
+                      : data.bulan?.split("-")[1]
+                  ),
+                  "Normal"
+                )}
               </Typography>
               <Typography
                 style={{ width: "33%", textAlign: "center" }}
                 fontFamily="Poppins-Light"
               >
-                1
+                {data.minggu}
               </Typography>
               <TextInput
                 style={{
@@ -95,6 +107,7 @@ export default function TabKurvaSKeuangan() {
                 }}
                 inputMode="numeric"
                 placeholder="%"
+                value={"" + data.nilai}
               />
             </View>
           ))}
@@ -123,9 +136,9 @@ export default function TabKurvaSKeuangan() {
                 borderColor: Colors["Error 600"],
               }}
             />
-            <Typography>Rencana Fisik</Typography>
+            <Typography>Keuangan</Typography>
           </Pressable>
-          <Pressable style={{ flexDirection: "row", gap: 10 }}>
+          {/* <Pressable style={{ flexDirection: "row", gap: 10 }}>
             <View
               style={{
                 height: 20,
@@ -136,37 +149,22 @@ export default function TabKurvaSKeuangan() {
               }}
             />
             <Typography>Realisasi Fisik (%)</Typography>
-          </Pressable>
+          </Pressable> */}
         </View>
         <LineChart
-          data={[
-            { value: 30, label: "jan" },
-            { value: 40, label: "feb" },
-            { value: 50, label: "mar" },
-            { value: 30, label: "apr" },
-            { value: 10, label: "mei" },
-            { value: 10, label: "jun" },
-            { value: 10, label: "jul" },
-            { value: 10, label: "agu" },
-            { value: 10, label: "sep" },
-            { value: 10, label: "okt" },
-            { value: 10, label: "nov" },
-            { value: 10, label: "des" },
-          ]}
-          data2={[
-            { value: 15, label: "jan" },
-            { value: 45, label: "feb" },
-            { value: 56, label: "mar" },
-            { value: 32, label: "apr" },
-            { value: 20, label: "mei" },
-            { value: 40, label: "jun" },
-            { value: 50, label: "jul" },
-            { value: 60, label: "agu" },
-            { value: 60, label: "sep" },
-            { value: 60, label: "okt" },
-            { value: 60, label: "nov" },
-            { value: 90, label: "des" },
-          ]}
+          data={kurvaKeuangan?.chart.labels.map((label, index) => {
+            // Periksa apakah `label` dan `data_fisik` di indeks yang sama tersedia
+            const value = kurvaKeuangan.chart.data_Keuangan[index];
+            return {
+              value: value,
+              label: getMonthName(
+                typeof label === "number"
+                  ? label
+                  : Number.parseInt(label.split("-")[1]), // Ekstrak bulan jika format "YYYY-MM"
+                "Short"
+              ),
+            };
+          })}
           noOfSections={10}
           showYAxisIndices
           curved
