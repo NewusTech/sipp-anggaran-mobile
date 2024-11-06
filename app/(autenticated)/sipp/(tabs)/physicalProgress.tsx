@@ -2,11 +2,15 @@ import { IconCalender, IconCaretDown } from "@/components/icons";
 import Appbar from "@/components/ui/appBar";
 import { Button } from "@/components/ui/button";
 import { DateInput } from "@/components/ui/inputDate";
+import Loader from "@/components/ui/loader";
 import { SelectInput } from "@/components/ui/selectInput";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
+import { formatDateYMD } from "@/constants";
 import { useAppTheme } from "@/context";
 import { getLastYears } from "@/helper";
+import { useGetRealisasiFisik } from "@/services/sipp";
+import { getMonthName } from "@/utils";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Dimensions, ScrollView } from "react-native";
@@ -18,15 +22,19 @@ export default function physicalProgress() {
   const inset = useSafeAreaInsets();
 
   const [filterYear, setFilterYear] = useState<number | string>("");
-  const [filterDateStart, setFilterDateStart] = useState<Date>(new Date());
-  const [filterDateEnd, setFilterDateEnd] = useState<Date>(new Date());
+  const [filterDateStart, setFilterDateStart] = useState<Date | null>(null);
+  const [filterDateEnd, setFilterDateEnd] = useState<Date | null>(null);
+  const [filterStatus, setFilterStatus] = useState<number | string>("");
+
+  const getRealisaiFisik = useGetRealisasiFisik(
+    `status=${filterStatus}&tahun=${filterYear}&start_date=${
+      filterDateStart ? formatDateYMD(filterDateStart) : ""
+    }&end_date=${filterDateEnd ? formatDateYMD(filterDateEnd) : ""}`
+  );
 
   return (
     <View style={{ flex: 1 }} backgroundColor="Background 100">
-      <Appbar
-        title={"Progres Fisik"}
-        variant="light"
-      />
+      <Appbar title={"Progres Fisik"} variant="light" />
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: 20,
@@ -36,13 +44,22 @@ export default function physicalProgress() {
       >
         <View style={{ gap: 10 }}>
           <SelectInput
-            data={getLastYears(24).map((d) => {
-              return {
-                title: d,
-              };
-            })}
-            value={""}
-            onSelect={(data) => console.log("")}
+            data={[
+              {
+                title: "-",
+              },
+              {
+                title: "sedang dikerjakan",
+              },
+              {
+                title: "selesai",
+              },
+              {
+                title: "belum dikerjakan",
+              },
+            ]}
+            value={filterStatus}
+            onSelect={(data) => setFilterStatus(data.title)}
             placeholder="Staus"
             trailingIcon={<IconCaretDown />}
           />
@@ -69,9 +86,7 @@ export default function physicalProgress() {
                 </View>
               }
               onChange={(date) => setFilterDateStart(date || new Date())}
-              value={filterDateStart}
-              // errorMessage={fieldState.error?.message}
-              // disabled={isNonExpire}
+              value={filterDateStart || ""}
             />
             <DateInput
               withBorder
@@ -83,73 +98,83 @@ export default function physicalProgress() {
                 </View>
               }
               onChange={(date) => setFilterDateEnd(date || new Date())}
-              value={filterDateEnd}
-              // errorMessage={fieldState.error?.message}
-              // disabled={isNonExpire}
+              value={filterDateEnd || ""}
             />
           </View>
-          <Button style={{ marginTop: 10 }}>Download</Button>
+          {/* <Button style={{ marginTop: 10 }}>Download</Button> */}
         </View>
-        {Array.from({ length: 10 }).map((d, index) => (
+        {!getRealisaiFisik.isFetching &&
+          getRealisaiFisik.data?.data.map((data, index) => (
+            <View
+              key={index}
+              style={{
+                backgroundColor: Colors["Background 100"],
+                width: Dimensions.get("window").width - 40,
+                padding: 20,
+                borderRadius: 15,
+                borderWidth: 1,
+                borderColor: Colors["Background 200"],
+              }}
+            >
+              <Typography
+                fontFamily="Poppins-Light"
+                fontSize={14}
+                color="Text 500"
+              >
+                Nama Pekerjaan
+              </Typography>
+              <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                {data.title}
+              </Typography>
+              <View style={{ marginVertical: 5, marginTop: 10 }}>
+                <Typography
+                  fontFamily="Poppins-Light"
+                  fontSize={14}
+                  color="Text 500"
+                >
+                  Bulan
+                </Typography>
+                <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                  {getMonthName(Number.parseInt(data.progres[0]?.bulan))}
+                </Typography>
+              </View>
+              <View style={{ marginVertical: 5 }}>
+                <Typography
+                  fontFamily="Poppins-Light"
+                  fontSize={14}
+                  color="Text 500"
+                >
+                  Minggu-Ke
+                </Typography>
+                <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                  {data.progres[0]?.minggu || "-"}
+                </Typography>
+              </View>
+              <View style={{ marginVertical: 5 }}>
+                <Typography
+                  fontFamily="Poppins-Light"
+                  fontSize={14}
+                  color="Text 500"
+                >
+                  {data.progres[0]?.jenis_progres || "-"}%
+                </Typography>
+                <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                  {data.progres[0]?.nilai || "-"}%
+                </Typography>
+              </View>
+            </View>
+          ))}
+        {getRealisaiFisik.isFetching && (
           <View
-            key={index}
             style={{
-              backgroundColor: Colors["Background 100"],
-              width: Dimensions.get("window").width - 40,
-              padding: 20,
-              borderRadius: 15,
-              borderWidth: 1,
-              borderColor: Colors["Background 200"],
+              height: 200,
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            <Typography
-              fontFamily="Poppins-Light"
-              fontSize={14}
-              color="Text 500"
-            >
-              Nama Pekerjaan
-            </Typography>
-            <Typography fontFamily="Poppins-Regular" fontSize={15}>
-              Operasi dan Pemeliharaan Sistem Penyediaan Air Minum (SPAM)
-            </Typography>
-            <View style={{ marginVertical: 5, marginTop: 10 }}>
-              <Typography
-                fontFamily="Poppins-Light"
-                fontSize={14}
-                color="Text 500"
-              >
-                Bulan
-              </Typography>
-              <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                November
-              </Typography>
-            </View>
-            <View style={{ marginVertical: 5 }}>
-              <Typography
-                fontFamily="Poppins-Light"
-                fontSize={14}
-                color="Text 500"
-              >
-                Minggu-Ke
-              </Typography>
-              <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                1
-              </Typography>
-            </View>
-            <View style={{ marginVertical: 5 }}>
-              <Typography
-                fontFamily="Poppins-Light"
-                fontSize={14}
-                color="Text 500"
-              >
-                Fisik%
-              </Typography>
-              <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                4.28%
-              </Typography>
-            </View>
+            <Loader />
           </View>
-        ))}
+        )}
       </ScrollView>
     </View>
   );
