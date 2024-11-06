@@ -4,7 +4,8 @@ import { StyleSheet, TextInput, TextInputProps } from "react-native";
 import { useAppTheme } from "@/context/theme-context";
 
 import { IconMagnifyingGlass } from "../../icons";
-import Animated, { SlideInLeft } from "react-native-reanimated";
+// import View from "../../view";
+import Animated, { SlideInLeft, SlideInRight } from "react-native-reanimated";
 import View from "../view";
 
 export type SearchBoxProps = {
@@ -23,7 +24,9 @@ export function SearchBox(props: SearchBoxProps) {
       style={[
         style.container,
         {
-          borderColor: focused ? Colors["Primary 500"] : Colors["Line 300"],
+          borderColor: focused
+            ? Colors["Primary Blue"]
+            : Colors["Primary Blue"],
           width: width,
           overflow: "hidden",
         },
@@ -34,14 +37,14 @@ export function SearchBox(props: SearchBoxProps) {
           <IconMagnifyingGlass
             width={24}
             height={24}
-            color={focused ? "Primary 500" : "Line 300"}
+            color={focused ? "Primary Blue" : "Background 500"}
           />
         </Animated.View>
       )}
       <TextInput
-        selectionColor={Colors["Primary 500"]}
-        style={{ flex: 1, color: Colors["Primary 500"] }}
-        placeholderTextColor={Colors["Line 300"]}
+        selectionColor={Colors["Primary Blue"]}
+        style={{ flex: 1, color: Colors["Text 900"] }}
+        placeholderTextColor={Colors["Background 500"]}
         {...rest}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
