@@ -97,6 +97,8 @@ export default function SectionTab() {
                                 width: "auto",
                                 flex: 1,
                                 paddingHorizontal: 10,
+                                borderLeftWidth: 1,
+                                borderRightWidth: 1,
                                 backgroundColor:
                                     tabDetail === "Statistik"
                                         ? Colors["Primary Blue"]

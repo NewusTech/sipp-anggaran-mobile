@@ -4,23 +4,24 @@ import View from '@/components/ui/view'
 // 
 import { useAppTheme } from "@/context";
 import React, { useEffect, useState } from "react";
-import { ScrollView, TouchableOpacity } from "react-native";
-import TabSectionRoad from '@/components/survey/home/tabRoadSection';
+import { Dimensions, ScrollView, TouchableOpacity } from "react-native";
 import Separator from '@/components/ui/separator';
-import TabSectionBridege from './tabBridgeSection';
-import TabSectionDrainase from './tabDrainaseSection';
+import TabStatistik from '../report/tabStatistik';
+import TabDownload from '../report/tabDownload';
+import TabPeriodik from '../report/tabPeriodik';
+import TabMasterDrainase from './tabDrainase';
+import TabMasterRoad from './tabRoad';
 
 export default function SectionTab() {
     const { Colors } = useAppTheme();
 
     const [tabDetail, setTabDetail] = useState<
+        | "Drainase"
         | "Ruas Jalan"
-        | "Ruas Jembatan"
-        | "Ruas Drainase"
     >();
 
     useEffect(() => {
-        setTabDetail("Ruas Jalan");
+        setTabDetail("Drainase");
     }, []);
     return (
         <View
@@ -28,7 +29,6 @@ export default function SectionTab() {
             }}
         // backgroundColor="Background 100"
         >
-            <HeaderSurvey />
             {/*  */}
             <View style={{
                 paddingTop: 20,
@@ -37,6 +37,22 @@ export default function SectionTab() {
             }}
                 backgroundColor="Background 100"
             >
+                 {/*  */}
+                 <Typography
+                    style={{
+                        fontSize: 20,
+                        fontFamily: "Poppins-Medium",
+                        paddingHorizontal: 20
+                    }}
+                >
+                    Master Data
+                </Typography>
+                <Separator
+                    style={{
+                        marginBottom: 10
+                    }}
+                />
+                {/*  */}
                 <ScrollView
                     horizontal
                     showsHorizontalScrollIndicator={false}
@@ -48,13 +64,39 @@ export default function SectionTab() {
                             borderWidth: 1,
                             borderColor: Colors["Primary Blue"],
                             borderRadius: 15,
+                            width: Dimensions.get("screen").width - 40,
                             overflow: "hidden",
+                            display: "flex",
                             flexDirection: "row",
                         }}
                     >
                         <TouchableOpacity
                             style={{
                                 width: "auto",
+                                flex: 1,
+                                paddingHorizontal: 10,
+                                backgroundColor:
+                                    tabDetail === "Drainase"
+                                        ? Colors["Primary Blue"]
+                                        : Colors["Background 100"],
+                                height: "100%",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                            onPress={() => setTabDetail("Drainase")}
+                        >
+                            <Typography
+                                fontSize={14}
+                                style={{ textAlignVertical: "center" }}
+                                color={tabDetail === "Drainase" ? "Background 100" : "Primary Blue"}
+                            >
+                                Drainase
+                            </Typography>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{
+                                width: "auto",
+                                flex: 1,
                                 paddingHorizontal: 10,
                                 backgroundColor:
                                     tabDetail === "Ruas Jalan"
@@ -69,61 +111,11 @@ export default function SectionTab() {
                             <Typography
                                 fontSize={14}
                                 style={{ textAlignVertical: "center" }}
-                                color={tabDetail === "Ruas Jalan" ? "Background 100" : "Primary Blue"}
+                                color={
+                                    tabDetail === "Ruas Jalan" ? "Background 100" : "Primary Blue"
+                                }
                             >
                                 Ruas Jalan
-                            </Typography>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={{
-                                width: "auto",
-                                paddingHorizontal: 10,
-                                borderLeftWidth: 1,
-                                borderRightWidth: 1,
-                                backgroundColor:
-                                    tabDetail === "Ruas Jembatan"
-                                        ? Colors["Primary Blue"]
-                                        : Colors["Background 100"],
-                                height: "100%",
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                            onPress={() => setTabDetail("Ruas Jembatan")}
-                        >
-                            <Typography
-                                fontSize={14}
-                                style={{ textAlignVertical: "center" }}
-                                color={
-                                    tabDetail === "Ruas Jembatan" ? "Background 100" : "Primary Blue"
-                                }
-                            >
-                                Ruas Jembatan
-                            </Typography>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={{
-                                width: "auto",
-                                paddingHorizontal: 10,
-                                backgroundColor:
-                                    tabDetail === "Ruas Drainase"
-                                        ? Colors["Primary Blue"]
-                                        : Colors["Background 100"],
-                                height: "100%",
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                            onPress={() => setTabDetail("Ruas Drainase")}
-                        >
-                            <Typography
-                                fontSize={14}
-                                style={{ textAlignVertical: "center" }}
-                                color={
-                                    tabDetail === "Ruas Drainase"
-                                        ? "Background 100"
-                                        : "Primary Blue"
-                                }
-                            >
-                                Ruas Drainase
                             </Typography>
                         </TouchableOpacity>
                     </View>
@@ -137,13 +129,12 @@ export default function SectionTab() {
             </View>
             <ScrollView
                 contentContainerStyle={{
-                    paddingBottom: 40
+                    // paddingBottom: 40
                 }}
                 style={{}}
             >
-                {tabDetail === "Ruas Jalan" && <TabSectionRoad />}
-                {tabDetail === "Ruas Jembatan" && <TabSectionBridege />}
-                {tabDetail === "Ruas Drainase" && <TabSectionDrainase />}
+                {tabDetail === "Drainase" && <TabMasterDrainase />}
+                {tabDetail === "Ruas Jalan" && <TabMasterRoad />}
             </ScrollView>
             {/*  */}
         </View>

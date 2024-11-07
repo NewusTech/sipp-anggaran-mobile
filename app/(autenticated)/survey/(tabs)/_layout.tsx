@@ -1,4 +1,5 @@
 import { IconHome } from "@/components/icons/IconHome";
+import { IconMaster } from "@/components/icons/IconMaster";
 import { IconReport2 } from "@/components/icons/IconReport2";
 import { IconSurvey } from "@/components/icons/IconSurvey";
 import { IconVerification } from "@/components/icons/IconVerification";
@@ -142,6 +143,19 @@ export default function TabLayout() {
                     title: "Laporan",
                     tabBarIcon: ({ focused }) => (
                         <IconReport2
+                            color={focused ? "Primary Blue" : "Text 300"}
+                            width={24}
+                            height={24}
+                        />
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="master"
+                options={{
+                    title: "Master",
+                    tabBarIcon: ({ focused }) => (
+                        <IconMaster
                             color={focused ? "Primary Blue" : "Text 300"}
                             width={24}
                             height={24}
