@@ -352,6 +352,15 @@ export default function Activities() {
                                         alignItems: "center",
                                         justifyContent: "center",
                                       }}
+                                      onPress={() =>
+                                        router.push({
+                                          pathname:
+                                            "/(autenticated)/sipp/activities/edit/[id]",
+                                          params: {
+                                            id: detail.id,
+                                          },
+                                        })
+                                      }
                                     >
                                       <Typography
                                         fontSize={15}

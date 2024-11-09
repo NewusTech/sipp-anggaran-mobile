@@ -1,6 +1,5 @@
 import { IconCalender, IconCaretDown } from "@/components/icons";
 import Appbar from "@/components/ui/appBar";
-import { Button } from "@/components/ui/button";
 import { DateInput } from "@/components/ui/inputDate";
 import Loader from "@/components/ui/loader";
 import { SelectInput } from "@/components/ui/selectInput";
@@ -23,10 +22,10 @@ export default function financialRealization() {
   const [filterYear, setFilterYear] = useState<number | string>("");
   const [filterDateStart, setFilterDateStart] = useState<Date | null>(null);
   const [filterDateEnd, setFilterDateEnd] = useState<Date | null>(null);
-  const [filterStatus, setFilterStatus] = useState<number | string>("");
+  // const [filterStatus, setFilterStatus] = useState<number | string>("");
 
   const getKeuangan = useGetRealisasiKeuangan(
-    `status=${filterStatus}&tahun=${filterYear}&start_date=${
+    `tahun=${filterYear}&start_date=${
       filterDateStart ? formatDateYMD(filterDateStart) : ""
     }&end_date=${filterDateEnd ? formatDateYMD(filterDateEnd) : ""}`
   );
@@ -42,7 +41,7 @@ export default function financialRealization() {
         }}
       >
         <View style={{ gap: 10 }}>
-          <SelectInput
+          {/* <SelectInput
             data={getLastYears(24).map((d) => {
               return {
                 title: d,
@@ -52,7 +51,7 @@ export default function financialRealization() {
             onSelect={(data) => console.log("")}
             placeholder="Staus"
             trailingIcon={<IconCaretDown />}
-          />
+          /> */}
           <SelectInput
             data={getLastYears(24).map((d) => {
               return {

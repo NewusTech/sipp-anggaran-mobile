@@ -1,5 +1,6 @@
 import { IconCaretDown, IconPencil } from "@/components/icons";
 import { Button } from "@/components/ui/button";
+import Loader from "@/components/ui/loader";
 import ModalSwipe from "@/components/ui/modalSwipe";
 import { SelectInput } from "@/components/ui/selectInput";
 import { Typography } from "@/components/ui/typography";
@@ -8,8 +9,10 @@ import { useAppTheme } from "@/context";
 import {
   useGetDataPenanggungJawab,
   useGetDetailAnggaranPenanggungJawab,
+  usePutDetailAnggaranPenanggungJawab,
 } from "@/services/sipp";
 import React, { useState } from "react";
+import Toast from "react-native-toast-message";
 
 export default function TabPersonInCharge({ id }: { id: string }) {
   const { Colors } = useAppTheme();
@@ -21,6 +24,35 @@ export default function TabPersonInCharge({ id }: { id: string }) {
   const pj = getPenanggungJawab.data?.data;
 
   const getDataPenanggungJawab = useGetDataPenanggungJawab();
+
+  const putPenanggungJawabMutation = usePutDetailAnggaranPenanggungJawab();
+
+  const handleUpdatePj = () => {
+    putPenanggungJawabMutation.mutate(
+      {
+        id,
+        payload: {
+          penanggung_jawab_id: penanggungJawab + "",
+        },
+      },
+      {
+        onSuccess: async (response) => {
+          Toast.show({
+            type: "success",
+            text1: "Berhasi Update Data!",
+            text2: "Update Data Penanggung Jawab",
+          });
+        },
+        onError: (error) => {
+          Toast.show({
+            type: "error",
+            text1: "Gagal Update Data!",
+            text2: "Update Data Penanggung Jawab",
+          });
+        },
+      }
+    );
+  };
 
   return (
     <View
@@ -69,7 +101,7 @@ export default function TabPersonInCharge({ id }: { id: string }) {
               Nama
             </Typography>
             <Typography fontFamily="Poppins-Light">
-              {pj?.kegiatan?.penanggung_jawab?.ppk_name || "-"}
+              {pj?.kegiatan?.penanggung_jawab?.pptk_name || "-"}
             </Typography>
           </View>
           <View
@@ -90,7 +122,7 @@ export default function TabPersonInCharge({ id }: { id: string }) {
               NIP
             </Typography>
             <Typography fontFamily="Poppins-Light">
-              {pj?.kegiatan?.penanggung_jawab?.ppk_nip || "-"}
+              {pj?.kegiatan?.penanggung_jawab?.pptk_nip || "-"}
             </Typography>
           </View>
           <View
@@ -111,7 +143,7 @@ export default function TabPersonInCharge({ id }: { id: string }) {
               Email
             </Typography>
             <Typography fontFamily="Poppins-Light">
-              {pj?.kegiatan?.penanggung_jawab?.ppk_name || "-"}
+              {pj?.kegiatan?.penanggung_jawab?.pptk_email || "-"}
             </Typography>
           </View>
           <View
@@ -132,7 +164,7 @@ export default function TabPersonInCharge({ id }: { id: string }) {
               Telepon
             </Typography>
             <Typography fontFamily="Poppins-Light">
-              {pj?.kegiatan?.penanggung_jawab?.ppk_telpon || "-"}
+              {pj?.kegiatan?.penanggung_jawab?.pptk_telpon || "-"}
             </Typography>
           </View>
           <View
@@ -151,7 +183,7 @@ export default function TabPersonInCharge({ id }: { id: string }) {
               Bidang
             </Typography>
             <Typography fontFamily="Poppins-Light">
-              {pj?.kegiatan.penanggung_jawab?.bidang_ppk || "-"}
+              {pj?.kegiatan.penanggung_jawab?.bidang_pptk || "-"}
             </Typography>
           </View>
         </View>
@@ -191,7 +223,7 @@ export default function TabPersonInCharge({ id }: { id: string }) {
               Nama
             </Typography>
             <Typography fontFamily="Poppins-Light">
-              Irsyad Abi Izzulhaq
+              {pj?.kegiatan?.penanggung_jawab?.ppk_name || "-"}
             </Typography>
           </View>
           <View
@@ -211,7 +243,10 @@ export default function TabPersonInCharge({ id }: { id: string }) {
             >
               NIP
             </Typography>
-            <Typography fontFamily="Poppins-Light">-</Typography>
+            <Typography fontFamily="Poppins-Light">
+              {" "}
+              {pj?.kegiatan?.penanggung_jawab?.pptk_nip || "-"}
+            </Typography>
           </View>
           <View
             style={[
@@ -231,7 +266,7 @@ export default function TabPersonInCharge({ id }: { id: string }) {
               Email
             </Typography>
             <Typography fontFamily="Poppins-Light">
-              irsyadabiizzulhaq@gmail.com
+              {pj?.kegiatan?.penanggung_jawab?.ppk_email || "-"}
             </Typography>
           </View>
           <View
@@ -251,7 +286,10 @@ export default function TabPersonInCharge({ id }: { id: string }) {
             >
               Telepon
             </Typography>
-            <Typography fontFamily="Poppins-Light">0895640417123</Typography>
+            <Typography fontFamily="Poppins-Light">
+              {" "}
+              {pj?.kegiatan?.penanggung_jawab?.ppk_telpon || "-"}
+            </Typography>
           </View>
           <View
             style={[
@@ -268,7 +306,10 @@ export default function TabPersonInCharge({ id }: { id: string }) {
             >
               Bidang
             </Typography>
-            <Typography fontFamily="Poppins-Light">-</Typography>
+            <Typography fontFamily="Poppins-Light">
+              {" "}
+              {pj?.kegiatan?.penanggung_jawab?.bidang_ppk || "-"}
+            </Typography>
           </View>
         </View>
 
@@ -307,7 +348,7 @@ export default function TabPersonInCharge({ id }: { id: string }) {
               Nama
             </Typography>
             <Typography fontFamily="Poppins-Light">
-              {pj?.penyedia_jasa || "-"}
+              {pj?.detail_kegiatan.penyedia_jasa || "-"}
             </Typography>
           </View>
           <View
@@ -325,7 +366,7 @@ export default function TabPersonInCharge({ id }: { id: string }) {
             >
               Telepon
             </Typography>
-            <Typography fontFamily="Poppins-Light">belum</Typography>
+            <Typography fontFamily="Poppins-Light">(belum)</Typography>
           </View>
         </View>
       </View>
@@ -366,7 +407,17 @@ export default function TabPersonInCharge({ id }: { id: string }) {
             padding={12}
             borderRadius={15}
           />
-          <Button style={{ marginTop: 20 }}>Simpan</Button>
+          <Button
+            style={{ marginTop: 20 }}
+            onPress={handleUpdatePj}
+            disabled={putPenanggungJawabMutation.isPending}
+          >
+            {putPenanggungJawabMutation.isPending ? (
+              <Loader color="Background 100" />
+            ) : (
+              "Simpan"
+            )}
+          </Button>
         </View>
       </ModalSwipe>
     </View>

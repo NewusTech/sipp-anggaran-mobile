@@ -1,3 +1,4 @@
+import { ResponseError } from "@/api";
 import {
   getBidang,
   getDashboardchart,
@@ -15,9 +16,20 @@ import {
   getLaporan,
   getRealisasiFisik,
   getRealisasiKeuangan,
+  postDetailAnggaranDokumentasi,
+  postKegiatan,
+  putDetailAnggaranDokumentasi,
+  putDetailAnggaranKurvaFisikProgress,
+  putDetailAnggaranKurvaFisikRencana,
+  putDetailAnggaranKurvaKeuanganRealisasi,
+  putDetailAnggaranPenanggungJawab,
+  putKegiatan,
+  getDetailKegiatan,
 } from "@/api/sipp";
 import { useAccessToken } from "@/store/sipp";
-import { useQuery } from "@tanstack/react-query";
+import { kegiatanPayload, kegiatanUpdatePayload } from "@/validation";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 
 export * from "./user";
 
@@ -204,5 +216,75 @@ export const useGetDetailAnggaranTitikLokasi = (id?: string) => {
     queryFn: () => getDetailAnggaranTitikLokasi(id),
     enabled: !!accessToken,
     refetchOnWindowFocus: true,
+  });
+};
+export const useGetDetailKegiatan = (id?: string) => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetDetailKegiatan", id, accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getDetailKegiatan(id),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+
+//
+export const usePutDetailAnggaranKurvaFisikRencana = () => {
+  return useMutation({
+    mutationFn: (payload: { id: string; payload: any }) =>
+      putDetailAnggaranKurvaFisikRencana(payload.id, payload.payload),
+    onError: (error: AxiosError<ResponseError>) => error,
+  });
+};
+export const usePutDetailAnggaranKurvaFisikProgress = () => {
+  return useMutation({
+    mutationFn: (payload: { id: string; payload: any }) =>
+      putDetailAnggaranKurvaFisikProgress(payload.id, payload.payload),
+    onError: (error: AxiosError<ResponseError>) => error,
+  });
+};
+export const usePutDetailAnggaranKurvaKeuanganRealisasi = () => {
+  return useMutation({
+    mutationFn: (payload: { id: string; payload: any }) =>
+      putDetailAnggaranKurvaKeuanganRealisasi(payload.id, payload.payload),
+    onError: (error: AxiosError<ResponseError>) => error,
+  });
+};
+export const usePutDetailAnggaranPenanggungJawab = () => {
+  return useMutation({
+    mutationFn: (payload: {
+      id: string;
+      payload: { penanggung_jawab_id: string };
+    }) => putDetailAnggaranPenanggungJawab(payload.id, payload.payload),
+    onError: (error: AxiosError<ResponseError>) => error,
+  });
+};
+export const usePostDetailAnggaranDokumentasi = () => {
+  return useMutation({
+    mutationFn: (payload: { id: string; data: FormData }) =>
+      postDetailAnggaranDokumentasi(payload.id, payload.data),
+    onError: (error: AxiosError<ResponseError>) => error,
+  });
+};
+export const usePutDetailAnggaranDokumentasi = () => {
+  return useMutation({
+    mutationFn: (payload: { id: string; data: FormData; id_doc: number }) =>
+      putDetailAnggaranDokumentasi(payload.id, payload.data, payload.id_doc),
+    onError: (error: AxiosError<ResponseError>) => error,
+  });
+};
+export const usePostKegiatan = () => {
+  return useMutation({
+    mutationFn: (payload: kegiatanPayload) => postKegiatan(payload),
+    onError: (error: AxiosError<ResponseError>) => error,
+  });
+};
+export const usePutKegiatan = () => {
+  return useMutation({
+    mutationFn: (payload: { id: string; data: kegiatanUpdatePayload }) =>
+      putKegiatan(payload.id, payload.data),
+    onError: (error: AxiosError<ResponseError>) => error,
   });
 };

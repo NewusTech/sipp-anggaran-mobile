@@ -149,10 +149,10 @@ export default function TabDetail(props: TabDetail) {
       </View>
       <View>
         <Typography fontFamily="Poppins-Light" fontSize={14} color="Text 600">
-          Target Pekerjaan
+          Target Pekerjaan (%)
         </Typography>
         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-          {data.target}%
+          {data.target}
         </Typography>
       </View>
     </View>

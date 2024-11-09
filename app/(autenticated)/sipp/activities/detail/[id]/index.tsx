@@ -244,9 +244,9 @@ export default function index() {
               noSPMK: detailAnggaran?.no_spmk || "",
               penyediaJasa: detailAnggaran?.penyedia_jasa || "",
               realisasi: detailAnggaran?.realisasi || "",
-              tahun: detailAnggaran?.kegiatan.tahun || "",
+              tahun: detailAnggaran?.kegiatan?.tahun || "",
               target: detailAnggaran?.target || "",
-              title: detailAnggaran?.kegiatan.program.name || "",
+              title: detailAnggaran?.kegiatan?.program?.name || "",
               titleKegiatan: detailAnggaran?.title || "",
               titleSubPekerjaan: detailAnggaran?.title || "",
             }}

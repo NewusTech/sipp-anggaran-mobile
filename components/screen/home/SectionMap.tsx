@@ -14,7 +14,6 @@ export default function SectionMap() {
       >
         Lokasi Pekerjaan
       </Typography>
- 
     </View>
   );
 }

@@ -1,219 +1,306 @@
+import { putDetailAnggaranKurvaFisikRencana } from "@/api/sipp";
 import { IconFlopyDisk } from "@/components/icons";
 import { Button } from "@/components/ui/button";
+import Loader from "@/components/ui/loader";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
-import { useGetDetailAnggaranKurvaFisik } from "@/services/sipp";
+import {
+  useGetDetailAnggaranKurvaFisik,
+  usePutDetailAnggaranKurvaFisikProgress,
+  usePutDetailAnggaranKurvaFisikRencana,
+} from "@/services/sipp";
 import { getMonthName } from "@/utils";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Dimensions, Pressable, TextInput } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
-import { number } from "zod";
+import Toast from "react-native-toast-message";
 
 export default function TabKurvaSFisik({ id }: { id: string }) {
   const { Colors } = useAppTheme();
 
-  const getKurvaFisik = useGetDetailAnggaranKurvaFisik(id);
-  const kuvaFisik = getKurvaFisik.data?.data;
+  const getkurvaFisik = useGetDetailAnggaranKurvaFisik(id);
+  const kurvaFisik = getkurvaFisik.data?.data;
+
+  const [dataKurvaFisik, setDataKurvaFisik] = useState<Record<string, number>>(
+    {}
+  );
+  const [dataKurvaFisikRencana, setDataKurvaFisikRencana] = useState<
+    Record<string, number>
+  >({});
+
+  const putDetailAnggaranKurvaFisikRencanaMutation =
+    usePutDetailAnggaranKurvaFisikRencana();
+  const putDetailAnggaranKurvaFisikProsesMutation =
+    usePutDetailAnggaranKurvaFisikProgress();
+
+  const handleUpdateRencana = () => {
+    const payload = { data: dataKurvaFisikRencana };
+    console.log(payload);
+    putDetailAnggaranKurvaFisikRencanaMutation.mutate(
+      { id, payload },
+      {
+        onSuccess: async (response) => {
+          Toast.show({
+            type: "success",
+            text1: "Berhasi Update Data!",
+            text2: "Update Data Rencana",
+          });
+        },
+        onError: (error) => {
+          Toast.show({
+            type: "error",
+            text1: "Gagal Update Data!",
+            text2: "Update Data Rencana",
+          });
+        },
+        onSettled: () => {
+          getkurvaFisik.refetch();
+        },
+      }
+    );
+  };
+
+  const handleUpdateProgress = () => {
+    const payload = { data: dataKurvaFisik };
+    console.log(payload);
+    putDetailAnggaranKurvaFisikProsesMutation.mutate(
+      { id, payload },
+      {
+        onSuccess: async (response) => {
+          Toast.show({
+            type: "success",
+            text1: "Berhasi Update Data!",
+            text2: "Update Data Realisasi",
+          });
+        },
+        onError: (error) => {
+          Toast.show({
+            type: "error",
+            text1: "Gagal Update Data!",
+            text2: "Update Data Realisasi",
+          });
+        },
+      }
+    );
+  };
+
+  const parseMonth = (dateString: string) =>
+    Number.parseInt(dateString.split("-")[1] || dateString);
+
+  const renderKurvaFisikRows = (
+    data: any[],
+    dataSet: Record<string, number>,
+    setData: React.Dispatch<React.SetStateAction<Record<string, number>>>,
+    type: "rencana" | "realisasi"
+  ) =>
+    data.map((dataFisik, index) => (
+      <View
+        key={`${index}-${type}`}
+        style={{
+          flexDirection: "row",
+          padding: 10,
+          borderBottomWidth: index !== data.length - 1 ? 1 : 0,
+          borderColor: Colors["Line 400"],
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Typography
+          style={{ width: "33%", textAlign: "center" }}
+          fontFamily="Poppins-Light"
+        >
+          {getMonthName(parseMonth(dataFisik.bulan), "Normal")}
+        </Typography>
+        <Typography
+          style={{ width: "33%", textAlign: "center" }}
+          fontFamily="Poppins-Light"
+        >
+          {dataFisik.minggu}
+        </Typography>
+        <TextInput
+          style={{
+            borderWidth: 1,
+            padding: 10,
+            width: "33%",
+            height: 40,
+            borderColor: Colors["Line 400"],
+            borderRadius: 10,
+            textAlign: "center",
+            color: Colors["Text 500"],
+          }}
+          inputMode="numeric"
+          placeholder="%"
+          value={String(dataSet[dataFisik.id] || "")}
+          onChangeText={(text) =>
+            setData((prev) => ({
+              ...prev,
+              [dataFisik.id]: parseFloat(text) || 0,
+            }))
+          }
+        />
+      </View>
+    ));
+
+  useEffect(() => {
+    if (kurvaFisik) {
+      const initialRealisasi = kurvaFisik.data.realisasi_fisik?.reduce(
+        (acc, { id, nilai }) => ({ ...acc, [id]: nilai }),
+        {}
+      );
+      const initialRencana = kurvaFisik.data.rencana_fisik?.reduce(
+        (acc, { id, fisik }) => ({ ...acc, [id]: fisik }),
+        {}
+      );
+
+      setDataKurvaFisik(initialRealisasi || {});
+      setDataKurvaFisikRencana(initialRencana || {});
+    }
+  }, [kurvaFisik]);
 
   return (
-    <View
-      style={{
-        paddingHorizontal: 20,
-        gap: 15,
-      }}
-    >
-      <View style={{ gap: 15 }}>
-        <Typography fontFamily="Poppins-Medium" fontSize={17}>
-          Rencana Kegiatan Fisik
-        </Typography>
-
+    <View style={{ paddingHorizontal: 20, gap: 15 }}>
+      <Typography fontFamily="Poppins-Medium" fontSize={17}>
+        Rencana Kegiatan Fisik
+      </Typography>
+      <View
+        style={{
+          borderRadius: 10,
+          borderWidth: 1,
+          borderColor: Colors["Line 400"],
+          overflow: "hidden",
+        }}
+      >
         <View
           style={{
-            borderRadius: 10,
-            borderWidth: 1,
-            borderColor: Colors["Line 400"],
-            overflow: "hidden",
+            flexDirection: "row",
+            backgroundColor: Colors["Line 400"],
+            padding: 10,
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <View
+          <Typography
             style={{
-              flexDirection: "row",
-              backgroundColor: Colors["Line 400"],
-              padding: 10,
+              width: "33%",
+              textAlign: "center",
+              textAlignVertical: "center",
             }}
+            color="Background 100"
           >
-            <Typography
-              style={{ width: "33%", textAlign: "center" }}
-              color="Background 100"
-            >
-              Bulan
-            </Typography>
-            <Typography
-              style={{ width: "33%", textAlign: "center" }}
-              color="Background 100"
-            >
-              Minggu-Ke
-            </Typography>
-            <Typography
-              style={{ width: "33%", textAlign: "center" }}
-              color="Background 100"
-            >
-              Fisik%
-            </Typography>
-          </View>
-          {kuvaFisik?.data.rencana_fisik.map((dataFisik, index) => (
-            <View
-              style={[
-                {
-                  flexDirection: "row",
-                  padding: 10,
-                  alignItems: "center",
-                },
-                index !== kuvaFisik.data.rencana_fisik.length - 1 && {
-                  borderBottomWidth: 1,
-                  borderColor: Colors["Line 400"],
-                },
-              ]}
-            >
-              <Typography
-                style={{ width: "33%", textAlign: "center" }}
-                fontFamily="Poppins-Light"
-              >
-                {getMonthName(
-                  Number.parseInt(
-                    dataFisik.bulan.split("-").length === 1
-                      ? dataFisik.bulan
-                      : dataFisik.bulan?.split("-")[1]
-                  ),
-                  "Normal"
-                )}
-              </Typography>
-              <Typography
-                style={{ width: "33%", textAlign: "center" }}
-                fontFamily="Poppins-Light"
-              >
-                {dataFisik.minggu}
-              </Typography>
-              <TextInput
-                style={{
-                  borderWidth: 1,
-                  padding: 10,
-                  width: "33%",
-                  height: 40,
-                  borderColor: Colors["Line 400"],
-                  borderRadius: 10,
-                  textAlign: "center",
-                  color: Colors["Text 500"],
-                }}
-                inputMode="numeric"
-                placeholder="%"
-                value={"" + dataFisik.fisik}
-              />
-            </View>
-          ))}
+            Bulan
+          </Typography>
+          <Typography
+            style={{
+              width: "33%",
+              textAlign: "center",
+              textAlignVertical: "center",
+            }}
+            color="Background 100"
+          >
+            Minggu-Ke
+          </Typography>
+          <Typography
+            style={{
+              width: "33%",
+              textAlign: "center",
+              textAlignVertical: "center",
+            }}
+            color="Background 100"
+          >
+            Fisik%
+          </Typography>
         </View>
-        <Button>
-          <IconFlopyDisk color="Background 100" />
-          <Typography color="Background 100">Simpan</Typography>
-        </Button>
+        {renderKurvaFisikRows(
+          kurvaFisik?.data.rencana_fisik || [],
+          dataKurvaFisikRencana,
+          setDataKurvaFisikRencana,
+          "rencana"
+        )}
       </View>
-      {/*  */}
-      <View style={{ marginTop: 10, gap: 15 }}>
-        <Typography fontFamily="Poppins-Medium" fontSize={17}>
-          Realisasi Fisik
-        </Typography>
+      <Button
+        onPress={handleUpdateRencana}
+        disabled={putDetailAnggaranKurvaFisikRencanaMutation.isPending}
+      >
+        <IconFlopyDisk color="Background 100" />
+        {putDetailAnggaranKurvaFisikRencanaMutation.isPending ? (
+          <Loader color="Background 100" />
+        ) : (
+          <Typography color="Background 100">Simpan</Typography>
+        )}
+      </Button>
 
+      <Typography
+        fontFamily="Poppins-Medium"
+        fontSize={17}
+        style={{ marginTop: 10 }}
+      >
+        Realisasi Fisik
+      </Typography>
+      <View
+        style={{
+          borderRadius: 10,
+          borderWidth: 1,
+          borderColor: Colors["Line 400"],
+          overflow: "hidden",
+        }}
+      >
         <View
           style={{
-            borderRadius: 10,
-            borderWidth: 1,
-            borderColor: Colors["Line 400"],
-            overflow: "hidden",
+            flexDirection: "row",
+            backgroundColor: Colors["Line 400"],
+            padding: 10,
           }}
         >
-          <View
+          <Typography
             style={{
-              flexDirection: "row",
-              backgroundColor: Colors["Line 400"],
-              padding: 10,
+              width: "33%",
+              textAlign: "center",
+              textAlignVertical: "center",
             }}
+            color="Background 100"
           >
-            <Typography
-              style={{ width: "33%", textAlign: "center" }}
-              color="Background 100"
-            >
-              Bulan
-            </Typography>
-            <Typography
-              style={{ width: "33%", textAlign: "center" }}
-              color="Background 100"
-            >
-              Minggu-Ke
-            </Typography>
-            <Typography
-              style={{ width: "33%", textAlign: "center" }}
-              color="Background 100"
-            >
-              Aksi
-            </Typography>
-          </View>
-          {kuvaFisik?.data.realisasi_fisik.map((dataFisik, index) => (
-            <View
-              style={[
-                {
-                  flexDirection: "row",
-                  padding: 10,
-                  alignItems: "center",
-                },
-                index !== kuvaFisik.data.rencana_fisik.length - 1 && {
-                  borderBottomWidth: 1,
-                  borderColor: Colors["Line 400"],
-                },
-              ]}
-            >
-              <Typography
-                style={{ width: "33%", textAlign: "center" }}
-                fontFamily="Poppins-Light"
-              >
-                {getMonthName(
-                  Number.parseInt(
-                    dataFisik.bulan.split("-").length === 1
-                      ? dataFisik.bulan
-                      : dataFisik.bulan?.split("-")[1]
-                  ),
-                  "Normal"
-                )}
-              </Typography>
-              <Typography
-                style={{ width: "33%", textAlign: "center" }}
-                fontFamily="Poppins-Light"
-              >
-                {dataFisik.minggu}
-              </Typography>
-              <TextInput
-                style={{
-                  borderWidth: 1,
-                  padding: 10,
-                  width: "33%",
-                  height: 40,
-                  borderColor: Colors["Line 400"],
-                  borderRadius: 10,
-                  textAlign: "center",
-                  color: Colors["Text 500"],
-                }}
-                inputMode="numeric"
-                placeholder="%"
-                value={"" + dataFisik.nilai}
-              />
-            </View>
-          ))}
+            Bulan
+          </Typography>
+          <Typography
+            style={{
+              width: "33%",
+              textAlign: "center",
+              textAlignVertical: "center",
+            }}
+            color="Background 100"
+          >
+            Minggu-Ke
+          </Typography>
+          <Typography
+            style={{
+              width: "33%",
+              textAlign: "center",
+              textAlignVertical: "center",
+            }}
+            color="Background 100"
+          >
+            Aksi
+          </Typography>
         </View>
-        <Button>
-          <IconFlopyDisk color="Background 100" />
-          <Typography color="Background 100">Simpan</Typography>
-        </Button>
+        {renderKurvaFisikRows(
+          kurvaFisik?.data.realisasi_fisik || [],
+          dataKurvaFisik,
+          setDataKurvaFisik,
+          "realisasi"
+        )}
       </View>
+      <Button
+        onPress={handleUpdateProgress}
+        disabled={putDetailAnggaranKurvaFisikProsesMutation.isPending}
+      >
+        <IconFlopyDisk color="Background 100" />
+        {putDetailAnggaranKurvaFisikProsesMutation.isPending ? (
+          <Loader color="Background 100" />
+        ) : (
+          <Typography color="Background 100">Simpan</Typography>
+        )}
+      </Button>
       <View>
         <View
           style={{
@@ -249,9 +336,9 @@ export default function TabKurvaSFisik({ id }: { id: string }) {
           </Pressable>
         </View>
         <LineChart
-          data={kuvaFisik?.chart.labels.map((label, index) => {
+          data2={kurvaFisik?.chart.labels.map((label, index) => {
             // Periksa apakah `label` dan `data_fisik` di indeks yang sama tersedia
-            const value = kuvaFisik.chart.data_fisik[index];
+            const value = kurvaFisik.chart.data_fisik[index];
             return {
               value: value,
               label: getMonthName(
@@ -262,8 +349,8 @@ export default function TabKurvaSFisik({ id }: { id: string }) {
               ),
             };
           })}
-          data2={kuvaFisik?.chart.labels.map((label, index) => {
-            const value = kuvaFisik.chart.data_rencana[index];
+          data={kurvaFisik?.chart.labels.map((label, index) => {
+            const value = kurvaFisik.chart.data_rencana[index];
             return {
               value: value,
               label: getMonthName(
@@ -279,10 +366,10 @@ export default function TabKurvaSFisik({ id }: { id: string }) {
           curved
           isAnimated
           animateOnDataChange
-          dataPointsColor1={Colors["Info 700"]}
-          dataPointsColor2={Colors["Error 700"]}
-          color1={Colors["Info 500"]}
-          color2={Colors["Error 600"]}
+          dataPointsColor2={Colors["Info 700"]}
+          dataPointsColor1={Colors["Error 700"]}
+          color2={Colors["Info 500"]}
+          color1={Colors["Error 600"]}
           spacing={55}
           animationDuration={300}
           thickness={3}

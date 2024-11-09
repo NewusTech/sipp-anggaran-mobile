@@ -1,9 +1,9 @@
-import View from "@/components/view";
 import React, { useRef } from "react";
 import { Modal, Pressable, TouchableOpacity } from "react-native";
 import { Typography } from "../typography";
 import { useAppTheme } from "@/context/theme-context";
 import LottieView from "lottie-react-native";
+import View from "../view";
 
 type ModalAction = {
   visible: boolean;
@@ -36,7 +36,7 @@ export default function ModalSuccess({
         onPress={() => setVisible(false)}
       >
         <View
-          backgroundColor="white"
+          backgroundColor="Background 100"
           style={{
             width: "80%",
             height: "auto",
@@ -67,7 +67,7 @@ export default function ModalSuccess({
           <Typography
             fontFamily="Poppins-Light"
             fontSize={14}
-            color="black-50"
+            color="Background 500"
             style={{ textAlign: "center" }}
           >
             {subTitle}
@@ -83,7 +83,7 @@ export default function ModalSuccess({
             <TouchableOpacity
               style={{
                 width: "100%",
-                backgroundColor: Colors["primary-50"],
+                backgroundColor: Colors["Primary 500"],
                 borderRadius: 15,
                 padding: 10,
                 marginTop: 30,
@@ -93,7 +93,7 @@ export default function ModalSuccess({
               <Typography
                 fontFamily="Poppins-Medium"
                 fontSize={16}
-                color="white"
+                color="Background 100"
                 style={{ textAlign: "center" }}
               >
                 Riwayat Pekerjaan

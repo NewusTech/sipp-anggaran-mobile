@@ -1,8 +1,16 @@
+import { API_URL_SIPP } from "@/constants";
 import { apiClientSIPP } from "@/lib/fatcher";
+import { getAccessToken } from "@/store/sipp";
+import { kegiatanPayload, kegiatanUpdatePayload } from "@/validation";
 import { HttpStatusCode } from "axios";
 
 export * from "./auth";
 export * from "./user";
+
+export type PostResponseSuccess = {
+  status: HttpStatusCode;
+  message: string;
+};
 
 export type dashboardKegiatanDataResponseSuccess = {
   status: HttpStatusCode;
@@ -271,49 +279,33 @@ export const getLaporan = async (query?: string) => {
   return response.data;
 };
 
-// export type detailKegiatanResponseSuccess = {
-//   status: HttpStatusCode;
-//   message: string;
-//   data: {
-//     id: number;
-//     title: string;
-//     no_detail_kegiatan: string;
-//     no_kontrak: string;
-//     no_spmk: string;
-//     nilai_kontrak: string;
-//     jenis_pengadaan: string;
-//     awal_kontrak: string;
-//     akhir_kontrak: string;
-//     penyedia_jasa: string;
-//     target: string;
-//     alamat: string;
-//     progres: {
-//       id: number;
-//       detail_kegiatan_id: number;
-//       tanggal: string;
-//       bulan: string;
-//       minggu: string;
-//       jenis_progres: string;
-//       nilai: number;
-//     }[];
-//     rencana_kegiatans: {
-//       id: number;
-//       detail_kegiatan_id: number;
-//       bulan: string;
-//       minggu: string;
-//       keuangan: number;
-//       fisik: number;
-//     }[];
-//   };
-// };
+export type detailKegiatanResponseSuccess = {
+  status: HttpStatusCode;
+  message: string;
+  data: {
+    id: 226;
+    title: "Pembangunan Taman Pemancingan Wisata di Agrowisata";
+    no_detail_kegiatan: "22";
+    no_kontrak: "600/22/KONTRAK/DPUPR/TUBABA/X/2024";
+    no_spmk: "600/22/SPMK/DPUPR/TUBABA/X/2024";
+    nilai_kontrak: "312832000";
+    jenis_pengadaan: "Konstruksi";
+    awal_kontrak: "2024-10-02T17:00:00.000000Z";
+    akhir_kontrak: "2024-12-30T17:00:00.000000Z";
+    penyedia_jasa: "CV. GLOBAL KONSTRUKSI";
+    target: "100%";
+    alamat: "Pulung Kencana";
+  };
+};
 
-// export const getDetailKegiatan = async (id?: string) => {
-//   const response = await apiClientSIPP<detailKegiatanResponseSuccess>({
-//     method: "GET",
-//     url: `/detail-kegiatan/${id}`,
-//   });
-//   return response.data;
-// };
+export const getDetailKegiatan = async (id?: string) => {
+  const response = await apiClientSIPP<detailKegiatanResponseSuccess>({
+    method: "GET",
+    url: `/detail-kegiatan/${id}`,
+  });
+  return response.data;
+};
+
 export type detailAnggaranResponseSuccess = {
   status: HttpStatusCode;
   message: string;
@@ -435,7 +427,9 @@ export type detailAnggaranPenanggungJawabResponseSuccess = {
   message: string;
   data: {
     id: number;
-    penyedia_jasa: string;
+    detail_kegiatan: {
+      penyedia_jasa: string;
+    };
     kegiatan: {
       penanggung_jawab: {
         id: number;
@@ -602,3 +596,151 @@ export const getDetailAnggaranTitikLokasi = async (id?: string) => {
     });
   return response.data;
 };
+
+export const putDetailAnggaranKurvaFisikRencana = async (
+  id: string,
+  payload: any
+) => {
+  const response = await apiClientSIPP<PostResponseSuccess>({
+    method: "PUT",
+    url: `/detail-anggaran/${id}/kurfa-fisik/rencana`,
+    data: payload,
+  });
+  return response.data;
+};
+
+export const putDetailAnggaranKurvaFisikProgress = async (
+  id: string,
+  payload: any
+) => {
+  const response = await apiClientSIPP<PostResponseSuccess>({
+    method: "PUT",
+    url: `/detail-anggaran/${id}/kurfa-fisik/progres`,
+    data: payload,
+  });
+  return response.data;
+};
+
+export const putDetailAnggaranKurvaKeuanganRealisasi = async (
+  id: string,
+  payload: any
+) => {
+  const response = await apiClientSIPP<PostResponseSuccess>({
+    method: "PUT",
+    url: `/detail-anggaran/${id}/kurfa-keuangan`,
+    data: payload,
+  });
+  return response.data;
+};
+
+export const putDetailAnggaranPenanggungJawab = async (
+  id: string,
+  payload: {
+    penanggung_jawab_id: string;
+  }
+) => {
+  const response = await apiClientSIPP<PostResponseSuccess>({
+    method: "PUT",
+    url: `/detail-anggaran/${id}/penanggung-jawab`,
+    data: payload,
+  });
+  return response.data;
+};
+
+export const postDetailAnggaranDokumentasi = async (
+  id: string,
+  payload: FormData
+) => {
+  const accessToken = getAccessToken();
+  try {
+    const response = await fetch(
+      `${API_URL_SIPP}/detail-anggaran/${id}/dokumentasi`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: payload,
+      }
+    );
+
+    // Periksa apakah respons sukses (status 2xx)
+    if (!response.ok) {
+      // Jika tidak sukses, ambil pesan error
+      const errorData = await response.json();
+      // Buat error baru dengan pesan dari respons
+      throw new Error(errorData.message || "Gagal memproses Data.");
+    }
+    // Respons sukses, kembalikan data JSON
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    // Tangani error di sini
+    console.error(
+      `Error saat memproses Data: ${error.message} - ${error.data}`
+    );
+    // Kamu bisa mengembalikan error atau menampilkannya ke UI
+    throw error;
+  }
+};
+
+export const putDetailAnggaranDokumentasi = async (
+  id: string,
+  payload: FormData,
+  id_doc: number
+) => {
+  const accessToken = getAccessToken();
+  try {
+    const response = await fetch(
+      `${API_URL_SIPP}/detail-anggaran/${id}/dokumentasi/${id_doc}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: payload,
+      }
+    );
+
+    // Periksa apakah respons sukses (status 2xx)
+    if (!response.ok) {
+      // Jika tidak sukses, ambil pesan error
+      const errorData = await response.json();
+      // Buat error baru dengan pesan dari respons
+      throw new Error(errorData.message || "Gagal memproses Data.");
+    }
+    // Respons sukses, kembalikan data JSON
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    // Tangani error di sini
+    console.error(
+      `Error saat memproses Data: ${error.message} - ${error.data}`
+    );
+    // Kamu bisa mengembalikan error atau menampilkannya ke UI
+    throw error;
+  }
+};
+
+export const postKegiatan = async (payload: kegiatanPayload) => {
+  const response = await apiClientSIPP<PostResponseSuccess>({
+    method: "POST",
+    url: `/detail-kegiatan`,
+    data: payload,
+  });
+  return response.data;
+};
+
+export const putKegiatan = async (
+  id: string,
+  payload: kegiatanUpdatePayload
+) => {
+  const response = await apiClientSIPP<PostResponseSuccess>({
+    method: "PUT",
+    url: `/detail-kegiatan/${id}`,
+    data: payload,
+  });
+  return response.data;
+};
+
+

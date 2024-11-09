@@ -50,7 +50,7 @@ export default function InitialScreen() {
       } else {
         router.replace("/(public)/home");
       }
-      // router.replace("/home");
+      // router.replace("/(autenticated)/sipp/(tabs)/report");
     };
 
     initAuth();
@@ -67,7 +67,7 @@ export default function InitialScreen() {
         fontSize={24}
         style={{ marginVertical: 10 }}
       >
-        SIPP Anggaran
+        SIPP - Tubaba
       </Typography>
     </View>
   );

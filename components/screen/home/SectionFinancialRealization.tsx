@@ -7,7 +7,7 @@ import { useAppTheme } from "@/context";
 import { getMonthName, substring } from "@/utils";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Dimensions, FlatList } from "react-native";
+import { Dimensions, FlatList, Pressable } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
 
 type SectionFinancialRealization = {
@@ -96,7 +96,7 @@ export default function SectionFinancialRealization(
           data={data || []}
           removeClippedSubviews={true}
           renderItem={({ item }) => (
-            <View
+            <Pressable
               style={{
                 backgroundColor: Colors["Background 100"],
                 marginTop: 20,
@@ -107,6 +107,14 @@ export default function SectionFinancialRealization(
                 borderWidth: 1,
                 borderColor: Colors["Background 200"],
               }}
+              onPress={() =>
+                router.push({
+                  pathname: "/(autenticated)/sipp/activities/detail/[id]",
+                  params: {
+                    id: item.id,
+                  },
+                })
+              }
             >
               <Typography
                 fontFamily="Poppins-Light"
@@ -157,7 +165,7 @@ export default function SectionFinancialRealization(
                   {item.progres[0]?.nilai || "-"}%
                 </Typography>
               </View>
-            </View>
+            </Pressable>
           )}
           style={{ width: "100%", paddingBottom: 20 }}
           contentContainerStyle={{

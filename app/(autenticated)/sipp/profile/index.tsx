@@ -7,18 +7,16 @@ import ModalAction from "@/components/ui/modalAction";
 import Separator from "@/components/ui/separator";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
+import { BASE_URL_SIPP } from "@/constants";
 import { useAppTheme } from "@/context";
 import { useGetProfile } from "@/services";
 import { handleLogoutSession } from "@/services/auth.service";
-import { useRouter } from "expo-router";
+import { useAuthActions } from "@/store/sipp";
 import React, { useEffect, useState } from "react";
 import { Dimensions, Pressable, ScrollView } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function index() {
-  const router = useRouter();
   const { Colors } = useAppTheme();
-  const inset = useSafeAreaInsets();
 
   const [activeTab, setActiveTab] = useState<"informasi" | "password">(
     "informasi"
@@ -27,6 +25,9 @@ export default function index() {
   const [modalLogout, setModalLogout] = useState<boolean>(false);
 
   const getUser = useGetProfile();
+  const user = getUser.data?.data;
+
+  const { setProfile } = useAuthActions();
 
   const handleLogout = () => {
     handleLogoutSession();
@@ -35,6 +36,12 @@ export default function index() {
   useEffect(() => {
     setActiveTab("informasi");
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      setProfile(user);
+    }
+  }, [user]);
 
   return (
     <ScrollView
@@ -55,7 +62,7 @@ export default function index() {
           <ImageModal
             source={
               getUser.data?.data
-                ? { uri: getUser.data.data.image }
+                ? { uri: `${BASE_URL_SIPP}/uploads/${getUser.data.data.image}` }
                 : require("@/assets/images/dummy1.jpg")
             }
             style={{
@@ -64,6 +71,7 @@ export default function index() {
               borderRadius: 100,
               borderWidth: 2,
               borderColor: "white",
+              backgroundColor: "white",
             }}
           />
           <Pressable
