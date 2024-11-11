@@ -10,13 +10,27 @@ import View from "@/components/ui/view";
 import { AppColor } from "@/constants";
 import { useAppTheme } from "@/context";
 import React from "react";
-import { Dimensions, Pressable, StyleSheet } from "react-native";
+import { Dimensions, Pressable, StyleSheet, ActivityIndicator } from "react-native";
 import { Button } from "@/components/ui/button";
 import { IconCaretUp } from "@/components/icons/IconCaretUp";
 import { router } from "expo-router";
+import { useGetDashoardTableRoadSection } from "@/services/survey";
 
-export default function SectionTableSurvey() {
+interface SectionCardSurveyProps {
+    filterYear?: string | undefined;
+}
+export default function SectionTableSurvey({ filterYear }: SectionCardSurveyProps) {
     const { Colors } = useAppTheme();
+
+    const { data: tableData, isLoading, error } = useGetDashoardTableRoadSection(filterYear ? "year=" + filterYear : "");
+
+    if (isLoading) {
+        return <ActivityIndicator size="large" color={Colors["Primary Blue"]} />;
+    }
+
+    if (error) {
+        return <Typography color="Error 500">Failed to load data.</Typography>;
+    }
 
     return (
         <View style={{ marginTop: 20 }}>
@@ -42,126 +56,105 @@ export default function SectionTableSurvey() {
                 borderBottomLeftRadius: 10,
                 borderBottomRightRadius: 10,
             }}>
-                {Array.from({ length: 5 }).map((d, index) => (
-                    <Accordion
-                        key={index}
-                        style={{
-                            marginBottom: 10,
-                            borderWidth: 1,
-                            borderColor: Colors["Primary Blue"],
-                            // Apply different border radius styles based on index
-                            borderBottomLeftRadius: index === 0 ? 10 : undefined,
-                            borderBottomRightRadius: index === 0 ? 10 : undefined,
-                            borderRadius: index !== 0 ? 10 : undefined,
-                            overflow: "hidden",
-                        }}
-                        header={(isOpen) => (
-                            <View
-                                style={{
-                                    padding: 10,
-                                    backgroundColor: "#ECECEF",
-                                    flexDirection: "row",
-                                    borderTopLeftRadius: 10,
-                                    borderTopRightRadius: 10,
-                                    overflow: "hidden",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
-                                }}
-                            >
-                                <Typography color="Primary Blue" fontSize={15}>
-                                    Sp. Panaragan - Panaragan (Kantor Camat)
-                                </Typography>
-                                {isOpen ? <IconCaretFillDown /> : <IconCaretUp />}
+                {tableData?.data?.data && tableData.data.data.length > 0 ? (
+                    tableData?.data?.data?.map((section, index) => (
+                        <Accordion
+                            key={section.id}
+                            style={{
+                                marginBottom: 10,
+                                borderWidth: 1,
+                                borderColor: Colors["Primary Blue"],
+                                borderBottomLeftRadius: index === 0 ? 10 : undefined,
+                                borderBottomRightRadius: index === 0 ? 10 : undefined,
+                                borderRadius: index !== 0 ? 10 : undefined,
+                                overflow: "hidden",
+                            }}
+                            header={(isOpen) => (
+                                <View
+                                    style={{
+                                        padding: 10,
+                                        backgroundColor: "#ECECEF",
+                                        flexDirection: "row",
+                                        borderTopLeftRadius: 10,
+                                        borderTopRightRadius: 10,
+                                        overflow: "hidden",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                    }}
+                                >
+                                    <Typography
+                                        style={{
+                                            width: 285,
+                                        }}
+                                        color="Primary Blue" fontSize={15}>
+                                        {section.nama_ruas || "-"}
+                                    </Typography>
+                                    {isOpen ? <IconCaretFillDown /> : <IconCaretUp />}
+                                </View>
+                            )}
+                        >
+                            <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                <View >
+                                    <Typography style={{ color: "#757575", fontSize: 16 }}>
+                                        Kecamatan
+                                    </Typography>
+                                    <Typography style={{ fontSize: 16 }}>
+                                        {section.name_kecamatan || "-"}
+                                    </Typography>
+                                </View>
                             </View>
-                        )}
-                    >
-                        <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                            <View >
-                                <Typography
-                                    style={{
-                                        color: "#757575",
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    Kecamatan
-                                </Typography>
-                                <Typography
-                                    style={{
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    Tulang Bawang Tengah
-                                </Typography>
+                            <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                <View >
+                                    <Typography style={{ color: "#757575", fontSize: 16 }}>
+                                        Panjang Ruas
+                                    </Typography>
+                                    <Typography style={{ fontSize: 16 }}>
+                                        {section.panjang_ruas || "-"}
+                                    </Typography>
+                                </View>
                             </View>
-                        </View>
-                        <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                            <View >
-                                <Typography
-                                    style={{
-                                        color: "#757575",
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    Panjang Ruas
-                                </Typography>
-                                <Typography
-                                    style={{
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    1.08
-                                </Typography>
+                            <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                <View >
+                                    <Typography style={{ color: "#757575", fontSize: 16 }}>
+                                        Lebar Ruas
+                                    </Typography>
+                                    <Typography style={{ fontSize: 16 }}>
+                                        {section.lebar || "-"}
+                                    </Typography>
+                                </View>
                             </View>
-                        </View>
-                        <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                            <View >
-                                <Typography
-                                    style={{
-                                        color: "#757575",
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    Lebar Ruas
-                                </Typography>
-                                <Typography
-                                    style={{
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    3
-                                </Typography>
-                            </View>
-                        </View>
-                        {/* button */}
-                        <View style={{ 
-                            marginTop: 5, 
-                            marginBottom: 15, 
-                            paddingHorizontal: 10, 
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-between"
+                            {/* button */}
+                            <View style={{
+                                marginTop: 5,
+                                marginBottom: 15,
+                                paddingHorizontal: 10,
+                                flexDirection: "row",
+                                justifyContent: "space-between"
                             }}>
-                            <Button
-                            style={{
-                                width: Dimensions.get("window").width / 2 - 40,
-                            }}
-                            color="Primary Blue"
-                            onPress={() => router.push("(autenticated)/survey/home/SectionRoad/detail")}
-                            >
-                                Lihat
-                            </Button>
-                            <Button
-                            onPress={() => router.push("(autenticated)/survey/home/SectionRoad/edit")}
-                            style={{
-                                width: Dimensions.get("window").width / 2 - 40,
-                            }}
-                            color="Success 600"
-                            >
-                                Edit
-                            </Button>
-                        </View>
-                    </Accordion>
-                ))}
+                                <Button
+                                    style={{ width: Dimensions.get("window").width / 2 - 40 }}
+                                    color="Primary Blue"
+                                    onPress={() => router.push(`(autenticated)/survey/home/SectionRoad/detail/${section.id}`)}
+                                >
+                                    Lihat
+                                </Button>
+                                <Button
+                                    onPress={() => router.push(`(autenticated)/survey/home/SectionRoad/edit/${section.id}`)}
+                                    style={{ width: Dimensions.get("window").width / 2 - 40 }}
+                                    color="Success 600"
+                                >
+                                    Edit
+                                </Button>
+                            </View>
+                        </Accordion>
+                    ))
+                ) : (
+                    <View style={{ padding: 20, alignItems: "center" }}>
+                        <Typography color="Text 500" fontSize={16}>
+                            Tidak ada data
+                        </Typography>
+                    </View>
+                )}
             </View>
 
             {/* Pagination */}

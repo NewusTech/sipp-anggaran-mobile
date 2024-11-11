@@ -10,13 +10,28 @@ import View from "@/components/ui/view";
 import { AppColor } from "@/constants";
 import { useAppTheme } from "@/context";
 import React from "react";
-import { Dimensions, Pressable, StyleSheet } from "react-native";
+import { ActivityIndicator, Dimensions, Pressable, StyleSheet } from "react-native";
 import { Button } from "@/components/ui/button";
 import { IconCaretUp } from "@/components/icons/IconCaretUp";
 import { router } from "expo-router";
+import { useGetDashoardTableBridgeSection } from "@/services/survey";
 
-export default function SectionTableBridge() {
+interface SectionCardSurveyProps {
+    filterYear?: string | undefined;
+}
+
+export default function SectionTableBridge({ filterYear }: SectionCardSurveyProps) {
     const { Colors } = useAppTheme();
+
+    const { data: tableData, isLoading, error } = useGetDashoardTableBridgeSection(filterYear ? "year=" + filterYear : "");
+
+    if (isLoading) {
+        return <ActivityIndicator size="large" color={Colors["Primary Blue"]} />;
+    }
+
+    if (error) {
+        return <Typography color="Error 500">Failed to load data.</Typography>;
+    }
 
     return (
         <View style={{ marginTop: 20 }}>
@@ -42,228 +57,240 @@ export default function SectionTableBridge() {
                 borderBottomLeftRadius: 10,
                 borderBottomRightRadius: 10,
             }}>
-                {Array.from({ length: 5 }).map((d, index) => (
-                    <Accordion
-                        key={index}
-                        style={{
-                            marginBottom: 10,
-                            borderWidth: 1,
-                            borderColor: Colors["Primary Blue"],
-                            // Apply different border radius styles based on index
-                            borderBottomLeftRadius: index === 0 ? 10 : undefined,
-                            borderBottomRightRadius: index === 0 ? 10 : undefined,
-                            borderRadius: index !== 0 ? 10 : undefined,
-                            overflow: "hidden",
-                        }}
-                        header={(isOpen) => (
-                            <View
-                                style={{
-                                    padding: 10,
-                                    backgroundColor: "#ECECEF",
-                                    flexDirection: "row",
-                                    borderTopLeftRadius: 10,
-                                    borderTopRightRadius: 10,
-                                    overflow: "hidden",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
-                                }}
-                            >
-                                <Typography color="Primary Blue" fontSize={15}>
-                                    TOTO KATON - TOTO MAKMUR
-                                </Typography>
-                                {isOpen ? <IconCaretFillDown /> : <IconCaretUp />}
+                {tableData?.data?.data && tableData.data.data.length > 0 ? (
+                    tableData?.data?.data?.map((section, index) => (
+                        <Accordion
+                            key={index}
+                            style={{
+                                marginBottom: 10,
+                                borderWidth: 1,
+                                borderColor: Colors["Primary Blue"],
+                                // Apply different border radius styles based on index
+                                borderBottomLeftRadius: index === 0 ? 10 : undefined,
+                                borderBottomRightRadius: index === 0 ? 10 : undefined,
+                                borderRadius: index !== 0 ? 10 : undefined,
+                                overflow: "hidden",
+                            }}
+                            header={(isOpen) => (
+                                <View
+                                    style={{
+                                        padding: 10,
+                                        backgroundColor: "#ECECEF",
+                                        flexDirection: "row",
+                                        borderTopLeftRadius: 10,
+                                        borderTopRightRadius: 10,
+                                        overflow: "hidden",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                    }}
+                                >
+                                    <Typography
+                                    style={{
+                                        width: 285,
+                                     }}
+                                    color="Primary Blue" fontSize={15}>
+                                    {section?.nama_ruas || "-"}
+                                    </Typography>
+                                    {isOpen ? <IconCaretFillDown /> : <IconCaretUp />}
+                                </View>
+                            )}
+                        >
+                            <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                <View >
+                                    <Typography
+                                        style={{
+                                            color: "#757575",
+                                            fontSize: 16,
+                                        }}
+                                    >
+                                        No Jembatan
+                                    </Typography>
+                                    <Typography
+                                        style={{
+                                            fontSize: 16,
+                                        }}
+                                    >
+                                        {section?.no_jembatan || "-"}
+                                    </Typography>
+                                </View>
                             </View>
-                        )}
-                    >
-                        <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                            <View >
-                                <Typography
-                                    style={{
-                                        color: "#757575",
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    No Jembatan
-                                </Typography>
-                                <Typography
-                                    style={{
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    18.12.163.2
-                                </Typography>
+                            {/*  */}
+                            <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                <View >
+                                    <Typography
+                                        style={{
+                                            color: "#757575",
+                                            fontSize: 16,
+                                        }}
+                                    >
+                                        Asal
+                                    </Typography>
+                                    <Typography
+                                        style={{
+                                            fontSize: 16,
+                                        }}
+                                    >
+                                        {section?.asal || "-"}
+                                    </Typography>
+                                </View>
                             </View>
-                        </View>
-                        {/*  */}
-                        <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                            <View >
-                                <Typography
-                                    style={{
-                                        color: "#757575",
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    Asal
-                                </Typography>
-                                <Typography
-                                    style={{
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    MARGA SARI
-                                </Typography>
+                            {/*  */}
+                            <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                <View >
+                                    <Typography
+                                        style={{
+                                            color: "#757575",
+                                            fontSize: 16,
+                                        }}
+                                    >
+                                        Nama Jembatan
+                                    </Typography>
+                                    <Typography
+                                        style={{
+                                            fontSize: 16,
+                                        }}
+                                    >
+                                        {section?.nama_jembatan || "-"}
+                                    </Typography>
+                                </View>
                             </View>
-                        </View>
-                        {/*  */}
-                        <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                            <View >
-                                <Typography
-                                    style={{
-                                        color: "#757575",
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    Nama Jembatan
-                                </Typography>
-                                <Typography
-                                    style={{
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    WAY DAM
-                                </Typography>
+                            {/*  */}
+                            <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                <View >
+                                    <Typography
+                                        style={{
+                                            color: "#757575",
+                                            fontSize: 16,
+                                        }}
+                                    >
+                                        KMPOST (km)
+                                    </Typography>
+                                    <Typography
+                                        style={{
+                                            fontSize: 16,
+                                        }}
+                                    >
+                                        {section?.kmpost || "-"}
+                                    </Typography>
+                                </View>
                             </View>
-                        </View>
-                        {/*  */}
-                        <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                            <View >
-                                <Typography
-                                    style={{
-                                        color: "#757575",
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    KMPOST (km)
-                                </Typography>
-                                <Typography
-                                    style={{
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    0+205
-                                </Typography>
+                            {/*  */}
+                            <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                <View >
+                                    <Typography
+                                        style={{
+                                            color: "#757575",
+                                            fontSize: 16,
+                                        }}
+                                    >
+                                        Panjang
+                                    </Typography>
+                                    <Typography
+                                        style={{
+                                            fontSize: 16,
+                                        }}
+                                    >
+                                        {section?.panjang || "-"}
+                                    </Typography>
+                                </View>
                             </View>
-                        </View>
-                        {/*  */}
-                        <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                            <View >
-                                <Typography
-                                    style={{
-                                        color: "#757575",
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    Panjang
-                                </Typography>
-                                <Typography
-                                    style={{
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    10,5
-                                </Typography>
+                            {/*  */}
+                            <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                <View >
+                                    <Typography
+                                        style={{
+                                            color: "#757575",
+                                            fontSize: 16,
+                                        }}
+                                    >
+                                        Lebar
+                                    </Typography>
+                                    <Typography
+                                        style={{
+                                            fontSize: 16,
+                                        }}
+                                    >
+                                        {section?.lebar || "-"}
+                                    </Typography>
+                                </View>
                             </View>
-                        </View>
-                        {/*  */}
-                        <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                            <View >
-                                <Typography
-                                    style={{
-                                        color: "#757575",
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    Lebar
-                                </Typography>
-                                <Typography
-                                    style={{
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    5
-                                </Typography>
+                            {/*  */}
+                            <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                <View >
+                                    <Typography
+                                        style={{
+                                            color: "#757575",
+                                            fontSize: 16,
+                                        }}
+                                    >
+                                        Nilai Kondisi
+                                    </Typography>
+                                    <Typography
+                                        style={{
+                                            fontSize: 16,
+                                        }}
+                                    >
+                                        {section?.nilai_kondisi || "-"}
+                                    </Typography>
+                                </View>
                             </View>
-                        </View>
-                        {/*  */}
-                        <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                            <View >
-                                <Typography
-                                    style={{
-                                        color: "#757575",
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    Nilai Kondisi
-                                </Typography>
-                                <Typography
-                                    style={{
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    1
-                                </Typography>
+                            {/*  */}
+                            <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                <View >
+                                    <Typography
+                                        style={{
+                                            color: "#757575",
+                                            fontSize: 16,
+                                        }}
+                                    >
+                                        Kondisi
+                                    </Typography>
+                                    <Typography
+                                        style={{
+                                            fontSize: 16,
+                                        }}
+                                    >
+                                        {section?.kondisi || "-"}
+                                    </Typography>
+                                </View>
                             </View>
-                        </View>
-                        {/*  */}
-                        <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                            <View >
-                                <Typography
+                            {/* button */}
+                            <View style={{
+                                marginTop: 5,
+                                marginBottom: 15,
+                                paddingHorizontal: 10,
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "space-between"
+                            }}>
+                                <Button
+                                    onPress={() => router.push(`(autenticated)/survey/home/sectionBridge/detail/${section.id}`)}
                                     style={{
-                                        color: "#757575",
-                                        fontSize: 16,
+                                        width: Dimensions.get("window").width / 2 - 40,
                                     }}
+                                    color="Primary Blue"
                                 >
-                                    Kondisi
-                                </Typography>
-                                <Typography
+                                    Lihat
+                                </Button>
+                                <Button
+                                    onPress={() => router.push(`(autenticated)/survey/home/sectionBridge/edit/${section.id}`)}
                                     style={{
-                                        fontSize: 16,
+                                        width: Dimensions.get("window").width / 2 - 40,
                                     }}
+                                    color="Success 600"
                                 >
-                                    B
-                                </Typography>
+                                    Edit
+                                </Button>
                             </View>
-                        </View>
-                        {/* button */}
-                        <View style={{
-                            marginTop: 5,
-                            marginBottom: 15,
-                            paddingHorizontal: 10,
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-between"
-                        }}>
-                            <Button
-                                onPress={() => router.push("(autenticated)/survey/home/sectionBridge/detail")}
-                                style={{
-                                    width: Dimensions.get("window").width / 2 - 40,
-                                }}
-                                color="Primary Blue"
-                            >
-                                Lihat
-                            </Button>
-                            <Button
-                                onPress={() => router.push("(autenticated)/survey/home/sectionBridge/edit")}
-                                style={{
-                                    width: Dimensions.get("window").width / 2 - 40,
-                                }}
-                                color="Success 600"
-                            >
-                                Edit
-                            </Button>
-                        </View>
-                    </Accordion>
-                ))}
+                        </Accordion>
+                    ))
+                ) : (
+                    <View style={{ padding: 20, alignItems: "center" }}>
+                        <Typography color="Text 500" fontSize={16}>
+                            Tidak ada data
+                        </Typography>
+                    </View>
+                )}
             </View>
 
             {/* Pagination */}

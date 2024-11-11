@@ -2,15 +2,14 @@ import React from "react";
 import View from "../../ui/view";
 import { useAppTheme } from "@/context";
 import { Typography } from "../../ui/typography";
-import { PieChart } from "react-native-gifted-charts";
-import { Text } from "react-native";
-
-export default function SectionCardBridge() {
+import { useGetDashoardRoadSection } from "@/services/survey";
+// Define the prop types
+interface SectionCardSurveyProps {
+    filterYear?: string | undefined;
+}
+export default function SectionCardBridge({ filterYear }: SectionCardSurveyProps) {
     const { Colors } = useAppTheme();
-    const pieData = [
-        { value: 70, color: '#177AD5' },
-        { value: 30, color: 'lightgray' }
-    ];
+    const getDashboardRoad = useGetDashoardRoadSection(filterYear ? "year=" + filterYear : "")
 
     return (
         <View style={{ gap: 10, marginTop: 30 }}>
@@ -64,7 +63,7 @@ export default function SectionCardBridge() {
                         fontSize={20}
                         color="Background 100"
                     >
-                        266,623 / Kilometer
+                        {getDashboardRoad?.data?.data?.tot_panjang_jalan || "-"} / Kilometer
                     </Typography>
                 </View>
             </View>
@@ -119,7 +118,7 @@ export default function SectionCardBridge() {
                         fontSize={20}
                         color="Background 100"
                     >
-                        94 Jembatan
+                        {getDashboardRoad?.data?.data?.jumlah_ruas || "-"} Jembatan
                     </Typography>
                 </View>
             </View>
