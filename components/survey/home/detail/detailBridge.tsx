@@ -3,10 +3,18 @@ import Separator from "@/components/ui/separator";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
+import { useGetDetailRuasJembatan } from "@/services/survey";
+import { useLocalSearchParams } from "expo-router";
 import React from "react";
 
 export default function TabDetailBridge() {
     const { Colors } = useAppTheme();
+    const params = useLocalSearchParams<{
+        id: string;
+    }>();
+
+    const getDetailRuasJembatan = useGetDetailRuasJembatan(params.id);
+    const getDetailJembatan = getDetailRuasJembatan?.data?.data
 
     return (
         <View>
@@ -29,7 +37,7 @@ export default function TabDetailBridge() {
                         No Ruas
                     </Typography>
                     <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                        163
+                        {getDetailJembatan?.no_ruas || "-"}
                     </Typography>
                 </View>
                 <Separator />
@@ -43,7 +51,7 @@ export default function TabDetailBridge() {
                         Nama Ruas
                     </Typography>
                     <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                        TOTO KATON - TOTO MAKMUR
+                    {getDetailJembatan?.nama_ruas || "-"}
                     </Typography>
                 </View>
                 <Separator />
@@ -56,7 +64,7 @@ export default function TabDetailBridge() {
                         Nama Jembatan
                     </Typography>
                     <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                        WAY MILI
+                    {getDetailJembatan?.nama_jembatan || "-"}
                     </Typography>
                 </View>
                 <Separator />
@@ -69,7 +77,7 @@ export default function TabDetailBridge() {
                         Nama Kecamatan
                     </Typography>
                     <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                        Batu Putih
+                    {getDetailJembatan?.kecamatan_name || "-"}
                     </Typography>
                 </View>
                 <Separator />
@@ -82,7 +90,7 @@ export default function TabDetailBridge() {
                         Asal
                     </Typography>
                     <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                        TOTO KATON
+                    {getDetailJembatan?.asal || "-"}
                     </Typography>
                 </View>
                 <Separator />
@@ -104,7 +112,7 @@ export default function TabDetailBridge() {
                             No
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            18.12.163.2
+                        {getDetailJembatan?.no_jembatan || "-"}
                         </Typography>
                     </View>
                     <View
@@ -116,7 +124,7 @@ export default function TabDetailBridge() {
                             Panjang
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            3,50
+                        {getDetailJembatan?.panjang || "-"}
                         </Typography>
                     </View>
                 </View>
@@ -138,7 +146,7 @@ export default function TabDetailBridge() {
                             Lebar
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            6,3
+                        {getDetailJembatan?.lebar || "-"}
                         </Typography>
                     </View>
                     <View
@@ -150,7 +158,7 @@ export default function TabDetailBridge() {
                             KMPOST (km)
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            1+600
+                        {getDetailJembatan?.kmpost || "-"}
                         </Typography>
                     </View>
                 </View>
@@ -172,7 +180,7 @@ export default function TabDetailBridge() {
                             Jumlah bentang
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            12
+                        {getDetailJembatan?.jml_bentang || "-"}
                         </Typography>
                     </View>
                     <View
@@ -184,7 +192,7 @@ export default function TabDetailBridge() {
                             Tipe BA
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            G
+                        {getDetailJembatan?.tipe_ba || "-"}
                         </Typography>
                     </View>
                 </View>
@@ -206,7 +214,7 @@ export default function TabDetailBridge() {
                             Kondisi BA
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            1
+                        {getDetailJembatan?.kondisi_ba || "-"}
                         </Typography>
                     </View>
                     <View
@@ -218,7 +226,7 @@ export default function TabDetailBridge() {
                             Tipe BB
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            1
+                        {getDetailJembatan?.tipe_bb || "-"}
                         </Typography>
                     </View>
                 </View>
@@ -240,7 +248,7 @@ export default function TabDetailBridge() {
                             Tipe Fondasi
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            LS
+                        {getDetailJembatan?.tipe_fondasi || "-"}
                         </Typography>
                     </View>
                     <View
@@ -252,7 +260,7 @@ export default function TabDetailBridge() {
                             Kondisi Fondasi
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            1
+                        {getDetailJembatan?.kondisi_fondasi || "-"}
                         </Typography>
                     </View>
                 </View>
@@ -274,7 +282,7 @@ export default function TabDetailBridge() {
                             Bahan
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            T
+                        {getDetailJembatan?.bahan || "-"}
                         </Typography>
                     </View>
                     <View
@@ -286,7 +294,7 @@ export default function TabDetailBridge() {
                             Kondisi
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            B
+                        {getDetailJembatan?.kondisi || "-"}
                         </Typography>
                     </View>
                 </View>
@@ -308,7 +316,7 @@ export default function TabDetailBridge() {
                             G. Bujur
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            -4.4245321
+                        {getDetailJembatan?.longitude || "-"}
                         </Typography>
                     </View>
                     <View
@@ -320,7 +328,7 @@ export default function TabDetailBridge() {
                             G. Lintang
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            105.0344679
+                        {getDetailJembatan?.latitude || "-"}
                         </Typography>
                     </View>
                 </View>
@@ -342,7 +350,7 @@ export default function TabDetailBridge() {
                             Nilai Kondisi
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            1
+                        {getDetailJembatan?.nilai_kondisi || "-"}
                         </Typography>
                     </View>
                 </View>

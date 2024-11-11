@@ -16,6 +16,8 @@ import { PostLoginPayload, postLoginPayloadSchema } from "@/validation";
 import { setItem } from "@/lib/async-storage";
 import Toast from "react-native-toast-message";
 import Loader from "@/components/ui/loader";
+import { postLoginPayloadSchemaSurvey, PostLoginPayloadSurvey } from "@/validation/survey";
+import { useAuthLoginSurvey } from "@/services/survey/user";
 
 export default function index() {
   const router = useRouter();
@@ -26,14 +28,14 @@ export default function index() {
   // store
   const { setAccessToken } = useAuthActions();
 
-  const loginMutation = useAuthLogin();
+  const loginMutation = useAuthLoginSurvey();
 
-  const { control, handleSubmit, formState } = useForm<PostLoginPayload>({
+  const { control, handleSubmit, formState } = useForm<PostLoginPayloadSurvey>({
     defaultValues: {
       email: "admin@mailinator.com",
       password: "password",
     },
-    resolver: zodResolver(postLoginPayloadSchema),
+    resolver: zodResolver(postLoginPayloadSchemaSurvey),
     mode: "all",
   });
 
@@ -43,14 +45,14 @@ export default function index() {
         setAccessToken(response.data.token);
 
         await setItem("accesstoken", response.data.token);
-        await setItem("app_name", response.data.app_name);
+        await setItem("app_name", "SIPP-Survey");
 
         Toast.show({
           type: "success",
           text1: "Login berhasil!",
           text2: "Selamat anda berhasil login",
         });
-        router.replace("/(autenticated)/sipp/(tabs)/home");
+        router.replace("/(autenticated)/survey/(tabs)/home");
 
         navigation.reset({
           index: 0,

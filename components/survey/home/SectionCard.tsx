@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import View from "../../ui/view";
 import { useAppTheme } from "@/context";
 import { Typography } from "../../ui/typography";
 import { PieChart } from "react-native-gifted-charts";
 import { Text } from "react-native";
+import { useGetDashoardRoadSection } from "@/services/survey";
 
-export default function SectionCardSurvey() {
+// Define the prop types
+interface SectionCardSurveyProps {
+    filterYear?: string | undefined;
+}
+export default function SectionCardSurvey({ filterYear }: SectionCardSurveyProps) {
     const { Colors } = useAppTheme();
     const pieDataMantap = [
         { value: 70, color: '#D9D9D9' },
@@ -15,6 +20,9 @@ export default function SectionCardSurvey() {
         { value: 70, color: '#D9D9D9' },
         { value: 30, color: '#B42424' }
     ];
+
+
+    const getDashboardRoad = useGetDashoardRoadSection(filterYear ? "year=" + filterYear : "")
 
     return (
         <View style={{ gap: 10, marginTop: 30 }}>
@@ -68,7 +76,7 @@ export default function SectionCardSurvey() {
                         fontSize={20}
                         color="Background 100"
                     >
-                        Rp. 67,821,237,900 / Kilometer
+                        {getDashboardRoad?.data?.data?.tot_panjang_jalan || "-"} / Kilometer
                     </Typography>
                 </View>
             </View>
@@ -123,7 +131,7 @@ export default function SectionCardSurvey() {
                         fontSize={20}
                         color="Background 100"
                     >
-                        95 Jalan
+                        {getDashboardRoad?.data?.data?.jumlah_ruas || "-"} Jalan
                     </Typography>
                 </View>
             </View>

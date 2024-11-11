@@ -1,12 +1,20 @@
+import { getDashboardTableRoadSectionDetail } from "@/api/survey";
 import { Button } from "@/components/ui/button";
 import Separator from "@/components/ui/separator";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
+import { useGetDetailRuasJalan } from "@/services/survey";
+import { useLocalSearchParams } from "expo-router";
 import React from "react";
 
 export default function TabDetailRoad() {
     const { Colors } = useAppTheme();
+    const params = useLocalSearchParams<{
+        id: string;
+    }>();
+
+    const getDetailRuasJalan = useGetDetailRuasJalan(params.id);
 
     return (
         <View>
@@ -29,7 +37,7 @@ export default function TabDetailRoad() {
                         No
                     </Typography>
                     <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                        1
+                        {getDetailRuasJalan?.data?.data?.no_ruas || "-"}
                     </Typography>
                 </View>
                 <Separator />
@@ -42,7 +50,7 @@ export default function TabDetailRoad() {
                         Nama Ruas
                     </Typography>
                     <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                        Sp. Panaragan- Bandar Dewa - Menggala Mas
+                        {getDetailRuasJalan?.data?.data?.nama_ruas || "-"}
                     </Typography>
                 </View>
                 <Separator />
@@ -63,7 +71,7 @@ export default function TabDetailRoad() {
                             Panjang Ruas
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            1
+                        {getDetailRuasJalan?.data?.data?.panjang_ruas || "-"}
                         </Typography>
                     </View>
                     <View
@@ -75,7 +83,7 @@ export default function TabDetailRoad() {
                             Lebar Ruas
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            1
+                        {getDetailRuasJalan?.data?.data?.lebar || "-"}
                         </Typography>
                     </View>
                 </View>
@@ -97,7 +105,7 @@ export default function TabDetailRoad() {
                             Rigit
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                        36.850
+                        {getDetailRuasJalan?.data?.data?.rigit || "-"}
                         </Typography>
                     </View>
                     <View
@@ -106,10 +114,10 @@ export default function TabDetailRoad() {
                         }}
                     >
                         <Typography fontFamily="Poppins-Light" fontSize={14} color="Text 600">
-                        Hotmix
+                            Hotmix
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                        5.140
+                        {getDetailRuasJalan?.data?.data?.hotmix || "-"}
                         </Typography>
                     </View>
                 </View>
@@ -131,7 +139,7 @@ export default function TabDetailRoad() {
                             Lapen
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            1
+                        {getDetailRuasJalan?.data?.data?.lapen || "-"}
                         </Typography>
                     </View>
                     <View
@@ -143,7 +151,7 @@ export default function TabDetailRoad() {
                             Telford
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            1
+                        {getDetailRuasJalan?.data?.data?.lapen || "-"}
                         </Typography>
                     </View>
                 </View>
@@ -165,7 +173,7 @@ export default function TabDetailRoad() {
                             Tanah
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            25.100
+                        {getDetailRuasJalan?.data?.data?.tanah || "-"}
                         </Typography>
                     </View>
                     <View
@@ -177,7 +185,7 @@ export default function TabDetailRoad() {
                             Baik
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            0.950
+                        {getDetailRuasJalan?.data?.data?.baik || "-"}
                         </Typography>
                     </View>
                 </View>
@@ -199,7 +207,7 @@ export default function TabDetailRoad() {
                             Sedang
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            14.2
+                        {getDetailRuasJalan?.data?.data?.sedang || "-"}
                         </Typography>
                     </View>
                     <View
@@ -211,7 +219,7 @@ export default function TabDetailRoad() {
                             Rusak Ringan
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            0.40
+                        {getDetailRuasJalan?.data?.data?.rusak_ringan || "-"}
                         </Typography>
                     </View>
                 </View>
@@ -233,7 +241,7 @@ export default function TabDetailRoad() {
                             Rusak Berat
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            4.34
+                        {getDetailRuasJalan?.data?.data?.rusak_berat || "-"}
                         </Typography>
                     </View>
                     <View
@@ -245,7 +253,7 @@ export default function TabDetailRoad() {
                             LHR
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            1
+                        {getDetailRuasJalan?.data?.data?.lhr || "-"}
                         </Typography>
                     </View>
                 </View>
@@ -267,7 +275,7 @@ export default function TabDetailRoad() {
                             Akses
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            K
+                        {getDetailRuasJalan?.data?.data?.akses || "-"}
                         </Typography>
                     </View>
                     <View
@@ -279,19 +287,19 @@ export default function TabDetailRoad() {
                             Keterangan
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            -
+                        {getDetailRuasJalan?.data?.data?.keterangan || "-"}
                         </Typography>
                     </View>
                 </View>
             </View>
             {/* button */}
             <Button
-            style={{
-                marginHorizontal: 20,
-                marginTop: 20,
-                backgroundColor: Colors["Primary Blue"],
-                borderColor: Colors["Primary Blue"],
-            }}
+                style={{
+                    marginHorizontal: 20,
+                    marginTop: 20,
+                    backgroundColor: Colors["Primary Blue"],
+                    borderColor: Colors["Primary Blue"],
+                }}
             >
                 <Typography style={{ color: Colors["Background 100"] }}>Download Ruas Jalan</Typography>
             </Button>
