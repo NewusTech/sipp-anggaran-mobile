@@ -10,10 +10,11 @@ import { formatDateYMD } from "@/constants";
 import { useAppTheme } from "@/context";
 import { getLastYears } from "@/helper";
 import { useGetRealisasiFisik } from "@/services/sipp";
+import { usePermission } from "@/store/sipp";
 import { getMonthName } from "@/utils";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Dimensions, ScrollView } from "react-native";
+import { Dimensions, Pressable, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function physicalProgress() {
@@ -25,6 +26,8 @@ export default function physicalProgress() {
   const [filterDateStart, setFilterDateStart] = useState<Date | null>(null);
   const [filterDateEnd, setFilterDateEnd] = useState<Date | null>(null);
   const [filterStatus, setFilterStatus] = useState<number | string>("");
+
+  const userPermissions = usePermission();
 
   const getRealisaiFisik = useGetRealisasiFisik(
     `status=${filterStatus}&tahun=${filterYear}&start_date=${
@@ -104,66 +107,131 @@ export default function physicalProgress() {
           {/* <Button style={{ marginTop: 10 }}>Download</Button> */}
         </View>
         {!getRealisaiFisik.isFetching &&
-          getRealisaiFisik.data?.data.map((data, index) => (
-            <View
-              key={index}
-              style={{
-                backgroundColor: Colors["Background 100"],
-                width: Dimensions.get("window").width - 40,
-                padding: 20,
-                borderRadius: 15,
-                borderWidth: 1,
-                borderColor: Colors["Background 200"],
-              }}
-            >
-              <Typography
-                fontFamily="Poppins-Light"
-                fontSize={14}
-                color="Text 500"
-              >
-                Nama Pekerjaan
-              </Typography>
-              <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                {data.title}
-              </Typography>
-              <View style={{ marginVertical: 5, marginTop: 10 }}>
-                <Typography
-                  fontFamily="Poppins-Light"
-                  fontSize={14}
-                  color="Text 500"
+          getRealisaiFisik.data?.data.map(
+            (data, index) =>
+              data.kegiatan && (
+                <Pressable
+                  key={index}
+                  style={{
+                    backgroundColor: Colors["Background 100"],
+                    width: Dimensions.get("window").width - 40,
+                    borderRadius: 15,
+                    borderWidth: 1,
+                    borderColor: Colors["Background 200"],
+                    overflow: "hidden",
+                  }}
+                  disabled={!userPermissions.includes("lihat detail kegiatan")}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/(autenticated)/sipp/activities/detail/[id]",
+                      params: {
+                        id: data.id,
+                      },
+                    })
+                  }
                 >
-                  Bulan
-                </Typography>
-                <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                  {getMonthName(Number.parseInt(data.progres[0]?.bulan))}
-                </Typography>
-              </View>
-              <View style={{ marginVertical: 5 }}>
-                <Typography
-                  fontFamily="Poppins-Light"
-                  fontSize={14}
-                  color="Text 500"
-                >
-                  Minggu-Ke
-                </Typography>
-                <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                  {data.progres[0]?.minggu || "-"}
-                </Typography>
-              </View>
-              <View style={{ marginVertical: 5 }}>
-                <Typography
-                  fontFamily="Poppins-Light"
-                  fontSize={14}
-                  color="Text 500"
-                >
-                  {data.progres[0]?.jenis_progres || "-"}%
-                </Typography>
-                <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                  {data.progres[0]?.nilai || "-"}%
-                </Typography>
-              </View>
-            </View>
-          ))}
+                  <Typography
+                    style={{
+                      textAlignVertical: "center",
+                      textAlign: "center",
+                      backgroundColor: Colors["Info 500"],
+                      paddingVertical: 15,
+                    }}
+                    color="Background 100"
+                  >
+                    {data.kegiatan.bidang.name}
+                  </Typography>
+                  <View
+                    style={{
+                      padding: 20,
+                    }}
+                  >
+                    <Typography
+                      fontFamily="Poppins-Light"
+                      fontSize={14}
+                      color="Text 500"
+                    >
+                      Nama Pekerjaan
+                    </Typography>
+                    <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                      {data.title}
+                    </Typography>
+                    <View style={{ marginVertical: 5 }}>
+                      <Typography
+                        fontFamily="Poppins-Light"
+                        fontSize={14}
+                        color="Text 500"
+                      >
+                        Penyedia Jasa
+                      </Typography>
+                      <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                        {data.penyedia_jasa || "-"}
+                      </Typography>
+                    </View>
+                    <View style={{ marginVertical: 5 }}>
+                      <Typography
+                        fontFamily="Poppins-Light"
+                        fontSize={14}
+                        color="Text 500"
+                      >
+                        Jenis Pengadaan
+                      </Typography>
+                      <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                        {data.jenis_pengadaan || "-"}
+                      </Typography>
+                    </View>
+                    <View style={{ marginVertical: 5 }}>
+                      <Typography
+                        fontFamily="Poppins-Light"
+                        fontSize={14}
+                        color="Text 500"
+                      >
+                        Lokasi
+                      </Typography>
+                      <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                        {data.alamat || "-"}
+                      </Typography>
+                    </View>
+                    <View style={{ marginVertical: 5, marginTop: 10 }}>
+                      <Typography
+                        fontFamily="Poppins-Light"
+                        fontSize={14}
+                        color="Text 500"
+                      >
+                        Bulan
+                      </Typography>
+                      <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                        {getMonthName(Number.parseInt(data.progres[0]?.bulan))}
+                      </Typography>
+                    </View>
+                    <View style={{ marginVertical: 5 }}>
+                      <Typography
+                        fontFamily="Poppins-Light"
+                        fontSize={14}
+                        color="Text 500"
+                      >
+                        Minggu-Ke
+                      </Typography>
+                      <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                        {data.progres[0]?.minggu || "-"}
+                      </Typography>
+                    </View>
+                    <View style={{ marginVertical: 5 }}>
+                      <Typography
+                        fontFamily="Poppins-Light"
+                        fontSize={14}
+                        color="Text 500"
+                      >
+                        {data.progres[0]?.jenis_progres || "-"}%
+                      </Typography>
+                      <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                        {data.progres[0]?.nilai || "-"}%
+                      </Typography>
+                    </View>
+                  </View>
+                </Pressable>
+              )
+          )}
         {getRealisaiFisik.isFetching && (
           <View
             style={{

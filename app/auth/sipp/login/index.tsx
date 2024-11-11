@@ -44,6 +44,7 @@ export default function index() {
         setAccessToken(response.data.token);
 
         await setItem("accesstoken", response.data.token);
+        await setItem("permission", response.data.permission);
 
         Toast.show({
           type: "success",

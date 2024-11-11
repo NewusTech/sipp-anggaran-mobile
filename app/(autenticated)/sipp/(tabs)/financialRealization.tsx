@@ -9,9 +9,11 @@ import { formatDateYMD } from "@/constants";
 import { useAppTheme } from "@/context";
 import { getLastYears } from "@/helper";
 import { useGetRealisasiKeuangan } from "@/services/sipp";
+import { usePermission } from "@/store/sipp";
+import { getMonthName, substring } from "@/utils";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Dimensions, ScrollView } from "react-native";
+import { Dimensions, Pressable, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function financialRealization() {
@@ -23,6 +25,8 @@ export default function financialRealization() {
   const [filterDateStart, setFilterDateStart] = useState<Date | null>(null);
   const [filterDateEnd, setFilterDateEnd] = useState<Date | null>(null);
   // const [filterStatus, setFilterStatus] = useState<number | string>("");
+
+  const userPermissions = usePermission();
 
   const getKeuangan = useGetRealisasiKeuangan(
     `tahun=${filterYear}&start_date=${
@@ -97,66 +101,134 @@ export default function financialRealization() {
           {/* <Button style={{ marginTop: 10 }}>Download</Button> */}
         </View>
         {!getKeuangan.isFetching &&
-          getKeuangan.data?.data.map((d, index) => (
-            <View
-              key={index}
-              style={{
-                backgroundColor: Colors["Background 100"],
-                width: Dimensions.get("window").width - 40,
-                padding: 20,
-                borderRadius: 15,
-                borderWidth: 1,
-                borderColor: Colors["Background 200"],
-              }}
-            >
-              <Typography
-                fontFamily="Poppins-Light"
-                fontSize={14}
-                color="Text 500"
-              >
-                Nama Pekerjaan
-              </Typography>
-              <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                Operasi dan Pemeliharaan Sistem Penyediaan Air Minum (SPAM)
-              </Typography>
-              <View style={{ marginVertical: 5, marginTop: 10 }}>
-                <Typography
-                  fontFamily="Poppins-Light"
-                  fontSize={14}
-                  color="Text 500"
+          getKeuangan.data?.data.map(
+            (item, index) =>
+              item.kegiatan && (
+                <Pressable
+                  key={index}
+                  style={{
+                    backgroundColor: Colors["Background 100"],
+                    width: Dimensions.get("window").width - 40,
+                    borderRadius: 15,
+                    borderWidth: 1,
+                    borderColor: Colors["Background 200"],
+                    overflow: "hidden",
+                  }}
+                  disabled={!userPermissions.includes("lihat detail kegiatan")}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/(autenticated)/sipp/activities/detail/[id]",
+                      params: {
+                        id: item.id,
+                      },
+                    })
+                  }
                 >
-                  Bulan
-                </Typography>
-                <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                  November
-                </Typography>
-              </View>
-              <View style={{ marginVertical: 5 }}>
-                <Typography
-                  fontFamily="Poppins-Light"
-                  fontSize={14}
-                  color="Text 500"
-                >
-                  Minggu-Ke
-                </Typography>
-                <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                  1
-                </Typography>
-              </View>
-              <View style={{ marginVertical: 5 }}>
-                <Typography
-                  fontFamily="Poppins-Light"
-                  fontSize={14}
-                  color="Text 500"
-                >
-                  Fisik%
-                </Typography>
-                <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                  4.28%
-                </Typography>
-              </View>
-            </View>
-          ))}
+                  <Typography
+                    style={{
+                      textAlignVertical: "center",
+                      textAlign: "center",
+                      backgroundColor: Colors["Info 500"],
+                      paddingVertical: 15,
+                    }}
+                    color="Background 100"
+                  >
+                    {item.kegiatan.bidang.name}
+                  </Typography>
+                  <View
+                    style={{
+                      padding: 20,
+                    }}
+                  >
+                    <Typography
+                      fontFamily="Poppins-Light"
+                      fontSize={14}
+                      color="Text 500"
+                    >
+                      Nama Pekerjaan
+                    </Typography>
+                    <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                      {substring(item.title, 47)}
+                    </Typography>
+                    <View style={{ marginVertical: 5 }}>
+                      <Typography
+                        fontFamily="Poppins-Light"
+                        fontSize={14}
+                        color="Text 500"
+                      >
+                        Penyedia Jasa
+                      </Typography>
+                      <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                        {item.penyedia_jasa || "-"}
+                      </Typography>
+                    </View>
+                    <View style={{ marginVertical: 5 }}>
+                      <Typography
+                        fontFamily="Poppins-Light"
+                        fontSize={14}
+                        color="Text 500"
+                      >
+                        Jenis Pengadaan
+                      </Typography>
+                      <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                        {item.jenis_pengadaan || "-"}
+                      </Typography>
+                    </View>
+                    <View style={{ marginVertical: 5 }}>
+                      <Typography
+                        fontFamily="Poppins-Light"
+                        fontSize={14}
+                        color="Text 500"
+                      >
+                        Lokasi
+                      </Typography>
+                      <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                        {item.alamat || "-"}
+                      </Typography>
+                    </View>
+                    <View style={{ marginVertical: 5, marginTop: 10 }}>
+                      <Typography
+                        fontFamily="Poppins-Light"
+                        fontSize={14}
+                        color="Text 500"
+                      >
+                        Bulan
+                      </Typography>
+                      <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                        {getMonthName(
+                          Number.parseInt(item.progres[0]?.bulan),
+                          "Normal"
+                        ) || "-"}
+                      </Typography>
+                    </View>
+                    <View style={{ marginVertical: 5 }}>
+                      <Typography
+                        fontFamily="Poppins-Light"
+                        fontSize={14}
+                        color="Text 500"
+                      >
+                        Minggu-Ke
+                      </Typography>
+                      <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                        {item.progres[0]?.minggu || "-"}
+                      </Typography>
+                    </View>
+                    <View style={{ marginVertical: 5 }}>
+                      <Typography
+                        fontFamily="Poppins-Light"
+                        fontSize={14}
+                        color="Text 500"
+                      >
+                        Fisik%
+                      </Typography>
+                      <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                        {item.progres[0]?.nilai || "-"}%
+                      </Typography>
+                    </View>
+                  </View>
+                </Pressable>
+              )
+          )}
         {getKeuangan.isFetching && (
           <View
             style={{

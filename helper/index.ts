@@ -8,5 +8,5 @@ export function getLastYears(lastYears: number) {
     years.push((currentYear - i).toString());
   }
 
-  return years.reverse();
+  return years;
 }

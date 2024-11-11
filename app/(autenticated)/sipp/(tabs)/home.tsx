@@ -15,12 +15,18 @@ import SectionTable from "@/components/screen/home/SectionTable";
 import Header from "@/components/header";
 import { useRouter } from "expo-router";
 import { useGetDashoardCart, useGetDashoardRealisasi } from "@/services/sipp";
+import { useAccessToken, usePermission } from "@/store/sipp";
+import { jwtDecode } from "jwt-decode";
 
 export default function home() {
   const inset = useSafeAreaInsets();
   const router = useRouter();
 
   const [filterYear, setFilterYear] = useState<number | string>("");
+  // const [activePage, setActivePage] = useState<number>(0);
+  const userPermissions = usePermission();
+  const token = useAccessToken();
+  const decoded = jwtDecode(token || "") as any;
 
   const getCart = useGetDashoardCart(filterYear ? "year=" + filterYear : "");
   const getRealisasi = useGetDashoardRealisasi(
@@ -56,12 +62,16 @@ export default function home() {
           placeholder="Pilih Tahun"
           trailingIcon={<IconCaretDown />}
         />
-        <SectionCard filterYear={filterYear.toString()} />
-        <SectionFinancialRealization
-          chartLabel={getCart.data?.data.chart_data.labels || []}
-          chartDdata={getCart.data?.data.chart_data.data_keuangan || []}
-          data={getRealisasi.data?.data.realisasi_keuangan || []}
-        />
+        {userPermissions.includes("lihat total keuangan") && (
+          <SectionCard filterYear={filterYear.toString()} />
+        )}
+        {userPermissions.includes("lihat progres keuangan") && (
+          <SectionFinancialRealization
+            chartLabel={getCart.data?.data.chart_data.labels || []}
+            chartDdata={getCart.data?.data.chart_data.data_keuangan || []}
+            data={getRealisasi.data?.data.realisasi_keuangan || []}
+          />
+        )}
         <SectionPhysicalProgress
           chartLabel={getCart.data?.data.chart_data.labels || []}
           chartDdata={getCart.data?.data.chart_data.data_fisik || []}

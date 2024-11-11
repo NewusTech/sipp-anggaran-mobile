@@ -177,6 +177,9 @@ export type realisasiFisikResponseSuccess = {
   data: {
     id: number;
     title: string;
+    alamat: "Setia Agung";
+    jenis_pengadaan: "Lelang";
+    penyedia_jasa: "PT Kontraktor Indonesia";
     progres: {
       id: number;
       detail_kegiatan_id: number;
@@ -185,6 +188,15 @@ export type realisasiFisikResponseSuccess = {
       jenis_progres: string;
       nilai: number;
     }[];
+    kegiatan: {
+      id: 3;
+      title: "Penyelenggaraan Jalan Kabupaten/Kota";
+      bidang_id: 6;
+      bidang: {
+        id: 6;
+        name: "Bidang Bina Marga";
+      };
+    };
   }[];
 };
 
@@ -202,6 +214,9 @@ export type realisasiKeuanganResponseSuccess = {
   data: {
     id: number;
     title: string;
+    alamat: "Setia Agung";
+    jenis_pengadaan: "Lelang";
+    penyedia_jasa: "PT Kontraktor Indonesia";
     progres: {
       id: number;
       detail_kegiatan_id: number;
@@ -210,6 +225,15 @@ export type realisasiKeuanganResponseSuccess = {
       jenis_progres: string;
       nilai: number;
     }[];
+    kegiatan: {
+      id: 3;
+      title: "Penyelenggaraan Jalan Kabupaten/Kota";
+      bidang_id: 6;
+      bidang: {
+        id: 6;
+        name: "Bidang Bina Marga";
+      };
+    };
   }[];
 };
 
@@ -743,4 +767,89 @@ export const putKegiatan = async (
   return response.data;
 };
 
+export const deleteKegiatan = async (id: string) => {
+  const response = await apiClientSIPP<PostResponseSuccess>({
+    method: "DELTE",
+    url: `/detail-kegiatan/${id}`,
+  });
+  return response.data;
+};
 
+export type kegiatanDanSubKegiatan = {
+  status: HttpStatusCode;
+  message: string;
+  data: {
+    kegiatan: {
+      id: number;
+      title: string;
+      bidang: string | null;
+    }[];
+  };
+};
+
+export const getKegiatanDanSubKegiatan = async () => {
+  const response = await apiClientSIPP<kegiatanDanSubKegiatan>({
+    method: "GET",
+    url: `/detail-kegiatan/kegitan-and-sub-kegiatan`,
+  });
+  return response.data;
+};
+
+export type bidangDanSumberDana = {
+  status: HttpStatusCode;
+  message: string;
+  data: {
+    bidang: {
+      id: number;
+      name: string;
+      kode: string;
+    }[];
+    sumber_dana: {
+      id: number;
+      name: string;
+    }[];
+  };
+};
+
+export const getBidangDanSumberDana = async () => {
+  const response = await apiClientSIPP<bidangDanSumberDana>({
+    method: "GET",
+    url: `/detail-kegiatan/bidang-and-sumber-dana`,
+  });
+  return response.data;
+};
+
+export type subKegiatan = {
+  status: HttpStatusCode;
+  message: string;
+  data: {
+    id: number;
+    title: string;
+  }[];
+};
+
+export const getSubKegiatan = async () => {
+  const response = await apiClientSIPP<subKegiatan>({
+    method: "GET",
+    url: `/detail-kegiatan/sub-kegiatan`,
+  });
+  return response.data;
+};
+
+export type program = {
+  status: HttpStatusCode;
+  message: string;
+  data: {
+    id: number;
+    name: string;
+    kode: string;
+  }[];
+};
+
+export const getProgram = async () => {
+  const response = await apiClientSIPP<program>({
+    method: "GET",
+    url: `/detail-kegiatan/program`,
+  });
+  return response.data;
+};

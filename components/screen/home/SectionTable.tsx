@@ -8,9 +8,11 @@ import React, { useState } from "react";
 import { Dimensions, StyleSheet } from "react-native";
 import { useGetDashoardTableData } from "@/services/sipp";
 import PaginatedView from "@/components/ui/pagination";
+import { useRouter } from "expo-router";
 
 export default function SectionTable({ filterYear }: { filterYear: string }) {
   const { Colors } = useAppTheme();
+  const router = useRouter();
 
   const [page, setPage] = useState<number>(1);
   const getTable = useGetDashoardTableData(`year=${filterYear}&page=${page}`);
@@ -67,7 +69,17 @@ export default function SectionTable({ filterYear }: { filterYear: string }) {
                     Progress
                   </Typography>
                   <Typography style={{ width: 10 }}>:</Typography>
-                  <Typography color="Info 500">
+                  <Typography
+                    color="Info 500"
+                    onPress={() =>
+                      router.push({
+                        pathname: "/(autenticated)/sipp/activities/detail/[id]",
+                        params: {
+                          id: data.id,
+                        },
+                      })
+                    }
+                  >
                     {data.progres[0]?.nilai || "-"}%
                   </Typography>
                 </View>

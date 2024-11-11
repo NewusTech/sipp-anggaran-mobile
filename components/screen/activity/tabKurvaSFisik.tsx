@@ -10,7 +10,9 @@ import {
   usePutDetailAnggaranKurvaFisikProgress,
   usePutDetailAnggaranKurvaFisikRencana,
 } from "@/services/sipp";
+import { useAccessToken, usePermission } from "@/store/sipp";
 import { getMonthName } from "@/utils";
+import { jwtDecode } from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import { Dimensions, Pressable, TextInput } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
@@ -28,6 +30,11 @@ export default function TabKurvaSFisik({ id }: { id: string }) {
   const [dataKurvaFisikRencana, setDataKurvaFisikRencana] = useState<
     Record<string, number>
   >({});
+
+  const userPermissions = usePermission();
+
+  const token = useAccessToken();
+  const decoded = jwtDecode(token || "") as any;
 
   const putDetailAnggaranKurvaFisikRencanaMutation =
     usePutDetailAnggaranKurvaFisikRencana();
@@ -118,27 +125,45 @@ export default function TabKurvaSFisik({ id }: { id: string }) {
         >
           {dataFisik.minggu}
         </Typography>
-        <TextInput
-          style={{
-            borderWidth: 1,
-            padding: 10,
-            width: "33%",
-            height: 40,
-            borderColor: Colors["Line 400"],
-            borderRadius: 10,
-            textAlign: "center",
-            color: Colors["Text 500"],
-          }}
-          inputMode="numeric"
-          placeholder="%"
-          value={String(dataSet[dataFisik.id] || "")}
-          onChangeText={(text) =>
-            setData((prev) => ({
-              ...prev,
-              [dataFisik.id]: parseFloat(text) || 0,
-            }))
-          }
-        />
+        {userPermissions.includes("ubah detail kegiatan") ? (
+          <TextInput
+            style={{
+              borderWidth: 1,
+              padding: 10,
+              width: "33%",
+              height: 40,
+              borderColor: Colors["Line 400"],
+              borderRadius: 10,
+              textAlign: "center",
+              color: Colors["Text 500"],
+            }}
+            inputMode="numeric"
+            placeholder="%"
+            value={String(dataSet[dataFisik.id] || "")}
+            onChangeText={(text) =>
+              setData((prev) => ({
+                ...prev,
+                [dataFisik.id]: parseFloat(text) || 0,
+              }))
+            }
+          />
+        ) : (
+          <Typography
+            style={{
+              borderWidth: 1,
+              padding: 10,
+              width: "33%",
+              height: 40,
+              borderColor: Colors["Line 400"],
+              borderRadius: 10,
+              textAlign: "center",
+              color: Colors["Text 500"],
+              backgroundColor: Colors["Background 200"],
+            }}
+          >
+            {String(dataSet[dataFisik.id] || "")}%
+          </Typography>
+        )}
       </View>
     ));
 

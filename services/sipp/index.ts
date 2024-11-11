@@ -25,6 +25,11 @@ import {
   putDetailAnggaranPenanggungJawab,
   putKegiatan,
   getDetailKegiatan,
+  deleteKegiatan,
+  getKegiatanDanSubKegiatan,
+  getBidangDanSumberDana,
+  getSubKegiatan,
+  getProgram,
 } from "@/api/sipp";
 import { useAccessToken } from "@/store/sipp";
 import { kegiatanPayload, kegiatanUpdatePayload } from "@/validation";
@@ -230,6 +235,51 @@ export const useGetDetailKegiatan = (id?: string) => {
   });
 };
 
+export const useGetKegiatanDanSubKegiatan = () => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetKegiatanDanSubKegiatan", accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getKegiatanDanSubKegiatan(),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+export const useGetBidangDanSumberDana = () => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetBidangDanSumberDana", accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getBidangDanSumberDana(),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+export const useGetSubKegiatan = () => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetSubKegiatan", accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getSubKegiatan(),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+export const useGetProgram = () => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetProgram", accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getProgram(),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+
 //
 export const usePutDetailAnggaranKurvaFisikRencana = () => {
   return useMutation({
@@ -285,6 +335,12 @@ export const usePutKegiatan = () => {
   return useMutation({
     mutationFn: (payload: { id: string; data: kegiatanUpdatePayload }) =>
       putKegiatan(payload.id, payload.data),
+    onError: (error: AxiosError<ResponseError>) => error,
+  });
+};
+export const useDeleteKegiatan = () => {
+  return useMutation({
+    mutationFn: (payload: string) => deleteKegiatan(payload),
     onError: (error: AxiosError<ResponseError>) => error,
   });
 };

@@ -6,7 +6,13 @@ import { SelectInput } from "@/components/ui/selectInput";
 import TextInput from "@/components/ui/textInput";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
-import { usePostKegiatan } from "@/services/sipp";
+import {
+  useGetBidangDanSumberDana,
+  useGetKegiatanDanSubKegiatan,
+  useGetProgram,
+  useGetSubKegiatan,
+  usePostKegiatan,
+} from "@/services/sipp";
 import { kegiatanPayload, kegiatanSchema } from "@/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
@@ -19,12 +25,18 @@ export default function index() {
   const router = useRouter();
   const { Colors } = useAppTheme();
 
-  const { control, handleSubmit, formState, setValue } =
+  const { control, handleSubmit, formState, setValue, watch } =
     useForm<kegiatanPayload>({
       defaultValues: {},
       resolver: zodResolver(kegiatanSchema),
       mode: "all",
     });
+
+  const getKegitan = useGetKegiatanDanSubKegiatan();
+  const getSubKegiatan = useGetSubKegiatan();
+  const getBidangDanSumberDana = useGetBidangDanSumberDana();
+  const getProgram = useGetProgram();
+  const programData = getProgram.data?.data;
 
   const postKegiatanMutation = usePostKegiatan();
 
@@ -69,12 +81,25 @@ export default function index() {
           render={({ field, fieldState }) => (
             <SelectInput
               label="Program"
-              data={[]}
-              placeholder="Program"
-              onSelect={(dataItem: any, index: any) =>
-                field.onChange(dataItem.title)
+              data={
+                programData?.map((data) => {
+                  return {
+                    title: data.name,
+                  };
+                }) || []
               }
-              value={field.value}
+              placeholder="Program"
+              onSelect={(dataItem: any, index: any) => {
+                const id = programData?.find(
+                  (f) => f.name === dataItem.title
+                )?.id;
+                field.onChange(id);
+              }}
+              value={
+                programData?.find(
+                  (f) => f.id.toString() === field.name.toString()
+                )?.name || "-"
+              }
               trailingIcon={<IconCaretDown color="Text 900" />}
               padding={12}
               borderRadius={15}
@@ -87,12 +112,25 @@ export default function index() {
           render={({ field, fieldState }) => (
             <SelectInput
               label="Kegiatan"
-              data={[]}
-              placeholder="Kegiatan"
-              onSelect={(dataItem: any, index: any) =>
-                field.onChange(dataItem.title)
+              data={
+                getKegitan.data?.data?.kegiatan.map((d) => {
+                  return {
+                    title: d.title,
+                  };
+                }) || []
               }
-              value={field.value}
+              placeholder="Kegiatan"
+              onSelect={(dataItem: any, index: any) => {
+                const id = getKegitan.data?.data?.kegiatan?.find(
+                  (f) => f.title === dataItem.title
+                )?.id;
+                field.onChange(id);
+              }}
+              value={
+                getKegitan.data?.data?.kegiatan?.find(
+                  (f) => f.id.toString() === field.value
+                )?.title || ""
+              }
               trailingIcon={<IconCaretDown color="Text 900" />}
               padding={12}
               borderRadius={15}
@@ -105,12 +143,25 @@ export default function index() {
           render={({ field, fieldState }) => (
             <SelectInput
               label="Sub Kegiatan"
-              data={[]}
-              placeholder="Sub Kegiatan"
-              onSelect={(dataItem: any, index: any) =>
-                field.onChange(dataItem.title)
+              data={
+                getSubKegiatan.data?.data?.map((d) => {
+                  return {
+                    title: d.title,
+                  };
+                }) || []
               }
-              value={field.value}
+              placeholder="Sub Kegiatan"
+              onSelect={(dataItem: any, index: any) => {
+                const id = getSubKegiatan.data?.data?.find(
+                  (f) => f.title === dataItem.title
+                )?.id;
+                field.onChange(id);
+              }}
+              value={
+                getSubKegiatan.data?.data?.find(
+                  (f) => f.id.toString() === field.value
+                )?.title || ""
+              }
               trailingIcon={<IconCaretDown color="Text 900" />}
               padding={12}
               borderRadius={15}
@@ -176,10 +227,17 @@ export default function index() {
               label="Bidang"
               data={[]}
               placeholder="Bidang"
-              onSelect={(dataItem: any, index: any) =>
-                field.onChange(dataItem.title)
+              onSelect={(dataItem: any, index: any) => {
+                const id = getBidangDanSumberDana.data?.data?.bidang?.find(
+                  (f) => f.name === dataItem.title
+                )?.id;
+                field.onChange(id);
+              }}
+              value={
+                getBidangDanSumberDana.data?.data?.bidang?.find(
+                  (f) => f.id.toString() === field.value
+                )?.name || ""
               }
-              value={field.value}
               trailingIcon={<IconCaretDown color="Text 900" />}
               padding={12}
               borderRadius={15}
@@ -192,12 +250,25 @@ export default function index() {
           render={({ field, fieldState }) => (
             <SelectInput
               label="Sumber Dana"
-              data={[]}
-              placeholder="Sumber Dana"
-              onSelect={(dataItem: any, index: any) =>
-                field.onChange(dataItem.title)
+              data={
+                getBidangDanSumberDana.data?.data.sumber_dana.map((f) => {
+                  return {
+                    title: f.name,
+                  };
+                }) || []
               }
-              value={"field.value"}
+              placeholder="Sumber Dana"
+              onSelect={(dataItem: any, index: any) => {
+                const id = getBidangDanSumberDana.data?.data?.sumber_dana?.find(
+                  (f) => f.name === dataItem.title
+                )?.id;
+                field.onChange(id);
+              }}
+              value={
+                getBidangDanSumberDana.data?.data?.sumber_dana?.find(
+                  (f) => f.id.toString() === field.value
+                )?.name || ""
+              }
               trailingIcon={<IconCaretDown color="Text 900" />}
               padding={12}
               borderRadius={15}
