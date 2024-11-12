@@ -33,7 +33,7 @@
         // highlight-start
         "@rnmapbox/maps",
         {
-          "RNMapboxMapsDownloadToken": "sk.key",
+          "RNMapboxMapsDownloadToken": "pk.eyJ1IjoiaGFtZGFuaGFiaWJpNyIsImEiOiJjbTM1bmp4ODUwY2JyMnJwbmFqazY2cWNoIn0.d32KBuAGIQwoVpYq4OAyow",
           "locationWhenInUsePermission": "Show current location on map."
         }
         // highlight-end
