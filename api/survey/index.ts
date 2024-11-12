@@ -47,6 +47,8 @@ export type RuasJalanData = {
   keterangan: string | null;
   mantap: string;
   tmantap: string;
+  status: string;
+  alasan: string;
 };
 
 export type RuasJalanResponse = {
@@ -141,6 +143,8 @@ export type Bridge = {
   nilai_kondisi: number;
   kondisi: string;
   tahun: string;
+  status: string;
+  keterangan: string;
   created_at: string;
 }
 
@@ -213,3 +217,110 @@ export const getDashboardDrainaseSection = async (query?: string) => {
   return response.data;
 };
 // getDashboardDrainase
+
+// getTableDashboardDrainase
+export type DrainaseDataResponse = {
+  success: boolean;
+  data: {
+    current_page: number;
+    data: Drainase[];
+    first_page_url: string;
+    from: number;
+    last_page: number;
+    last_page_url: string;
+    links: Array<{
+      url: string | null;
+      label: string;
+      active: boolean;
+    }>;
+    next_page_url: string | null;
+    path: string;
+    per_page: number;
+    prev_page_url: string | null;
+    to: number;
+    total: number;
+  };
+  message: string;
+};
+
+export type Drainase = {
+  id: number;
+  nama_desa: string;
+  nama_kecamatan: string;
+  total_panjang_ruas: number;
+};
+
+export const getDashboardTableDrainaseSection = async (query?: string) => {
+  const response = await apiClientSurvey<DrainaseDataResponse>({
+    method: "GET",
+    url: `/survey_drainase?${query && query}`,
+  });
+  return response.data;
+};
+// getTableDashboardDrainase
+
+// getDetailRuasDrainase
+export type RuasDrainaseData = {
+  id: number;
+  nama_ruas: string;
+  panjang_ruas: string;
+  desa_id: number;
+  nama_desa: string;
+  panjang_drainase: number;
+  letak_drainase: string;
+  lebar_atas: string;
+  lebar_bawah: string;
+  tinggi: string;
+  kondisi: string;
+  latitude: string;
+  longitude: string;
+  created_at: string;
+  nama_kecamatan: string;
+  status: string;
+  keterangan: string;
+};
+
+export type PaginationLink = {
+  url: string | null;
+  label: string;
+  active: boolean;
+};
+
+export type PaginationDetails = {
+  current_page: number;
+  data: RuasDrainaseData[];
+  first_page_url: string;
+  from: number;
+  last_page: number;
+  last_page_url: string;
+  links: PaginationLink[];
+  next_page_url: string | null;
+  path: string;
+  per_page: number;
+  prev_page_url: string | null;
+  to: number;
+  total: number;
+};
+
+export type DataTotal = {
+  total_panjang_ruas: number;
+  total_panjang_drainase: string;
+  total_panjang_drainase_kondisi_tanah: number;
+};
+
+export type RuasDrainaseResponse = {
+  success: boolean;
+  data: PaginationDetails;
+  data_total: DataTotal;
+  message: string;
+};
+
+
+export const getDashboardTableDrainaseSectionDetail = async (id?: string) => {
+  const response = await apiClientSurvey<RuasDrainaseResponse>({
+    method: "GET",
+    url: `/survey_drainase/detail?desa_id=${id}`,
+  });
+  return response.data;
+};
+// getDetailRuasDrainase

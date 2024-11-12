@@ -3,6 +3,8 @@ import {
     getDashboardRoadSection,
     getDashboardTableBridgeSection,
     getDashboardTableBridgeSectionDetail,
+    getDashboardTableDrainaseSection,
+    getDashboardTableDrainaseSectionDetail,
     getDashboardTableRoadSection,
     getDashboardTableRoadSectionDetail,
 
@@ -93,3 +95,31 @@ export const useGetDashoardDrainaseSection = (query?: string) => {
     });
   };
 // get dashboard drainase
+
+//   get table ruas jembatan dashboard
+export const useGetDashoardTableDrainaseSection = (query?: string) => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetDashoardTableDrainaseSection", query, accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getDashboardTableDrainaseSection(query),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+//   get table ruas jembatan dashboard
+
+// get detail ruas jembatan dashboard
+export const useGetDetailRuasDrainase = (id?: string) => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetDetailRuasDrainase", id, accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getDashboardTableDrainaseSectionDetail(id),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+// get detail ruas jembatan dashboard

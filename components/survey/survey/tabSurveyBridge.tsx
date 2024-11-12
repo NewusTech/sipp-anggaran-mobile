@@ -93,7 +93,7 @@ export default function TabSurveyBridge() {
                         <Typography color='Background 100'>Import</Typography>
                     </Button>
                     <Button
-                    onPress={() => router.push("(autenticated)/survey/home/sectionBridge/add")}
+                    onPress={() => router.push("/(autenticated)/survey/home/sectionBridge/add")}
                         style={{
                             width: Dimensions.get("window").width / 2 - 25,
                         }}
