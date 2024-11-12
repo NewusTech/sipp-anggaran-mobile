@@ -264,7 +264,7 @@ export default function SectionTableBridge({ filterYear }: SectionCardSurveyProp
                                 justifyContent: "space-between"
                             }}>
                                 <Button
-                                    onPress={() => router.push(`(autenticated)/survey/home/sectionBridge/detail/${section.id}`)}
+                                    onPress={() => router.push(`/(autenticated)/survey/home/sectionBridge/detail/${section.id}`)}
                                     style={{
                                         width: Dimensions.get("window").width / 2 - 40,
                                     }}
@@ -273,7 +273,7 @@ export default function SectionTableBridge({ filterYear }: SectionCardSurveyProp
                                     Lihat
                                 </Button>
                                 <Button
-                                    onPress={() => router.push(`(autenticated)/survey/home/sectionBridge/edit/${section.id}`)}
+                                    onPress={() => router.push(`/(autenticated)/survey/home/sectionBridge/edit`)}
                                     style={{
                                         width: Dimensions.get("window").width / 2 - 40,
                                     }}

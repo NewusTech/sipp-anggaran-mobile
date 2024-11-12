@@ -11,7 +11,7 @@ import View from "@/components/ui/view";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Dimensions, ScrollView } from "react-native";
-import { LeafletView } from "react-native-leaflet-maps";
+// import { LeafletView } from "react-native-leaflet-maps";
 
 
 export default function index() {
@@ -132,14 +132,14 @@ export default function index() {
                 >Cari Alamat
                 </Button>
                 {/* map */}
-                <View style={{ flex: 1, width: "100%", height: 300, marginTop: 10, }}>
+                {/* <View style={{ flex: 1, width: "100%", height: 300, marginTop: 10, }}>
                     <LeafletView
                         mapCenterPosition={{
                             lat: -5.39714,
                             lng: 105.266792,
                         }}
                     />
-                </View>
+                </View> */}
                 <Separator
                 ></Separator>
                 {/* button */}

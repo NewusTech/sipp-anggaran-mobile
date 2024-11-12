@@ -8,7 +8,7 @@ import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
 import React, { useState } from "react";
-import { Dimensions, Modal, Pressable, StyleSheet } from "react-native";
+import { ActivityIndicator, Dimensions, Modal, Pressable, StyleSheet } from "react-native";
 import { AppColor } from "@/constants";
 import Accordion from "@/components/ui/accordion";
 import {
@@ -16,9 +16,15 @@ import {
     IconCaretRight,
 } from "@/components/icons";
 import { IconCaretUp } from "@/components/icons/IconCaretUp";
-import { router } from "expo-router"
+import { router, useLocalSearchParams } from "expo-router"
 import ModalAction from "@/components/ui/modalAction";
 import TextInput from "@/components/ui/textInput";
+import { useGetDetailRuasDrainase } from "@/services/survey";
+
+interface RuasJalanData {
+    status: string;
+    keterangan: string;
+}
 export default function TabDetailDrainase() {
     // Sample month data; replace with actual data source
     const monthOptions = [
@@ -35,6 +41,22 @@ export default function TabDetailDrainase() {
     const [modalStatus, setModalStatus] = useState(false);
     const [modalStatusTerima, setModalStatusTerima] = useState(false);
     const [modalStatusTolak, setModalStatusTolak] = useState(false);
+    const [selectedSection, setSelectedSection] = useState<RuasJalanData | null>(null);
+
+    // intergasi
+    const params = useLocalSearchParams<{
+        id: string;
+    }>();
+    const { data: tableData, isLoading, error } = useGetDetailRuasDrainase(params.id);
+
+    if (isLoading) {
+        return <ActivityIndicator size="large" color={Colors["Primary Blue"]} />;
+    }
+
+    if (error) {
+        return <Typography color="Error 500">Failed to load data.</Typography>;
+    }
+    // intergasi
 
     return (
         <View>
@@ -102,282 +124,348 @@ export default function TabDetailDrainase() {
                         borderBottomLeftRadius: 10,
                         borderBottomRightRadius: 10,
                     }}>
-                        {Array.from({ length: 5 }).map((d, index) => (
-                            <Accordion
-                                key={index}
-                                style={{
-                                    marginBottom: 10,
-                                    borderWidth: 1,
-                                    borderColor: Colors["Primary Blue"],
-                                    // Apply different border radius styles based on index
-                                    borderBottomLeftRadius: index === 0 ? 10 : undefined,
-                                    borderBottomRightRadius: index === 0 ? 10 : undefined,
-                                    borderRadius: index !== 0 ? 10 : undefined,
-                                    overflow: "hidden",
-                                }}
-                                header={(isOpen) => (
-                                    <View
-                                        style={{
-                                            padding: 10,
-                                            backgroundColor: "#ECECEF",
-                                            flexDirection: "row",
-                                            borderTopLeftRadius: 10,
-                                            borderTopRightRadius: 10,
-                                            overflow: "hidden",
-                                            alignItems: "center",
-                                            justifyContent: "space-between",
-                                        }}
-                                    >
-                                        <Typography color="Primary Blue" fontSize={15}>
-                                            POROS 1 (KANAN JALAN)
-                                        </Typography>
-                                        {isOpen ? <IconCaretFillDown /> : <IconCaretUp />}
+                        {tableData?.data?.data && tableData.data.data.length > 0 ? (
+                            tableData?.data?.data?.map((section, index) => (
+                                <Accordion
+                                    key={index}
+                                    style={{
+                                        marginBottom: 10,
+                                        borderWidth: 1,
+                                        borderColor: Colors["Primary Blue"],
+                                        // Apply different border radius styles based on index
+                                        borderBottomLeftRadius: index === 0 ? 10 : undefined,
+                                        borderBottomRightRadius: index === 0 ? 10 : undefined,
+                                        borderRadius: index !== 0 ? 10 : undefined,
+                                        overflow: "hidden",
+                                    }}
+                                    header={(isOpen) => (
+                                        <View
+                                            style={{
+                                                padding: 10,
+                                                backgroundColor: "#ECECEF",
+                                                flexDirection: "row",
+                                                borderTopLeftRadius: 10,
+                                                borderTopRightRadius: 10,
+                                                overflow: "hidden",
+                                                alignItems: "center",
+                                                justifyContent: "space-between",
+                                            }}
+                                        >
+                                            <Typography
+                                                style={{
+                                                    width: 285,
+                                                }}
+                                                color="Primary Blue" fontSize={15}>
+                                                {section?.nama_ruas || "-"}
+                                            </Typography>
+                                            {isOpen ? <IconCaretFillDown /> : <IconCaretUp />}
+                                        </View>
+                                    )}
+                                >
+                                    <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                        <View >
+                                            <Typography
+                                                style={{
+                                                    color: "#757575",
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                Desa
+                                            </Typography>
+                                            <Typography
+                                                style={{
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                {section?.nama_desa || "-"}
+                                            </Typography>
+                                        </View>
                                     </View>
-                                )}
-                            >
-                                <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                                    <View >
-                                        <Typography
-                                            style={{
-                                                color: "#757575",
-                                                fontSize: 16,
-                                            }}
-                                        >
-                                            Desa
-                                        </Typography>
-                                        <Typography
-                                            style={{
-                                                fontSize: 16,
-                                            }}
-                                        >
-                                            MULYO SARI
-                                        </Typography>
+                                    {/*  */}
+                                    <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                        <View >
+                                            <Typography
+                                                style={{
+                                                    color: "#757575",
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                Kecamatan
+                                            </Typography>
+                                            <Typography
+                                                style={{
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                {section?.nama_kecamatan || "-"}
+                                            </Typography>
+                                        </View>
                                     </View>
-                                </View>
-                                {/*  */}
-                                <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                                    <View >
-                                        <Typography
-                                            style={{
-                                                color: "#757575",
-                                                fontSize: 16,
-                                            }}
-                                        >
-                                            Kecamatan
-                                        </Typography>
-                                        <Typography
-                                            style={{
-                                                fontSize: 16,
-                                            }}
-                                        >
-                                            Batu Putih
-                                        </Typography>
+                                    {/*  */}
+                                    <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                        <View >
+                                            <Typography
+                                                style={{
+                                                    color: "#757575",
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                Panjang Ruas
+                                            </Typography>
+                                            <Typography
+                                                style={{
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                {section?.panjang_ruas || "-"}
+                                            </Typography>
+                                        </View>
                                     </View>
-                                </View>
-                                {/*  */}
-                                <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                                    <View >
-                                        <Typography
-                                            style={{
-                                                color: "#757575",
-                                                fontSize: 16,
-                                            }}
-                                        >
-                                            Panjang Ruas
-                                        </Typography>
-                                        <Typography
-                                            style={{
-                                                fontSize: 16,
-                                            }}
-                                        >
-                                            80
-                                        </Typography>
+                                    {/*  */}
+                                    <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                        <View >
+                                            <Typography
+                                                style={{
+                                                    color: "#757575",
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                Panjang Drainase
+                                            </Typography>
+                                            <Typography
+                                                style={{
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                {section?.panjang_drainase || "-"}
+                                            </Typography>
+                                        </View>
                                     </View>
-                                </View>
-                                {/*  */}
-                                <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                                    <View >
-                                        <Typography
-                                            style={{
-                                                color: "#757575",
-                                                fontSize: 16,
-                                            }}
-                                        >
-                                            Panjang Drainase
-                                        </Typography>
-                                        <Typography
-                                            style={{
-                                                fontSize: 16,
-                                            }}
-                                        >
-                                            40
-                                        </Typography>
+                                    {/*  */}
+                                    <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                        <View >
+                                            <Typography
+                                                style={{
+                                                    color: "#757575",
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                Letak Drainase
+                                            </Typography>
+                                            <Typography
+                                                style={{
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                {section?.letak_drainase || "-"}
+                                            </Typography>
+                                        </View>
                                     </View>
-                                </View>
-                                {/*  */}
-                                <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                                    <View >
-                                        <Typography
-                                            style={{
-                                                color: "#757575",
-                                                fontSize: 16,
-                                            }}
-                                        >
-                                            Letak Drainase
-                                        </Typography>
-                                        <Typography
-                                            style={{
-                                                fontSize: 16,
-                                            }}
-                                        >
-                                            -
-                                        </Typography>
+                                    {/*  */}
+                                    <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                        <View >
+                                            <Typography
+                                                style={{
+                                                    color: "#757575",
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                Lebar Atas
+                                            </Typography>
+                                            <Typography
+                                                style={{
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                {section?.lebar_atas || "-"}
+                                            </Typography>
+                                        </View>
                                     </View>
-                                </View>
-                                {/*  */}
-                                <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                                    <View >
-                                        <Typography
-                                            style={{
-                                                color: "#757575",
-                                                fontSize: 16,
-                                            }}
-                                        >
-                                            Lebar Atas
-                                        </Typography>
-                                        <Typography
-                                            style={{
-                                                fontSize: 16,
-                                            }}
-                                        >
-                                            60
-                                        </Typography>
+                                    {/*  */}
+                                    <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                        <View >
+                                            <Typography
+                                                style={{
+                                                    color: "#757575",
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                Lebar Bawah
+                                            </Typography>
+                                            <Typography
+                                                style={{
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                {section?.lebar_bawah || "-"}
+                                            </Typography>
+                                        </View>
                                     </View>
-                                </View>
-                                {/*  */}
-                                <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                                    <View >
-                                        <Typography
-                                            style={{
-                                                color: "#757575",
-                                                fontSize: 16,
-                                            }}
-                                        >
-                                            Lebar Bawah
-                                        </Typography>
-                                        <Typography
-                                            style={{
-                                                fontSize: 16,
-                                            }}
-                                        >
-                                            40
-                                        </Typography>
+                                    {/*  */}
+                                    <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                        <View >
+                                            <Typography
+                                                style={{
+                                                    color: "#757575",
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                Tinggi
+                                            </Typography>
+                                            <Typography
+                                                style={{
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                {section?.tinggi || "-"}
+                                            </Typography>
+                                        </View>
                                     </View>
-                                </View>
-                                {/*  */}
-                                <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                                    <View >
-                                        <Typography
-                                            style={{
-                                                color: "#757575",
-                                                fontSize: 16,
-                                            }}
-                                        >
-                                            Tinggi
-                                        </Typography>
-                                        <Typography
-                                            style={{
-                                                fontSize: 16,
-                                            }}
-                                        >
-                                            60
-                                        </Typography>
+                                    {/*  */}
+                                    <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
+                                        <View >
+                                            <Typography
+                                                style={{
+                                                    color: "#757575",
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                Kondisi
+                                            </Typography>
+                                            <Typography
+                                                style={{
+                                                    fontSize: 16,
+                                                }}
+                                            >
+                                                {section?.kondisi || "-"}
+                                            </Typography>
+                                        </View>
                                     </View>
-                                </View>
-                                {/*  */}
-                                <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                                    <View >
+                                    {/* status */}
+                                    <View style={{
+                                        marginTop: 5,
+                                        marginBottom: 15,
+                                        paddingHorizontal: 10,
+                                        display: "flex",
+                                        gap: 5,
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        flexDirection: "column",
+                                    }}>
                                         <Typography
                                             style={{
-                                                color: "#757575",
-                                                fontSize: 16,
+                                                fontSize: 15,
                                             }}
                                         >
-                                            Kondisi
+                                            Status
                                         </Typography>
-                                        <Typography
+                                        <Button
+                                            onPress={() => {
+                                                setSelectedSection(section);
+                                                setModalStatus(true);
+                                            }}
                                             style={{
-                                                fontSize: 16,
+                                                width: Dimensions.get("window").width / 1 - 70,
                                             }}
+                                            color={`${section?.status === "Diterima" ? "Success 600" : section?.status === "Ditolak" ? "Error 500" : "Warning 600"}`}
                                         >
-                                            Baik
-                                        </Typography>
+                                            {section?.status || "-"}
+                                        </Button>
+                                        {/* Modal status */}
+                                        <Modal transparent={true} visible={modalStatus}>
+                                            <Pressable
+                                                style={{
+                                                    flex: 1,
+                                                    width: "100%",
+                                                    height: "100%",
+                                                    backgroundColor: "rgba(20, 21, 17, 0.5)",
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                }}
+                                                onPress={() => setModalStatus(false)}
+                                            >
+                                                <View style={{
+                                                    backgroundColor: "white",
+                                                    width: "80%",
+                                                    padding: 20,
+                                                    borderRadius: 15,
+                                                    justifyContent: "center",
+                                                    gap: 10,
+                                                    paddingBottom: 20,
+                                                }}>
+                                                    <View style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                                                        <View style={{ flexDirection: "row", gap: 5 }}>
+                                                            <Typography style={{ fontWeight: "bold" }}>Status</Typography>
+                                                            <Typography>:</Typography>
+                                                        </View>
+                                                        <View>
+                                                            <Typography>
+                                                                {selectedSection?.status || "-"}
+                                                            </Typography>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{ flexDirection: "column", gap: 1 }}>
+                                                        <View style={{ flexDirection: "row", gap: 5 }}>
+                                                            <Typography style={{ fontWeight: "bold" }}>Keterangan</Typography>
+                                                            <Typography>:</Typography>
+                                                        </View>
+                                                        <View>
+                                                            <Typography>
+                                                                {selectedSection?.keterangan || "-"}
+                                                            </Typography>
+                                                        </View>
+                                                    </View>
+                                                    <Button color="Primary Blue" onPress={() => setModalStatus(false)}>
+                                                        <Typography color="Background 100">Keluar</Typography>
+                                                    </Button>
+                                                </View>
+                                            </Pressable>
+                                        </Modal>
+                                        {/* Modal status */}
                                     </View>
-                                </View>
-                                {/* status */}
-                                <View style={{
-                                    marginTop: 5,
-                                    marginBottom: 15,
-                                    paddingHorizontal: 10,
-                                    display: "flex",
-                                    gap: 5,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    flexDirection: "column",
-                                }}>
-                                    <Typography
-                                        style={{
-                                            fontSize: 15,
-                                        }}
-                                    >
-                                        Status
-                                    </Typography>
-                                    <Button
-                                        onPress={() => setModalStatus(true)}
-                                        style={{
-                                            width: Dimensions.get("window").width / 1 - 70,
-                                        }}
-                                        color="Success 600"
-                                    >
-                                        Diterima
-                                    </Button>
-                                </View>
-                                <Separator
-                                    style={
-                                        { marginTop: 10, marginBottom: 10 }
-                                    }
-                                ></Separator>
-                                {/* button */}
-                                <View style={{
-                                    marginTop: 5,
-                                    marginBottom: 15,
-                                    paddingHorizontal: 10,
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    justifyContent: "space-between"
-                                }}>
-                                    <Button
-                                        onPress={() => setModalStatusTolak(true)}
+                                    <Separator
+                                        style={
+                                            { marginTop: 10, marginBottom: 10 }
+                                        }
+                                    ></Separator>
+                                    {/* button */}
+                                    <View style={{
+                                        marginTop: 5,
+                                        marginBottom: 15,
+                                        paddingHorizontal: 10,
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        justifyContent: "space-between"
+                                    }}>
+                                        <Button
+                                            onPress={() => setModalStatusTolak(true)}
 
-                                        style={{
-                                            width: Dimensions.get("window").width / 2 - 40,
-                                        }}
-                                        color="Error 500"
-                                    >
-                                        Tolak
-                                    </Button>
-                                    <Button
-                                        onPress={() => setModalStatusTerima(true)}
-                                        style={{
-                                            width: Dimensions.get("window").width / 2 - 40,
-                                        }}
-                                        color="Success 600"
-                                    >
-                                        Terima
-                                    </Button>
-                                </View>
-                            </Accordion>
-                        ))}
+                                            style={{
+                                                width: Dimensions.get("window").width / 2 - 40,
+                                            }}
+                                            color="Error 500"
+                                        >
+                                            Tolak
+                                        </Button>
+                                        <Button
+                                            onPress={() => setModalStatusTerima(true)}
+                                            style={{
+                                                width: Dimensions.get("window").width / 2 - 40,
+                                            }}
+                                            color="Success 600"
+                                        >
+                                            Terima
+                                        </Button>
+                                    </View>
+                                </Accordion>
+                            ))
+                        ) : (
+                            <View style={{ padding: 20, alignItems: "center" }}>
+                                <Typography color="Text 500" fontSize={16}>
+                                    Tidak ada data
+                                </Typography>
+                            </View>
+                        )}
                     </View>
 
                     {/* Pagination */}
@@ -406,106 +494,6 @@ export default function TabDetailDrainase() {
                     </View>
                 </View>
             </View>
-            {/* Modal status */}
-            <Modal transparent={true} visible={modalStatus}>
-                <Pressable
-                    style={{
-                        flex: 1,
-                        width: "100%",
-                        height: "100%",
-                        backgroundColor: "rgba(20, 21, 17, 0.5)",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                    onPress={() => setModalStatus(false)}
-                >
-                    <View
-                        backgroundColor="Background 100"
-                        style={{
-                            width: "80%",
-                            // height: 300,
-                            padding: 20,
-                            borderRadius: 15,
-                            justifyContent: "center",
-                            gap: 10,
-                            paddingBottom: 20,
-                        }}
-                    >
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: 1,
-                            }}
-                        >
-                            <View
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    gap: 5,
-                                }}
-                            >
-                                <Typography
-                                    style={{
-                                        fontWeight: "bold",
-                                    }}
-                                >
-                                    Status
-                                </Typography>
-                                <Typography>
-                                    :
-                                </Typography>
-                            </View>
-                            <View>
-                                <Typography>
-                                    Diterima
-                                </Typography>
-                            </View>
-                        </View>
-                        {/*  */}
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: 1,
-                            }}
-                        >
-                            <View
-                                style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    gap: 5,
-                                }}
-                            >
-                                <Typography
-                                    style={{
-                                        fontWeight: "bold",
-                                    }}
-                                >
-                                    Keterangan
-                                </Typography>
-                                <Typography>
-                                    :
-                                </Typography>
-                            </View>
-                            <View>
-                                <Typography>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis quia temporibus fugit ullam quo cum sed repellendus. Placeat, eius ullam.
-                                </Typography>
-                            </View>
-                        </View>
-                        <Button
-                            color="Primary Blue"
-                            onPress={() => setModalStatus(false)}
-                        // onPress={handleUploadFotoStatus}
-                        // disabled={uploadFotoStatus.isPending}
-                        >
-                            <Typography color="Background 100">Keluar</Typography>
-                        </Button>
-                    </View>
-                </Pressable>
-            </Modal>
-            {/* Modal status */}
 
             {/* Modal terima */}
             <Modal transparent={true} visible={modalStatusTerima}>

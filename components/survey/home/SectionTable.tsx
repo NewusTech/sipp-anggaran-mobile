@@ -134,12 +134,12 @@ export default function SectionTableSurvey({ filterYear }: SectionCardSurveyProp
                                 <Button
                                     style={{ width: Dimensions.get("window").width / 2 - 40 }}
                                     color="Primary Blue"
-                                    onPress={() => router.push(`(autenticated)/survey/home/SectionRoad/detail/${section.id}`)}
+                                    onPress={() => router.push(`/(autenticated)/survey/home/SectionRoad/detail/${section.id}`)}
                                 >
                                     Lihat
                                 </Button>
                                 <Button
-                                    onPress={() => router.push(`(autenticated)/survey/home/SectionRoad/edit/${section.id}`)}
+                                    onPress={() => router.push(`/(autenticated)/survey/home/SectionRoad/edit`)}
                                     style={{ width: Dimensions.get("window").width / 2 - 40 }}
                                     color="Success 600"
                                 >
