@@ -8,6 +8,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Button } from "@/components/ui/button";
 import { IconFlopyDisk, IconMap, IconPhone } from "@/components/icons";
 import { useGetDetailAnggaranTitikLokasi } from "@/services/sipp";
+import { useIsPermission } from "@/helper";
 
 export default function TabTitikLokasi({ id }: { id: string }) {
   const { Colors } = useAppTheme();
@@ -51,12 +52,19 @@ export default function TabTitikLokasi({ id }: { id: string }) {
             fontFamily="Poppins-Medium"
             fontSize={18}
           >
-            Bandar Lampung (belum)
+           Bandar Lampung
           </Typography>
           <Separator color="Background 100" />
-          <View style={{ flexDirection: "row", width: "100%", gap: 10 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              width: "100%",
+              gap: 10,
+              justifyContent: "center",
+            }}
+          >
             <Typography color="Background 100" fontSize={16}>
-              belum
+              -
             </Typography>
             <Separator orientation="vertical" color="Background 100" />
             <Typography color="Background 100" fontSize={16}>
@@ -64,7 +72,7 @@ export default function TabTitikLokasi({ id }: { id: string }) {
             </Typography>
             <Separator orientation="vertical" color="Background 100" />
             <Typography color="Background 100" fontSize={16}>
-              belum
+              -
             </Typography>
           </View>
         </LinearGradient>
@@ -131,7 +139,10 @@ export default function TabTitikLokasi({ id }: { id: string }) {
             </Button>
           </View>
         </View>
-        <Button style={{ marginTop: 20 }}>
+        <Button
+          style={{ marginTop: 20 }}
+          disabled={!useIsPermission("ubah detail kegiatan")}
+        >
           <IconFlopyDisk color="Background 100" />
           <Typography color="Background 100">Simpan</Typography>
         </Button>

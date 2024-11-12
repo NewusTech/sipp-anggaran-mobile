@@ -6,6 +6,7 @@ import { SelectInput } from "@/components/ui/selectInput";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
+import { useIsPermission } from "@/helper";
 import {
   useGetDataPenanggungJawab,
   useGetDetailAnggaranPenanggungJawab,
@@ -61,7 +62,10 @@ export default function TabPersonInCharge({ id }: { id: string }) {
         gap: 15,
       }}
     >
-      <Button onPress={() => setModalPJ(true)}>
+      <Button
+        onPress={() => setModalPJ(true)}
+        disabled={!useIsPermission("ubah detail kegiatan")}
+      >
         <IconPencil color="Background 100" />
         <Typography color="Background 100">Edit Penanggung Jawab</Typography>
       </Button>

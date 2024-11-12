@@ -1,18 +1,16 @@
-import { putDetailAnggaranKurvaFisikRencana } from "@/api/sipp";
 import { IconFlopyDisk } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/ui/loader";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
+import { useIsPermission } from "@/helper";
 import {
   useGetDetailAnggaranKurvaFisik,
   usePutDetailAnggaranKurvaFisikProgress,
   usePutDetailAnggaranKurvaFisikRencana,
 } from "@/services/sipp";
-import { useAccessToken, usePermission } from "@/store/sipp";
 import { getMonthName } from "@/utils";
-import { jwtDecode } from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import { Dimensions, Pressable, TextInput } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
@@ -31,10 +29,8 @@ export default function TabKurvaSFisik({ id }: { id: string }) {
     Record<string, number>
   >({});
 
-  const userPermissions = usePermission();
-
-  const token = useAccessToken();
-  const decoded = jwtDecode(token || "") as any;
+  // Perform the permission check once before mapping
+  const canEdit = useIsPermission("ubah detail kegiatan");
 
   const putDetailAnggaranKurvaFisikRencanaMutation =
     usePutDetailAnggaranKurvaFisikRencana();
@@ -125,7 +121,7 @@ export default function TabKurvaSFisik({ id }: { id: string }) {
         >
           {dataFisik.minggu}
         </Typography>
-        {userPermissions.includes("ubah detail kegiatan") ? (
+        {canEdit ? (
           <TextInput
             style={{
               borderWidth: 1,
@@ -245,7 +241,9 @@ export default function TabKurvaSFisik({ id }: { id: string }) {
       </View>
       <Button
         onPress={handleUpdateRencana}
-        disabled={putDetailAnggaranKurvaFisikRencanaMutation.isPending}
+        disabled={
+          putDetailAnggaranKurvaFisikRencanaMutation.isPending || !canEdit
+        }
       >
         <IconFlopyDisk color="Background 100" />
         {putDetailAnggaranKurvaFisikRencanaMutation.isPending ? (
@@ -317,7 +315,9 @@ export default function TabKurvaSFisik({ id }: { id: string }) {
       </View>
       <Button
         onPress={handleUpdateProgress}
-        disabled={putDetailAnggaranKurvaFisikProsesMutation.isPending}
+        disabled={
+          putDetailAnggaranKurvaFisikProsesMutation.isPending || !canEdit
+        }
       >
         <IconFlopyDisk color="Background 100" />
         {putDetailAnggaranKurvaFisikProsesMutation.isPending ? (

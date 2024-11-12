@@ -11,6 +11,7 @@ import UploadFoto from "@/components/ui/uploadFileFoto";
 import View from "@/components/ui/view";
 import { BASE_URL_SIPP } from "@/constants";
 import { useAppTheme } from "@/context";
+import { useIsPermission } from "@/helper";
 import {
   useGetDetailAnggaranDokumentasi,
   usePostDetailAnggaranDokumentasi,
@@ -171,7 +172,10 @@ export default function TabDocumentation({ id }: { id: string }) {
         gap: 15,
       }}
     >
-      <Button onPress={handleAddDocModal}>
+      <Button
+        onPress={handleAddDocModal}
+        disabled={!useIsPermission("ubah detail kegiatan")}
+      >
         <IconPlus color="Background 100" />
         <Typography color="Background 100">Tambah Dokumentasi</Typography>
       </Button>

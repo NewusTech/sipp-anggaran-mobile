@@ -11,7 +11,6 @@ import View from "@/components/ui/view";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Dimensions, ScrollView } from "react-native";
-import { LeafletView } from "react-native-leaflet-maps";
 
 
 export default function index() {
