@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SelectInput } from "@/components/ui/selectInput";
 import { useState } from "react";
 import { IconCaretDown } from "@/components/icons";
-import { getLastYears } from "@/helper";
+import { getLastYears, IsPermission } from "@/helper";
 import SectionCard from "@/components/screen/home/SectionCard";
 import SectionFinancialRealization from "@/components/screen/home/SectionFinancialRealization";
 import SectionPhysicalProgress from "@/components/screen/home/SectionPhysicalProgress";
@@ -15,8 +15,6 @@ import SectionTable from "@/components/screen/home/SectionTable";
 import Header from "@/components/header";
 import { useRouter } from "expo-router";
 import { useGetDashoardCart, useGetDashoardRealisasi } from "@/services/sipp";
-import { useAccessToken, usePermission } from "@/store/sipp";
-import { jwtDecode } from "jwt-decode";
 
 export default function home() {
   const inset = useSafeAreaInsets();
@@ -24,9 +22,6 @@ export default function home() {
 
   const [filterYear, setFilterYear] = useState<number | string>("");
   // const [activePage, setActivePage] = useState<number>(0);
-  const userPermissions = usePermission();
-  const token = useAccessToken();
-  const decoded = jwtDecode(token || "") as any;
 
   const getCart = useGetDashoardCart(filterYear ? "year=" + filterYear : "");
   const getRealisasi = useGetDashoardRealisasi(
@@ -62,16 +57,16 @@ export default function home() {
           placeholder="Pilih Tahun"
           trailingIcon={<IconCaretDown />}
         />
-        {userPermissions.includes("lihat total keuangan") && (
+        <IsPermission permission="lihat total keuangan">
           <SectionCard filterYear={filterYear.toString()} />
-        )}
-        {userPermissions.includes("lihat progres keuangan") && (
+        </IsPermission>
+        <IsPermission permission="lihat total keuangan">
           <SectionFinancialRealization
             chartLabel={getCart.data?.data.chart_data.labels || []}
             chartDdata={getCart.data?.data.chart_data.data_keuangan || []}
             data={getRealisasi.data?.data.realisasi_keuangan || []}
           />
-        )}
+        </IsPermission>
         <SectionPhysicalProgress
           chartLabel={getCart.data?.data.chart_data.labels || []}
           chartDdata={getCart.data?.data.chart_data.data_fisik || []}

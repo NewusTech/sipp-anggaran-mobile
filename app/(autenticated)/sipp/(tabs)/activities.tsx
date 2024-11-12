@@ -6,7 +6,7 @@ import Separator from "@/components/ui/separator";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
-import { getLastYears } from "@/helper";
+import { getLastYears, isPermission } from "@/helper";
 import React, { useState } from "react";
 import { Pressable, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -18,7 +18,6 @@ import { formatCurrency } from "@/utils";
 import Loader from "@/components/ui/loader";
 import ModalAction from "@/components/ui/modalAction";
 import Toast from "react-native-toast-message";
-import { usePermission } from "@/store/sipp";
 
 export default function Activities() {
   const inset = useSafeAreaInsets();
@@ -26,8 +25,6 @@ export default function Activities() {
   const { Colors } = useAppTheme();
 
   const [modalTambah, setModalTambah] = useState<boolean>(false);
-
-  const userPermissions = usePermission();
 
   const getKegiatan = useGetKegiatan(`year=${filterYear}`);
 
@@ -93,7 +90,7 @@ export default function Activities() {
           <Button
             style={{ borderRadius: 15 }}
             onPress={() => setModalTambah(true)}
-            disabled={!userPermissions.includes("tambah kegiatan")}
+            disabled={!isPermission("tambah kegiatan")}
           >
             <IconPlus color="Background 100" />
             <Typography
@@ -349,9 +346,7 @@ export default function Activities() {
                                   >
                                     <Button
                                       disabled={
-                                        !userPermissions.includes(
-                                          "lihat detail kegiatan"
-                                        )
+                                        !isPermission("lihat detail kegiatan")
                                       }
                                       onPress={() =>
                                         router.push({
@@ -372,11 +367,7 @@ export default function Activities() {
                                       </Typography>
                                     </Button>
                                     <Button
-                                      disabled={
-                                        !userPermissions.includes(
-                                          "ubah kegiatan"
-                                        )
-                                      }
+                                      disabled={isPermission("ubah kegiatan")}
                                       onPress={() =>
                                         router.push({
                                           pathname:
@@ -397,11 +388,7 @@ export default function Activities() {
                                       </Typography>
                                     </Button>
                                     <Button
-                                      disabled={
-                                        !userPermissions.includes(
-                                          "hapus kegiatan"
-                                        )
-                                      }
+                                      disabled={!isPermission("hapus kegiatan")}
                                       onPress={() =>
                                         handleModalDeleteKegiatan(
                                           detail.id.toString()
