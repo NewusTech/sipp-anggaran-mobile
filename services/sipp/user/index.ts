@@ -1,7 +1,15 @@
 import { postLogin, ResponseError } from "@/api";
-import { getUserProfile } from "@/api/sipp/user";
+import {
+  getUserProfile,
+  putEditProfile,
+  putProfilePassword,
+} from "@/api/sipp/user";
 import { useAccessToken } from "@/store/sipp";
-import { PostLoginPayload } from "@/validation";
+import {
+  PostLoginPayload,
+  userDataPayload,
+  userUpdatePasswordPayload,
+} from "@/validation";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
@@ -24,11 +32,17 @@ export const useGetProfile = () => {
   });
 };
 
-// export const useUpdatePrfoile = () => {
-//   return useMutation({
-//     mutationFn: (payload: { data: FormData; slug: string }) =>
-//       putEditProfile(payload.data, payload.slug),
-//     onError: (error: AxiosError<ResponseError>) => error,
-//   });
-// };
+export const useUpdatePrfoile = () => {
+  return useMutation({
+    mutationFn: (payload: userDataPayload) => putEditProfile(payload),
+    onError: (error: AxiosError<ResponseError>) => error,
+  });
+};
 
+export const useUpadatePassword = () => {
+  return useMutation({
+    mutationFn: (payload: userUpdatePasswordPayload) =>
+      putProfilePassword(payload),
+    onError: (error: AxiosError<ResponseError>) => error,
+  });
+};

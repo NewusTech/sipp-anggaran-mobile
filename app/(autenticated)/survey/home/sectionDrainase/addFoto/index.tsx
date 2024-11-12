@@ -14,7 +14,6 @@ import { useAppTheme } from "@/context";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Dimensions, Modal, Pressable, ScrollView } from "react-native";
-import { LeafletView } from "react-native-leaflet-maps";
 
 
 

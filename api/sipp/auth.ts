@@ -8,6 +8,7 @@ export type PostLoginResponseSuccess = {
     token: string;
     type: string;
     app_name: "SIPP-Anggaran" | "SIPP-Survey";
+    permission: string[];
   };
 };
 export const postLogin = async (payload: PostLoginPayload) => {

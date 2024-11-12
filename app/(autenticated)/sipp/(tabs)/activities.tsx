@@ -6,16 +6,18 @@ import Separator from "@/components/ui/separator";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
-import { getLastYears } from "@/helper";
+import { getLastYears, isPermission } from "@/helper";
 import React, { useState } from "react";
 import { Pressable, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Modals from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { router } from "expo-router";
-import { useGetKegiatan } from "@/services/sipp";
+import { useDeleteKegiatan, useGetKegiatan } from "@/services/sipp";
 import { formatCurrency } from "@/utils";
 import Loader from "@/components/ui/loader";
+import ModalAction from "@/components/ui/modalAction";
+import Toast from "react-native-toast-message";
 
 export default function Activities() {
   const inset = useSafeAreaInsets();
@@ -25,6 +27,35 @@ export default function Activities() {
   const [modalTambah, setModalTambah] = useState<boolean>(false);
 
   const getKegiatan = useGetKegiatan(`year=${filterYear}`);
+
+  const [modalDeleteKegiata, setModalDeleteKegiatan] = useState<boolean>(false);
+  const [dataDeleteKegiatan, setDataDeleteKegiatann] = useState<string>("");
+
+  const deleteKegiatanMutation = useDeleteKegiatan();
+
+  const handleModalDeleteKegiatan = (id: string) => {
+    setDataDeleteKegiatann(id);
+    setModalDeleteKegiatan(true);
+  };
+
+  const handleActionDelete = () => {
+    deleteKegiatanMutation.mutate(dataDeleteKegiatan, {
+      onSuccess: async (response) => {
+        Toast.show({
+          type: "success",
+          text1: "Sukses!",
+          text2: "Tambah Kegiatan",
+        });
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: "Gagal!",
+          text2: "Tambah Kegiatan",
+        });
+      },
+    });
+  };
 
   return (
     <View
@@ -59,6 +90,7 @@ export default function Activities() {
           <Button
             style={{ borderRadius: 15 }}
             onPress={() => setModalTambah(true)}
+            disabled={!isPermission("tambah kegiatan")}
           >
             <IconPlus color="Background 100" />
             <Typography
@@ -132,9 +164,9 @@ export default function Activities() {
                       Data Masih Kosong
                     </Typography>
                   )}
-                  {data.kegiatan.map((kegiatan) => (
+                  {data.kegiatan.map((kegiatan, index) => (
                     <View
-                      key={kegiatan.title}
+                      key={index + "kegiatan"}
                       style={{
                         padding: 15,
                         gap: 10,
@@ -170,8 +202,8 @@ export default function Activities() {
                       >
                         Total Sub Kegiatan : {kegiatan.sub_kegiatan.length}
                       </Typography>
-                      {kegiatan.sub_kegiatan.map((subKegiatan) => (
-                        <View key={subKegiatan.title} style={{ gap: 10 }}>
+                      {kegiatan.sub_kegiatan.map((subKegiatan, index) => (
+                        <View key={index + "subKegiatan"} style={{ gap: 10 }}>
                           <Separator style={{ marginVertical: 5 }} />
                           <Typography
                             fontFamily="Poppins-Medium"
@@ -189,9 +221,9 @@ export default function Activities() {
                           >
                             {subKegiatan.title}
                           </Typography>
-                          {subKegiatan.detail.map((detail) => (
+                          {subKegiatan.detail.map((detail, index) => (
                             <Accordion
-                              key={detail.title}
+                              key={index + "detail"}
                               style={{
                                 borderWidth: 1,
                                 borderRadius: 15,
@@ -312,17 +344,10 @@ export default function Activities() {
                                       marginTop: 10,
                                     }}
                                   >
-                                    <Pressable
-                                      style={{
-                                        padding: 10,
-                                        backgroundColor: Colors["Info 500"],
-                                        borderRadius: 15,
-                                        paddingHorizontal: 20,
-                                        gap: 10,
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                      }}
+                                    <Button
+                                      disabled={
+                                        !isPermission("lihat detail kegiatan")
+                                      }
                                       onPress={() =>
                                         router.push({
                                           pathname:
@@ -340,18 +365,19 @@ export default function Activities() {
                                       >
                                         Lihat
                                       </Typography>
-                                    </Pressable>
-                                    <Pressable
-                                      style={{
-                                        padding: 10,
-                                        backgroundColor: Colors["Success 700"],
-                                        borderRadius: 15,
-                                        paddingHorizontal: 20,
-                                        gap: 10,
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                      }}
+                                    </Button>
+                                    <Button
+                                      disabled={isPermission("ubah kegiatan")}
+                                      onPress={() =>
+                                        router.push({
+                                          pathname:
+                                            "/(autenticated)/sipp/activities/edit/[id]",
+                                          params: {
+                                            id: detail.id,
+                                          },
+                                        })
+                                      }
+                                      color="Success 700"
                                     >
                                       <Typography
                                         fontSize={15}
@@ -360,18 +386,15 @@ export default function Activities() {
                                       >
                                         Edit
                                       </Typography>
-                                    </Pressable>
-                                    <Pressable
-                                      style={{
-                                        padding: 10,
-                                        backgroundColor: Colors["Error 500"],
-                                        borderRadius: 15,
-                                        paddingHorizontal: 20,
-                                        gap: 10,
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                      }}
+                                    </Button>
+                                    <Button
+                                      disabled={!isPermission("hapus kegiatan")}
+                                      onPress={() =>
+                                        handleModalDeleteKegiatan(
+                                          detail.id.toString()
+                                        )
+                                      }
+                                      color="Error 500"
                                     >
                                       <Typography
                                         fontSize={15}
@@ -380,7 +403,7 @@ export default function Activities() {
                                       >
                                         Hapus
                                       </Typography>
-                                    </Pressable>
+                                    </Button>
                                   </View>
                                 </View>
                               </View>
@@ -421,6 +444,13 @@ export default function Activities() {
           Import
         </Button>
       </Modals>
+      <ModalAction
+        title="Yakin Ingin Menghapus Data Ini"
+        isLoading={false}
+        onAction={handleActionDelete}
+        setVisible={setModalDeleteKegiatan}
+        visible={modalDeleteKegiata}
+      />
     </View>
   );
 }

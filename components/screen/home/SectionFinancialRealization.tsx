@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
+import { usePermission } from "@/store/sipp";
 import { getMonthName, substring } from "@/utils";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Dimensions, FlatList } from "react-native";
+import { Dimensions, FlatList, Pressable } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
 
 type SectionFinancialRealization = {
@@ -22,6 +23,8 @@ export default function SectionFinancialRealization(
   const { chartDdata, chartLabel, data } = props;
   const { Colors } = useAppTheme();
   const router = useRouter();
+
+  const userPermissions = usePermission();
 
   return (
     <>
@@ -96,7 +99,7 @@ export default function SectionFinancialRealization(
           data={data || []}
           removeClippedSubviews={true}
           renderItem={({ item }) => (
-            <View
+            <Pressable
               style={{
                 backgroundColor: Colors["Background 100"],
                 marginTop: 20,
@@ -107,6 +110,15 @@ export default function SectionFinancialRealization(
                 borderWidth: 1,
                 borderColor: Colors["Background 200"],
               }}
+              disabled={!userPermissions.includes("lihat detail kegiatan")}
+              onPress={() =>
+                router.push({
+                  pathname: "/(autenticated)/sipp/activities/detail/[id]",
+                  params: {
+                    id: item.id,
+                  },
+                })
+              }
             >
               <Typography
                 fontFamily="Poppins-Light"
@@ -157,7 +169,7 @@ export default function SectionFinancialRealization(
                   {item.progres[0]?.nilai || "-"}%
                 </Typography>
               </View>
-            </View>
+            </Pressable>
           )}
           style={{ width: "100%", paddingBottom: 20 }}
           contentContainerStyle={{

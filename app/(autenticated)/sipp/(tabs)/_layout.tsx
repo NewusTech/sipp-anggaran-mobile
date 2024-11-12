@@ -8,8 +8,9 @@ import { IconHome } from "@/components/icons/IconHome";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
+import { useAccessToken, usePermission } from "@/store/sipp";
 import { Tabs } from "expo-router";
-import { useState } from "react";
+import { jwtDecode } from "jwt-decode";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import Animated, { LinearTransition } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -18,22 +19,69 @@ export default function TabLayout() {
   const { Colors } = useAppTheme();
   const insets = useSafeAreaInsets();
 
-  const [activePage, setActivePage] = useState<number>(0);
+  // const [activePage, setActivePage] = useState<number>(0);
+  // const [userPermissions, setUserPermissions] = useState<string[]>([]);
+  const userPermissions = usePermission();
+
+  const token = useAccessToken();
+  const decoded = jwtDecode(token || "") as any;
+
+  // Daftar semua tab dengan izin yang sesuai
+  const tabScreens = [
+    {
+      name: "home",
+      title: "Home",
+      icon: IconHome,
+      permission: "lihat dasbor", // Tambahkan izin yang sesuai
+    },
+    {
+      name: "activities",
+      title: "Kegiatan",
+      icon: IconAddBox,
+      permission: "lihat kegiatan",
+    },
+    {
+      name: "physicalProgress",
+      title: "Fisik",
+      icon: IconFisik,
+      permission: "lihat kegiatan",
+    },
+    {
+      name: "financialRealization",
+      title: "Keuangan",
+      icon: IconMonyBag,
+      permission: "lihat sumber dana",
+    },
+    {
+      name: "report",
+      title: "Laporan",
+      icon: IconFileReport,
+      permission: "cetak laporan",
+    },
+  ];
+
+  // Filter tab berdasarkan izin
+  // const accessibleTabs =
+  //   userPermissions.length === 0
+  //     ? tabScreens
+  //     : tabScreens.filter((tab) => userPermissions.includes(tab.permission));
 
   return (
     <Tabs
+      key={userPermissions.length}
       screenOptions={{
         headerShown: false,
       }}
       tabBar={({ state, descriptors, navigation }) => {
-        setActivePage(state.index);
+        // Move this line inside a `useEffect` hook to avoid invalid hook call
         return (
           <Animated.View
             layout={LinearTransition}
             style={[
               style.container,
               {
-                paddingBottom: insets.bottom,
+                paddingBottom: insets.bottom + 1,
+                paddingTop: 20,
                 backgroundColor: Colors["Background 100"],
               },
             ]}
@@ -64,107 +112,67 @@ export default function TabLayout() {
               const onLongPress = () => {
                 navigation.emit({
                   type: "tabLongPress",
-                  target: route.key,
+                  target: state.routes[index]?.key,
                 });
               };
-
-              return (
-                <TouchableOpacity
-                  key={route.key}
-                  onPress={onPress}
-                  onLongPress={onLongPress}
-                >
-                  <Animated.View
-                    style={[style.tabBarWrapper]}
-                    layout={LinearTransition}
+              if (
+                userPermissions.includes(
+                  tabScreens.find((f) => f.name === route.name)?.permission ||
+                    ""
+                ) ||
+                decoded.role[0] === "Super Admin"
+              ) {
+                return (
+                  <TouchableOpacity
+                    key={route.key}
+                    onPress={onPress}
+                    onLongPress={onLongPress}
                   >
-                    <View style={style.navIconWrapper}>
-                      {options?.tabBarIcon?.({
-                        focused: isFocused,
-                        color: "",
-                        size: 0,
-                      })}
-                    </View>
-                    <Typography
-                      fontFamily="Poppins-Medium"
-                      color={isFocused ? "Info 500" : "Text 300"}
-                      fontSize={14}
+                    <Animated.View
+                      style={[style.tabBarWrapper]}
+                      layout={LinearTransition}
                     >
-                      {label as string}
-                    </Typography>
-                  </Animated.View>
-                </TouchableOpacity>
-              );
+                      <View style={style.navIconWrapper}>
+                        {options?.tabBarIcon?.({
+                          focused: isFocused,
+                          color: "",
+                          size: 0,
+                        })}
+                      </View>
+                      <Typography
+                        fontFamily="Poppins-Medium"
+                        color={isFocused ? "Info 500" : "Text 300"}
+                        fontSize={14}
+                      >
+                        {label as string}
+                      </Typography>
+                    </Animated.View>
+                  </TouchableOpacity>
+                );
+              } else {
+                return null;
+              }
             })}
           </Animated.View>
         );
       }}
     >
-      <Tabs.Screen
-        name="home"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ focused }) => (
-            <IconHome
-              color={focused ? "Info 500" : "Text 300"}
-              width={24}
-              height={24}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="activities"
-        options={{
-          title: "Kegiatan",
-          tabBarIcon: ({ focused }) => (
-            <IconAddBox
-              color={focused ? "Info 500" : "Text 300"}
-              width={24}
-              height={24}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="physicalProgress"
-        options={{
-          title: "Fisik",
-          tabBarIcon: ({ focused }) => (
-            <IconFisik
-              color={focused ? "Info 500" : "Text 300"}
-              width={24}
-              height={24}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="financialRealization"
-        options={{
-          title: "Keuangan",
-          tabBarIcon: ({ focused }) => (
-            <IconMonyBag
-              color={focused ? "Info 500" : "Text 300"}
-              width={24}
-              height={24}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="report"
-        options={{
-          title: "Laporan",
-          tabBarIcon: ({ focused }) => (
-            <IconFileReport
-              color={focused ? "Info 500" : "Text 300"}
-              width={24}
-              height={24}
-            />
-          ),
-        }}
-      />
+      {tabScreens.map((tab) => (
+        <Tabs.Screen
+          key={tab.name}
+          name={tab.name}
+          options={{
+            title: tab.title,
+            tabBarIcon: ({ focused }) => (
+              <tab.icon
+                color={focused ? "Info 500" : "Text 300"}
+                width={24}
+                height={24}
+              />
+            ),
+          }}
+        />
+      ))}
     </Tabs>
   );
 }

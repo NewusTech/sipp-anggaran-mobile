@@ -3,24 +3,34 @@ import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
 import React from "react";
-import { Dimensions, ScrollView } from "react-native";
-import { LeafletView } from "react-native-leaflet-maps";
+import { Dimensions, Linking, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Button } from "@/components/ui/button";
 import { IconFlopyDisk, IconMap, IconPhone } from "@/components/icons";
+import { useGetDetailAnggaranTitikLokasi } from "@/services/sipp";
 
-export default function TabTitikLokasi() {
+export default function TabTitikLokasi({ id }: { id: string }) {
   const { Colors } = useAppTheme();
+
+  const getTitikLokasi = useGetDetailAnggaranTitikLokasi(id);
+  const titikLokasi = getTitikLokasi.data?.data;
+
+  const openGoogleMaps = () => {
+    const url = `https://www.google.com/maps?q=${titikLokasi?.lokasi.latitude},${titikLokasi?.lokasi.longitude}`;
+    Linking.openURL(url).catch((err) =>
+      console.error("Failed to open Google Maps:", err)
+    );
+  };
 
   return (
     <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
       <View style={{ flex: 1, width: "100%", height: 300 }}>
-        <LeafletView
+        {/* <LeafletView
           mapCenterPosition={{
             lat: -5.39714,
             lng: 105.266792,
           }}
-        />
+        /> */}
       </View>
       <View style={{ padding: 20 }}>
         <LinearGradient
@@ -41,20 +51,20 @@ export default function TabTitikLokasi() {
             fontFamily="Poppins-Medium"
             fontSize={18}
           >
-            Bandar Lampung
+            Bandar Lampung (belum)
           </Typography>
           <Separator color="Background 100" />
           <View style={{ flexDirection: "row", width: "100%", gap: 10 }}>
             <Typography color="Background 100" fontSize={16}>
-              2023
+              belum
             </Typography>
             <Separator orientation="vertical" color="Background 100" />
             <Typography color="Background 100" fontSize={16}>
-              CV. GLOBAL KONSTRUKSI
+              {titikLokasi?.detail_kegiatan.penyedia_jasa}
             </Typography>
             <Separator orientation="vertical" color="Background 100" />
             <Typography color="Background 100" fontSize={16}>
-              12 KM
+              belum
             </Typography>
           </View>
         </LinearGradient>
@@ -80,7 +90,7 @@ export default function TabTitikLokasi() {
               fontSize={15}
               color="Text 900"
             >
-              Irsyad Abi Izzulhaq
+              belum
             </Typography>
           </View>
           <View>
@@ -96,7 +106,7 @@ export default function TabTitikLokasi() {
               fontSize={15}
               color="Text 900"
             >
-              0895640417123
+              belum
             </Typography>
           </View>
           <View
@@ -114,6 +124,7 @@ export default function TabTitikLokasi() {
             <Button
               color="Success 700"
               style={{ width: Dimensions.get("window").width / 2 - 40 }}
+              onPress={openGoogleMaps}
             >
               <IconMap color="Background 100" />
               <Typography color="Background 100">Map</Typography>

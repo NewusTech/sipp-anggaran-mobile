@@ -23,9 +23,20 @@ export default function index() {
   return (
     <View
       backgroundColor="Background 100"
-      style={{ paddingTop: inset.top + 20, flex: 1, paddingHorizontal: 10 }}
+      style={{
+        paddingTop: inset.top + 20,
+        flex: 1,
+        paddingHorizontal: 10,
+        justifyContent: "center",
+      }}
     >
-      <View style={{ flexDirection: "row", justifyContent: "center", gap: 10 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          gap: 10,
+        }}
+      >
         <View
           style={{
             width: Dimensions.get("window").width / 2,

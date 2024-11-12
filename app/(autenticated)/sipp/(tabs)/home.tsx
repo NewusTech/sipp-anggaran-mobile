@@ -1,11 +1,11 @@
-import { Image, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
 
 import View from "@/components/ui/view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SelectInput } from "@/components/ui/selectInput";
 import { useState } from "react";
 import { IconCaretDown } from "@/components/icons";
-import { getLastYears } from "@/helper";
+import { getLastYears, IsPermission } from "@/helper";
 import SectionCard from "@/components/screen/home/SectionCard";
 import SectionFinancialRealization from "@/components/screen/home/SectionFinancialRealization";
 import SectionPhysicalProgress from "@/components/screen/home/SectionPhysicalProgress";
@@ -21,6 +21,7 @@ export default function home() {
   const router = useRouter();
 
   const [filterYear, setFilterYear] = useState<number | string>("");
+  // const [activePage, setActivePage] = useState<number>(0);
 
   const getCart = useGetDashoardCart(filterYear ? "year=" + filterYear : "");
   const getRealisasi = useGetDashoardRealisasi(
@@ -56,12 +57,16 @@ export default function home() {
           placeholder="Pilih Tahun"
           trailingIcon={<IconCaretDown />}
         />
-        <SectionCard filterYear={filterYear.toString()} />
-        <SectionFinancialRealization
-          chartLabel={getCart.data?.data.chart_data.labels || []}
-          chartDdata={getCart.data?.data.chart_data.data_keuangan || []}
-          data={getRealisasi.data?.data.realisasi_keuangan || []}
-        />
+        <IsPermission permission="lihat total keuangan">
+          <SectionCard filterYear={filterYear.toString()} />
+        </IsPermission>
+        <IsPermission permission="lihat total keuangan">
+          <SectionFinancialRealization
+            chartLabel={getCart.data?.data.chart_data.labels || []}
+            chartDdata={getCart.data?.data.chart_data.data_keuangan || []}
+            data={getRealisasi.data?.data.realisasi_keuangan || []}
+          />
+        </IsPermission>
         <SectionPhysicalProgress
           chartLabel={getCart.data?.data.chart_data.labels || []}
           chartDdata={getCart.data?.data.chart_data.data_fisik || []}

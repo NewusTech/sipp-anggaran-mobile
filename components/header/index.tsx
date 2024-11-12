@@ -2,9 +2,12 @@ import React from "react";
 import { Image, Pressable } from "react-native";
 import View from "../ui/view";
 import { useRouter } from "expo-router";
+import { useAuthProfile } from "@/store/sipp";
+import { BASE_URL_SIPP } from "@/constants";
 
 export default function Header() {
-  const router = useRouter()
+  const router = useRouter();
+  const user = useAuthProfile();
   return (
     <View
       style={{
@@ -22,10 +25,20 @@ export default function Header() {
         height={100}
         style={{ width: 200, height: 40 }}
       />
-      <Pressable onPress={()=>router.push("/(autenticated)/sipp/profile")}>
+      <Pressable onPress={() => router.push("/(autenticated)/sipp/profile")}>
         <Image
-          source={require("@/assets/images/dummy1.jpg")}
-          style={{ width: 50, height: 50, borderRadius: 100 }}
+          source={
+            user?.image
+              ? { uri: `${BASE_URL_SIPP}/uploads/${user.image}` }
+              : require("@/assets/images/dummy1.jpg")
+          }
+          style={{
+            width: 50,
+            height: 50,
+            borderRadius: 100,
+            borderWidth: .2,
+            borderColor: "gray",
+          }}
         />
       </Pressable>
     </View>

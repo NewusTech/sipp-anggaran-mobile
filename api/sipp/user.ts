@@ -1,5 +1,7 @@
 import { apiClientSIPP } from "@/lib/fatcher";
 import { HttpStatusCode } from "axios";
+import { PostResponseSuccess } from ".";
+import { userDataPayload, userUpdatePasswordPayload } from "@/validation";
 
 export type userProfileResponseSuccess = {
   status: HttpStatusCode;
@@ -25,6 +27,26 @@ export const getUserProfile = async () => {
   const response = await apiClientSIPP<userProfileResponseSuccess>({
     method: "GET",
     url: "/profile",
+  });
+  return response.data;
+};
+
+export const putEditProfile = async (payload: userDataPayload) => {
+  const response = await apiClientSIPP<PostResponseSuccess>({
+    method: "PUT",
+    url: `/profile`,
+    data: payload,
+  });
+  return response.data;
+};
+
+export const putProfilePassword = async (
+  payload: userUpdatePasswordPayload
+) => {
+  const response = await apiClientSIPP<PostResponseSuccess>({
+    method: "PUT",
+    url: `/profile/password`,
+    data: payload,
   });
   return response.data;
 };
