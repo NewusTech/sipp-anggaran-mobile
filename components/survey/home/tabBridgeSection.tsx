@@ -86,9 +86,9 @@ export default function TabSectionBridege() {
                     gap: 5,
                 }}
             >
-                <SectionCardBridge />
+                <SectionCardBridge filterYear={filterYear.toString()} />
                 <SectionMapBridge />
-                <SectionTableBridge />
+                <SectionTableBridge filterYear={filterYear.toString()} />
             </View>
             {/* card */}
         </View>

@@ -1,16 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import View from "../../ui/view";
 import { useAppTheme } from "@/context";
 import { Typography } from "../../ui/typography";
 import { PieChart } from "react-native-gifted-charts";
 import { Text } from "react-native";
+import { useGetDashoardRoadSection } from "@/services/survey";
 
-export default function SectionCardSurvey() {
+// Define the prop types
+interface SectionCardSurveyProps {
+    filterYear?: string | undefined;
+}
+export default function SectionCardSurvey({ filterYear }: SectionCardSurveyProps) {
     const { Colors } = useAppTheme();
-    const pieData = [
-        { value: 70, color: '#177AD5' },
-        { value: 30, color: 'lightgray' }
+    const pieDataMantap = [
+        { value: 70, color: '#D9D9D9' },
+        { value: 30, color: '#408329' }
     ];
+    const pieDataTidakMantap = [
+        { value: 70, color: '#D9D9D9' },
+        { value: 30, color: '#B42424' }
+    ];
+
+
+    const getDashboardRoad = useGetDashoardRoadSection(filterYear ? "year=" + filterYear : "")
 
     return (
         <View style={{ gap: 10, marginTop: 30 }}>
@@ -36,8 +48,8 @@ export default function SectionCardSurvey() {
                         height: 90,
                         borderRadius: 100,
                         position: "absolute",
-                        right: -15,
-                        top: -30,
+                        right: -45,
+                        top: -60,
                     }}
                 />
                 <View
@@ -64,7 +76,7 @@ export default function SectionCardSurvey() {
                         fontSize={20}
                         color="Background 100"
                     >
-                        Rp. 67,821,237,900 / Kilometer
+                        {getDashboardRoad?.data?.data?.tot_panjang_jalan || "-"} / Kilometer
                     </Typography>
                 </View>
             </View>
@@ -91,8 +103,8 @@ export default function SectionCardSurvey() {
                         height: 90,
                         borderRadius: 100,
                         position: "absolute",
-                        right: -15,
-                        top: -30,
+                        right: -45,
+                        top: -60,
                     }}
                 />
                 <View
@@ -119,7 +131,7 @@ export default function SectionCardSurvey() {
                         fontSize={20}
                         color="Background 100"
                     >
-                        95 Jalan
+                        {getDashboardRoad?.data?.data?.jumlah_ruas || "-"} Jalan
                     </Typography>
                 </View>
             </View>
@@ -146,8 +158,8 @@ export default function SectionCardSurvey() {
                         height: 90,
                         borderRadius: 100,
                         position: "absolute",
-                        right: -15,
-                        top: -30,
+                        right: -45,
+                        top: -60,
                     }}
                 />
                 <View
@@ -161,7 +173,14 @@ export default function SectionCardSurvey() {
                         bottom: -45,
                     }}
                 />
-                <View style={{}}>
+                <View
+                    style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        width: "100%",
+                    }}>
                     <Typography
                         fontFamily="Poppins-Medium"
                         fontSize={20}
@@ -169,6 +188,16 @@ export default function SectionCardSurvey() {
                     >
                         Mantap
                     </Typography>
+                    <PieChart
+                        donut
+                        radius={35}
+                        innerRadius={25}
+                        data={pieDataMantap}
+                        backgroundColor="#399918"
+                        centerLabelComponent={() => {
+                            return <Text style={{ fontSize: 10, color: Colors["Background 100"] }}>70%</Text>;
+                        }}
+                    />
                 </View>
             </View>
             {/*  */}
@@ -194,8 +223,8 @@ export default function SectionCardSurvey() {
                         height: 90,
                         borderRadius: 100,
                         position: "absolute",
-                        right: -15,
-                        top: -30,
+                        right: -45,
+                        top: -60,
                     }}
                 />
                 <View
@@ -209,7 +238,14 @@ export default function SectionCardSurvey() {
                         bottom: -45,
                     }}
                 />
-                <View style={{}}>
+                <View
+                    style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        width: "100%",
+                    }}>
                     <Typography
                         fontFamily="Poppins-Medium"
                         fontSize={20}
@@ -217,6 +253,16 @@ export default function SectionCardSurvey() {
                     >
                         Tidak Mantap
                     </Typography>
+                    <PieChart
+                        donut
+                        radius={35}
+                        innerRadius={25}
+                        data={pieDataTidakMantap}
+                        backgroundColor="#DF1212"
+                        centerLabelComponent={() => {
+                            return <Text style={{ fontSize: 10, color: Colors["Background 100"] }}>70%</Text>;
+                        }}
+                    />
                 </View>
             </View>
             {/*  */}

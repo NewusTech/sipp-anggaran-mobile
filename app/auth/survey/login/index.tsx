@@ -3,15 +3,70 @@ import TextInput from "@/components/ui/textInput";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
-import { useRouter } from "expo-router";
+import { useAuthLogin } from "@/services";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useAuthActions } from "@/store/sipp";
+import { useNavigation, useRouter } from "expo-router";
 import React from "react";
 import { Image } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { PostLoginPayload, postLoginPayloadSchema } from "@/validation";
+import { setItem } from "@/lib/async-storage";
+import Toast from "react-native-toast-message";
+import Loader from "@/components/ui/loader";
+import { postLoginPayloadSchemaSurvey, PostLoginPayloadSurvey } from "@/validation/survey";
+import { useAuthLoginSurvey } from "@/services/survey/user";
 
 export default function index() {
   const router = useRouter();
   const { Colors } = useAppTheme();
   const inset = useSafeAreaInsets();
+  const navigation = useNavigation<any>();
+
+  // store
+  const { setAccessToken } = useAuthActions();
+
+  const loginMutation = useAuthLoginSurvey();
+
+  const { control, handleSubmit, formState } = useForm<PostLoginPayloadSurvey>({
+    defaultValues: {
+      email: "admin@mailinator.com",
+      password: "password",
+    },
+    resolver: zodResolver(postLoginPayloadSchemaSurvey),
+    mode: "all",
+  });
+
+  const handleLoginMutation = handleSubmit((data) => {
+    loginMutation.mutate(data, {
+      onSuccess: async (response) => {
+        setAccessToken(response.data.token);
+
+        await setItem("accesstoken", response.data.token);
+        await setItem("app_name", "SIPP-Survey");
+
+        Toast.show({
+          type: "success",
+          text1: "Login berhasil!",
+          text2: "Selamat anda berhasil login",
+        });
+        router.replace("/(autenticated)/survey/(tabs)/home");
+
+        navigation.reset({
+          index: 0,
+        });
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: "Login gagal!",
+          text2: "email atau password tidak sesuai",
+        });
+      },
+    });
+  });
 
   return (
     <View
@@ -31,7 +86,7 @@ export default function index() {
       <Typography
         fontFamily="Poppins-Bold"
         fontSize={20}
-        color="Info 500"
+        color="Primary Blue"
         style={{ textAlign: "center", marginTop: 40, marginBottom: 40 }}
       >
         Login SIPP Survey
@@ -46,27 +101,50 @@ export default function index() {
       </View>
 
       <View style={{ gap: 20 }}>
-        <TextInput
-          label="Email"
-          placeholder="Contoh@gmail.com"
-          keyboardType="email-address"
-          borderRadius={17}
-          // value={field.value}
-          // onBlur={field.onBlur}
-          // onChangeText={field.onChange}
-          // errorMessage={fieldState.error?.message}
+        <Controller
+          control={control}
+          name="email"
+          render={({ field, fieldState }) => (
+            <TextInput
+              label="Email"
+              placeholder="Contoh@gmail.com"
+              keyboardType="email-address"
+              borderRadius={17}
+              value={field.value}
+              onBlur={field.onBlur}
+              onChangeText={field.onChange}
+              errorMessage={fieldState.error?.message}
+            />
+          )}
         />
-        <TextInput
-          label="Password"
-          placeholder="Kata Sandi"
-          secureTextEntry
-          borderRadius={17}
-          // value={field.value}
-          // onBlur={field.onBlur}
-          // onChangeText={field.onChange}
-          // errorMessage={fieldState.error?.message}
+        <Controller
+          control={control}
+          name="password"
+          render={({ field, fieldState }) => (
+            <TextInput
+              label="Password"
+              placeholder="Kata Sandi"
+              secureTextEntry
+              borderRadius={17}
+              value={field.value}
+              onBlur={field.onBlur}
+              onChangeText={field.onChange}
+              errorMessage={fieldState.error?.message}
+            />
+          )}
         />
-        <Button style={{ marginTop: 10 }}>Login</Button>
+        <Button
+          style={{ marginTop: 10 }}
+          color="Primary Blue"
+          disabled={!formState.isValid || loginMutation.isPending}
+          onPress={handleLoginMutation}
+        >
+          {loginMutation.isPending ? (
+            <Loader color="Background 100" />
+          ) : (
+            "Login"
+          )}
+        </Button>
       </View>
     </View>
   );

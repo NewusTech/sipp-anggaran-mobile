@@ -12,6 +12,7 @@ import { SearchBox } from '@/components/ui/searchBox';
 import { Button } from "@/components/ui/button";
 import IconFile from '@/components/icons/IconFile';
 import { router } from 'expo-router';
+import { getLastYears } from '@/helper';
 
 // Sample kecamatan data; replace with actual data source
 const kecamatanOptions = [
@@ -27,6 +28,7 @@ export default function TabDownload() {
     const [filterKecamatan, setFilterKecamatan] = useState<string | number>("");
     const [filterDateStart, setFilterDateStart] = useState<Date>(new Date());
     const [search, setSearch] = useState<string>("");
+    const [filterYear, setFilterYear] = useState<number | string>("");
 
     return (
         <View
@@ -39,78 +41,98 @@ export default function TabDownload() {
                     padding: 20,
                     paddingHorizontal: 20,
                     gap: 5,
-                    backgroundColor: Colors["Background 100"],
+                    backgroundColor: "#F2F2F2",
+                    height: "100%"
                 }}
             >
-                <SearchBox
-                    placeholder="Cari Ruas Jalan"
-                    width={"100%"}
-                    value={search}
-                    onChangeText={setSearch}
-                />
-                <DateInput
-                    withBorder
+                <View
                     style={{
-                        width: Dimensions.get("window").width - 40,
-                        marginBottom: 7,
-                        marginTop: 7,
+                        borderRadius: 15,
+                        borderWidth: 1,
+                        marginTop: 20,
+                        backgroundColor: Colors["Background 100"],
+                        borderColor: Colors["Line 100"],
+                        paddingVertical: 20,
+                        paddingHorizontal: 20,
+                        gap: 15,
                     }}
-                    color="Primary Blue"
-                    label="Filter Tanggal"
-                    trailingIcon={
-                        <View style={{ marginLeft: "auto" }}>
-                            <IconCalender width={21} height={21} />
-                        </View>
-                    }
-                    onChange={(date) => setFilterDateStart(date || new Date())}
-                    value={filterDateStart}
-                />
-                <SelectInput
-                    data={kecamatanOptions}
-                    color="Primary Blue"
-                    value={filterKecamatan}
-                    onSelect={(data) => setFilterKecamatan(data.title)}
-                    label="Filter Kecamatan"
-                    placeholder="Pilih Kecamatan"
-                    trailingIcon={<IconCaretDown />}
-                />
-                <View style={{
-                    marginTop: 15,
-                    marginBottom: 15,
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between"
-                }}>
-                    <Button
-                        style={{
-                            width: Dimensions.get("window").width / 2 - 25,
-                        }}
-                        color="Primary Blue"
+                >
+                    <Typography
+                    fontSize={16}
                     >
-                        <IconFile />
-                        <Typography color='Background 100'>Import</Typography>
+                        Export Data Ruas Jalan
+                    </Typography>
+                    <SelectInput
+                        data={getLastYears(24).map((d) => {
+                            return {
+                                title: d,
+                            };
+                        })}
+                        color='Primary Blue'
+                        value={filterYear}
+                        onSelect={(data) => setFilterYear(data.title)}
+                        label="Filter Tahun"
+                        placeholder="Pilih Tahun"
+                        trailingIcon={<IconCaretDown />}
+                    />
+                    <Button
+                    color='Primary Blue'
+                    style={{
+                        marginTop: 10,
+                    }}
+                    >
+                        <Typography
+                        color='Background 100'
+                        >
+                            Export
+                        </Typography>
                     </Button>
-                    <Button
-                        onPress={() => router.push("(autenticated)/survey/home/SectionRoad/add")}
-                        style={{
-                            width: Dimensions.get("window").width / 2 - 25,
-                        }}
-                        color="Primary Blue"
+                </View>
+                {/*  */}
+                <View
+                    style={{
+                        borderRadius: 15,
+                        borderWidth: 1,
+                        marginTop: 20,
+                        backgroundColor: Colors["Background 100"],
+                        borderColor: Colors["Line 100"],
+                        paddingVertical: 20,
+                        paddingHorizontal: 20,
+                        gap: 15,
+                    }}
+                >
+                    <Typography
+                    fontSize={16}
                     >
-                        <IconPlus color='Background 100' />
-                        <Typography color='Background 100'>Tambah</Typography>
+                        Export Data Ruas Jembatan
+                    </Typography>
+                    <SelectInput
+                        data={getLastYears(24).map((d) => {
+                            return {
+                                title: d,
+                            };
+                        })}
+                        color='Primary Blue'
+                        value={filterYear}
+                        onSelect={(data) => setFilterYear(data.title)}
+                        label="Filter Tahun"
+                        placeholder="Pilih Tahun"
+                        trailingIcon={<IconCaretDown />}
+                    />
+                    <Button
+                    color='Primary Blue'
+                    style={{
+                        marginTop: 10,
+                    }}
+                    >
+                        <Typography
+                        color='Background 100'
+                        >
+                            Export
+                        </Typography>
                     </Button>
                 </View>
             </View>
-            {/* card */}
-            <View
-                style={{
-                    paddingHorizontal: 20,
-                    gap: 5,
-                }}
-            >
-            </View>
-            {/* card */}
         </View>
     );
 }

@@ -86,9 +86,9 @@ export default function TabSectionRoad() {
                     gap: 5,
                 }}
             >
-                <SectionCardSurvey />
-                <SectionMapRoad />
-                <SectionTableSurvey />
+                <SectionCardSurvey filterYear={filterYear.toString()} />
+                <SectionMapRoad  />
+                <SectionTableSurvey filterYear={filterYear.toString()} />
             </View>
             {/* card */}
         </View>

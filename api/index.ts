@@ -1,4 +1,5 @@
 export * from "./sipp/auth";
+export * from "./survey/auth";
 
 export type ResponseError = {
   message: string;

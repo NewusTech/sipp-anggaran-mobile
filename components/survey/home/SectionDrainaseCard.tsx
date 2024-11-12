@@ -2,15 +2,15 @@ import React from "react";
 import View from "../../ui/view";
 import { useAppTheme } from "@/context";
 import { Typography } from "../../ui/typography";
-import { PieChart } from "react-native-gifted-charts";
-import { Text } from "react-native";
+import { useGetDashoardDrainaseSection } from "@/services/survey";
 
-export default function SectionCardDrainase() {
+interface SectionCardSurveyProps {
+    filterYear?: string | undefined;
+}
+export default function SectionCardDrainase({ filterYear }: SectionCardSurveyProps) {
     const { Colors } = useAppTheme();
-    const pieData = [
-        { value: 70, color: '#177AD5' },
-        { value: 30, color: 'lightgray' }
-    ];
+    const getDashboardBridge = useGetDashoardDrainaseSection(filterYear ? "year=" + filterYear : "")
+
 
     return (
         <View style={{ gap: 10, marginTop: 30 }}>
@@ -64,7 +64,7 @@ export default function SectionCardDrainase() {
                         fontSize={20}
                         color="Background 100"
                     >
-                        494778 Meter
+                        {getDashboardBridge?.data?.data?.total_panjang_ruas || "-"} Meter
                     </Typography>
                 </View>
             </View>
@@ -119,7 +119,7 @@ export default function SectionCardDrainase() {
                         fontSize={20}
                         color="Background 100"
                     >
-                        649 Drainase
+                        {getDashboardBridge?.data?.data?.jumlah_drainase || "-"} Drainase
                     </Typography>
                 </View>
             </View>
