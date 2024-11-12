@@ -33,7 +33,7 @@
         // highlight-start
         "@rnmapbox/maps",
         {
-          "RNMapboxMapsDownloadToken": "pk.eyJ1IjoiaGFtZGFuaGFiaWJpNyIsImEiOiJjbTM1bmp4ODUwY2JyMnJwbmFqazY2cWNoIn0.d32KBuAGIQwoVpYq4OAyow",
+          "RNMapboxMapsDownloadToken": "sk.eyJ1IjoiaGFtZGFuaGFiaWJpNyIsImEiOiJjbTNlMnYxZnUwOTlpMmlxeWlrcGpkdWduIn0.ggPa_ZGlRITxWRrgDxgk7A",
           "locationWhenInUsePermission": "Show current location on map."
         }
         // highlight-end
