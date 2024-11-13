@@ -3,17 +3,20 @@ import TabInformasi from "@/components/screen/profile/tabInformasi";
 import TabPassword from "@/components/screen/profile/tabPassword";
 import { Button } from "@/components/ui/button";
 import ImageModal from "@/components/ui/imageModal";
+import Loader from "@/components/ui/loader";
 import ModalAction from "@/components/ui/modalAction";
 import Separator from "@/components/ui/separator";
 import { Typography } from "@/components/ui/typography";
+import UploadFoto from "@/components/ui/uploadFileFoto";
 import View from "@/components/ui/view";
 import { BASE_URL_SIPP } from "@/constants";
 import { useAppTheme } from "@/context";
-import { useGetProfile } from "@/services";
+import { useGetProfile, usePostUploadFotoProfile } from "@/services";
 import { handleLogoutSession } from "@/services/auth.service";
 import { useAuthActions } from "@/store/sipp";
 import React, { useEffect, useState } from "react";
-import { Dimensions, Pressable, ScrollView } from "react-native";
+import { Dimensions, Modal, Pressable, ScrollView } from "react-native";
+import Toast from "react-native-toast-message";
 
 export default function index() {
   const { Colors } = useAppTheme();
@@ -23,6 +26,10 @@ export default function index() {
   );
 
   const [modalLogout, setModalLogout] = useState<boolean>(false);
+  const [newFotoProfile, setNewFotoProfile] = useState("");
+  const [modalProfile, setModalProfile] = useState(false);
+
+  const uploadFotoProfileMutation = usePostUploadFotoProfile();
 
   const getUser = useGetProfile();
   const user = getUser.data?.data;
@@ -31,6 +38,45 @@ export default function index() {
 
   const handleLogout = () => {
     handleLogoutSession();
+  };
+
+  const handleUploadFotoProfile = () => {
+    const formData = new FormData();
+    if (newFotoProfile === "")
+      return Toast.show({
+        type: "error",
+        text1: "Opps Gambar Kosong!",
+        text2: "Mohon pilih gambar terlebih dahulu",
+      });
+    const imageProfile: any = {
+      name: "image_profile",
+      type: "image/jpeg", // Pastikan MIME type sesuai
+      uri: newFotoProfile,
+    };
+
+    formData.append("image", imageProfile);
+    uploadFotoProfileMutation.mutate(formData, {
+      onSuccess: (res) => {
+        Toast.show({
+          type: "success",
+          text1: "Update Profile berhasil!",
+          text2: res.message,
+        });
+        setNewFotoProfile("");
+        setModalProfile(false);
+        getUser.refetch();
+      },
+      onError: (res) => {
+        Toast.show({
+          type: "error",
+          text1: "Update Foto Profile gagal, coba setelah beberapa saat",
+          text2: res.response?.data.message,
+        });
+        console.error(res);
+        setNewFotoProfile("");
+        setModalProfile(false);
+      },
+    });
   };
 
   useEffect(() => {
@@ -86,6 +132,7 @@ export default function index() {
               bottom: 0,
               right: -10,
             }}
+            onPress={() => setModalProfile(true)}
           >
             <IconCamera width={20} height={20} color="Info 500" />
           </Pressable>
@@ -231,6 +278,52 @@ export default function index() {
         setVisible={setModalLogout}
         visible={modalLogout}
       />
+      {/* Modal foto profile */}
+      <Modal transparent={true} visible={modalProfile}>
+        <Pressable
+          style={{
+            flex: 1,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(20, 21, 17, 0.5)",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          onPress={() => setModalProfile(false)}
+        >
+          <View
+            backgroundColor="Background 100"
+            style={{
+              width: "80%",
+              height: 300,
+              padding: 20,
+              borderRadius: 15,
+              justifyContent: "center",
+              gap: 20,
+              paddingBottom: 10,
+            }}
+          >
+            <UploadFoto
+              label="Masukan Foto Profile"
+              image={newFotoProfile}
+              setImage={setNewFotoProfile}
+              aspect={[1, 1]}
+            />
+            <Button
+              onPress={handleUploadFotoProfile}
+              disabled={uploadFotoProfileMutation.isPending}
+            >
+              {uploadFotoProfileMutation.isPending ? (
+                <Loader />
+              ) : (
+                <Typography color="Background 100">
+                  Simpan Foto Profile
+                </Typography>
+              )}
+            </Button>
+          </View>
+        </Pressable>
+      </Modal>
     </ScrollView>
   );
 }

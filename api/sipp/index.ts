@@ -621,6 +621,87 @@ export const getDetailAnggaranTitikLokasi = async (id?: string) => {
   return response.data;
 };
 
+export type kegiatanDanSubKegiatan = {
+  status: HttpStatusCode;
+  message: string;
+  data: {
+    kegiatan: {
+      id: number;
+      title: string;
+      bidang: string | null;
+    }[];
+  };
+};
+
+export const getKegiatanDanSubKegiatan = async () => {
+  const response = await apiClientSIPP<kegiatanDanSubKegiatan>({
+    method: "GET",
+    url: `/detail-kegiatan/kegitan-and-sub-kegiatan`,
+  });
+  return response.data;
+};
+
+export type bidangDanSumberDana = {
+  status: HttpStatusCode;
+  message: string;
+  data: {
+    bidang: {
+      id: number;
+      name: string;
+      kode: string;
+    }[];
+    sumber_dana: {
+      id: number;
+      name: string;
+    }[];
+  };
+};
+
+export const getBidangDanSumberDana = async () => {
+  const response = await apiClientSIPP<bidangDanSumberDana>({
+    method: "GET",
+    url: `/detail-kegiatan/bidang-and-sumber-dana`,
+  });
+  return response.data;
+};
+
+export type subKegiatan = {
+  status: HttpStatusCode;
+  message: string;
+  data: {
+    id: number;
+    title: string;
+  }[];
+};
+
+export const getSubKegiatan = async () => {
+  const response = await apiClientSIPP<subKegiatan>({
+    method: "GET",
+    url: `/detail-kegiatan/sub-kegiatan`,
+  });
+  return response.data;
+};
+
+export type program = {
+  status: HttpStatusCode;
+  message: string;
+  data: {
+    id: number;
+    name: string;
+    kode: string;
+  }[];
+};
+
+export const getProgram = async () => {
+  const response = await apiClientSIPP<program>({
+    method: "GET",
+    url: `/detail-kegiatan/program`,
+  });
+  return response.data;
+};
+
+/////
+
 export const putDetailAnggaranKurvaFisikRencana = async (
   id: string,
   payload: any
@@ -775,81 +856,17 @@ export const deleteKegiatan = async (id: string) => {
   return response.data;
 };
 
-export type kegiatanDanSubKegiatan = {
-  status: HttpStatusCode;
-  message: string;
-  data: {
-    kegiatan: {
-      id: number;
-      title: string;
-      bidang: string | null;
-    }[];
-  };
-};
-
-export const getKegiatanDanSubKegiatan = async () => {
-  const response = await apiClientSIPP<kegiatanDanSubKegiatan>({
-    method: "GET",
-    url: `/detail-kegiatan/kegitan-and-sub-kegiatan`,
-  });
-  return response.data;
-};
-
-export type bidangDanSumberDana = {
-  status: HttpStatusCode;
-  message: string;
-  data: {
-    bidang: {
-      id: number;
-      name: string;
-      kode: string;
-    }[];
-    sumber_dana: {
-      id: number;
-      name: string;
-    }[];
-  };
-};
-
-export const getBidangDanSumberDana = async () => {
-  const response = await apiClientSIPP<bidangDanSumberDana>({
-    method: "GET",
-    url: `/detail-kegiatan/bidang-and-sumber-dana`,
-  });
-  return response.data;
-};
-
-export type subKegiatan = {
-  status: HttpStatusCode;
-  message: string;
-  data: {
-    id: number;
-    title: string;
-  }[];
-};
-
-export const getSubKegiatan = async () => {
-  const response = await apiClientSIPP<subKegiatan>({
-    method: "GET",
-    url: `/detail-kegiatan/sub-kegiatan`,
-  });
-  return response.data;
-};
-
-export type program = {
-  status: HttpStatusCode;
-  message: string;
-  data: {
-    id: number;
-    name: string;
-    kode: string;
-  }[];
-};
-
-export const getProgram = async () => {
-  const response = await apiClientSIPP<program>({
-    method: "GET",
-    url: `/detail-kegiatan/program`,
+export const postDetailAnggaranTitikLokasi = async (
+  id: string,
+  payload: {
+    latitude: string;
+    longitude: string;
+  }
+) => {
+  const response = await apiClientSIPP<PostResponseSuccess>({
+    method: "POST",
+    url: `/detail-anggaran/${id}/titik-lokasi`,
+    data: payload,
   });
   return response.data;
 };

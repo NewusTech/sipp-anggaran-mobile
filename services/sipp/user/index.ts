@@ -1,6 +1,7 @@
 import { postLogin, ResponseError } from "@/api";
 import {
   getUserProfile,
+  postUploadFotoProfile,
   putEditProfile,
   putProfilePassword,
 } from "@/api/sipp/user";
@@ -43,6 +44,13 @@ export const useUpadatePassword = () => {
   return useMutation({
     mutationFn: (payload: userUpdatePasswordPayload) =>
       putProfilePassword(payload),
+    onError: (error: AxiosError<ResponseError>) => error,
+  });
+};
+
+export const usePostUploadFotoProfile = () => {
+  return useMutation({
+    mutationFn: (payload: FormData) => postUploadFotoProfile(payload),
     onError: (error: AxiosError<ResponseError>) => error,
   });
 };
