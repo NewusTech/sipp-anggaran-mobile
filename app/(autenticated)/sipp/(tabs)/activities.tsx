@@ -8,7 +8,7 @@ import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
 import { getLastYears, useIsPermission } from "@/helper";
 import React, { useState } from "react";
-import { ScrollView } from "react-native";
+import { Dimensions, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Modals from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
@@ -108,124 +108,109 @@ export default function Activities() {
               Tambah
             </Typography>
           </Button>
-          <View style={{ marginVertical: 10 }} />
+          <View style={{}} />
           {!getKegiatan.isFetching &&
             getKegiatan.data?.data &&
             getKegiatan.data.data.map((data) => (
-              <Accordion
+              <View
                 key={data.name}
-                style={{ marginTop: 15 }}
-                header={(isOpen) => (
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      padding: 15,
-                      backgroundColor: Colors["Info 500"],
-                      borderTopLeftRadius: 15,
-                      borderTopRightRadius: 15,
-                      borderBottomLeftRadius: isOpen ? 0 : 15,
-                      borderBottomRightRadius: isOpen ? 0 : 15,
-                    }}
-                  >
-                    <Typography
-                      fontFamily="Poppins-Medium"
-                      fontSize={16}
-                      color="Background 100"
-                    >
-                      {data.name}
-                    </Typography>
-                    {isOpen ? (
-                      <IconCaretUp
-                        width={26}
-                        height={24}
-                        color="Background 100"
-                      />
-                    ) : (
-                      <IconCaretDown
-                        width={26}
-                        height={24}
-                        color="Background 100"
-                      />
-                    )}
-                  </View>
-                )}
+                style={{
+                  marginTop: 15,
+                  borderWidth: 1,
+                  padding: 15,
+                  borderRadius: 15,
+                }}
               >
                 <View
                   style={{
-                    minHeight: 200,
-                    backgroundColor: Colors["Info 100"],
-                    borderBottomLeftRadius: 15,
-                    borderBottomRightRadius: 15,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    padding: 15,
+                    backgroundColor: Colors["Info 500"],
+                    borderRadius: 15,
                   }}
                 >
-                  {data.kegiatan.length === 0 && (
-                    <Typography
-                      fontFamily="Poppins-RegularItalic"
-                      color="Text 500"
-                      style={{
-                        textAlign: "center",
-                        textAlignVertical: "center",
-                        height: "100%",
-                      }}
-                    >
-                      Data Masih Kosong
-                    </Typography>
-                  )}
-                  {data.kegiatan.map((kegiatan, index) => (
-                    <View
-                      key={index + "kegiatan"}
-                      style={{
-                        padding: 15,
-                        gap: 10,
-                      }}
-                    >
-                      <Typography
-                        fontFamily="Poppins-Medium"
-                        fontSize={16}
-                        color="Text 900"
-                        style={{ textAlign: "center" }}
+                  <Typography
+                    fontFamily="Poppins-Medium"
+                    fontSize={16}
+                    color="Background 100"
+                  >
+                    {data.name}
+                  </Typography>
+                </View>
+                {data.kegiatan.map((kegiatan, index) => (
+                  <Accordion
+                    key={index + "kegiatan"}
+                    style={{
+                      marginTop: 15,
+                      borderWidth: 1,
+                      padding: 10,
+                      borderRadius: 15,
+                    }}
+                    header={(isOpen) => (
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          padding: 15,
+                          borderRadius: 15,
+                          backgroundColor: Colors["Background 500"],
+                        }}
                       >
-                        Kegiatan:
-                      </Typography>
+                        <Typography
+                          fontSize={16}
+                          style={{ width: "90%" }}
+                          fontFamily="Poppins-Medium"
+                          color="Background 100"
+                        >
+                          Kegiatan {index + 1}
+                        </Typography>
+                        {isOpen ? (
+                          <IconCaretDown
+                            width={26}
+                            height={24}
+                            color="Background 100"
+                          />
+                        ) : (
+                          <IconCaretDown
+                            width={26}
+                            height={24}
+                            color="Background 100"
+                          />
+                        )}
+                      </View>
+                    )}
+                  >
+                    <View style={{ padding: 8, gap: 5 }}>
                       <Typography
                         fontFamily="Poppins-Regular"
                         fontSize={15}
                         color="Text 900"
-                        style={{ textAlign: "center" }}
+                        style={{ textAlign: "left" }}
                       >
                         {kegiatan.title}
                       </Typography>
-                      <Typography
-                        fontFamily="Poppins-Regular"
-                        fontSize={16}
-                        color="Text 900"
-                        style={{
-                          textAlign: "center",
-                          borderWidth: 1,
-                          borderRadius: 15,
-                          padding: 10,
-                          textAlignVertical: "bottom",
-                        }}
-                      >
-                        Total Sub Kegiatan : {kegiatan.sub_kegiatan.length}
-                      </Typography>
                       {kegiatan.sub_kegiatan.map((subKegiatan, index) => (
                         <View key={index + "subKegiatan"} style={{ gap: 10 }}>
-                          <Separator style={{ marginVertical: 5 }} />
                           <Typography
-                            fontFamily="Poppins-Medium"
+                            fontFamily="Poppins-Regular"
                             fontSize={16}
                             color="Text 900"
-                            style={{ textAlign: "center" }}
+                            style={{
+                              textAlign: "center",
+                              borderWidth: 1,
+                              borderRadius: 15,
+                              padding: 10,
+                              textAlignVertical: "bottom",
+                            }}
                           >
-                            Sub Kegiatan:
+                            Sub Kegiatan
                           </Typography>
                           <Typography
                             fontFamily="Poppins-Regular"
                             fontSize={15}
                             color="Text 900"
-                            style={{ textAlign: "center" }}
+                            style={{ textAlign: "left" }}
                           >
                             {subKegiatan.title}
                           </Typography>
@@ -242,7 +227,7 @@ export default function Activities() {
                                   style={{
                                     flexDirection: "row",
                                     justifyContent: "space-between",
-                                    padding: 15,
+                                    padding: 10,
                                   }}
                                 >
                                   <Typography
@@ -269,7 +254,7 @@ export default function Activities() {
                             >
                               <View
                                 style={{
-                                  paddingHorizontal: 20,
+                                  paddingHorizontal: 10,
                                   paddingBottom: 20,
                                   gap: 10,
                                 }}
@@ -347,8 +332,8 @@ export default function Activities() {
                                   <View
                                     style={{
                                       flexDirection: "row",
-                                      justifyContent: "center",
-                                      gap: 10,
+                                      justifyContent: "space-between",
+                                      gap: 5,
                                       marginTop: 10,
                                     }}
                                   >
@@ -363,6 +348,13 @@ export default function Activities() {
                                           },
                                         })
                                       }
+                                      style={{
+                                        width:
+                                          Dimensions.get("window").width / 3 -
+                                          50,
+                                        minHeight: 40,
+                                        borderRadius: 10,
+                                      }}
                                     >
                                       <Typography
                                         fontSize={15}
@@ -384,6 +376,13 @@ export default function Activities() {
                                         })
                                       }
                                       color="Success 700"
+                                      style={{
+                                        width:
+                                          Dimensions.get("window").width / 3 -
+                                          50,
+                                        minHeight: 40,
+                                        borderRadius: 10,
+                                      }}
                                     >
                                       <Typography
                                         fontSize={15}
@@ -401,6 +400,13 @@ export default function Activities() {
                                         )
                                       }
                                       color="Error 500"
+                                      style={{
+                                        width:
+                                          Dimensions.get("window").width / 3 -
+                                          50,
+                                        minHeight: 40,
+                                        borderRadius: 10,
+                                      }}
                                     >
                                       <Typography
                                         fontSize={15}
@@ -418,9 +424,9 @@ export default function Activities() {
                         </View>
                       ))}
                     </View>
-                  ))}
-                </View>
-              </Accordion>
+                  </Accordion>
+                ))}
+              </View>
             ))}
           {getKegiatan.isFetching && (
             <View

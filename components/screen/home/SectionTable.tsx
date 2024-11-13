@@ -43,6 +43,14 @@ export default function SectionTable({ filterYear }: { filterYear: string }) {
         {getTable.data?.data.data &&
           getTable.data?.data?.data.map((data, index) => (
             <Accordion
+              style={{
+                borderWidth: 1,
+                borderRadius: 15,
+                backgroundColor: "white",
+                borderTopWidth:index === 0 ? 0 : 1,
+                borderTopLeftRadius: index === 0 ? 0 : 15,
+                borderTopRightRadius: index === 0 ? 0 : 15,
+              }}
               key={index}
               header={(isOpen) => (
                 <View
@@ -55,13 +63,6 @@ export default function SectionTable({ filterYear }: { filterYear: string }) {
                     justifyContent: "center",
                     gap: 10,
                     padding: 10,
-                    borderWidth: 1,
-                    borderTopWidth: index === 0 ? 0 : 1,
-                    borderTopLeftRadius: index === 0 ? 0 : 15,
-                    borderTopRightRadius: index === 0 ? 0 : 15,
-                    borderBottomWidth: isOpen ? 0 : 1,
-                    borderBottomLeftRadius: isOpen ? 0 : 15,
-                    borderBottomRightRadius: isOpen ? 0 : 15,
                   }}
                 >
                   <Typography
@@ -79,9 +80,6 @@ export default function SectionTable({ filterYear }: { filterYear: string }) {
                 style={{
                   paddingTop: 5,
                   borderTopWidth: 0,
-                  borderWidth: 1,
-                  borderBottomLeftRadius: 15,
-                  borderBottomRightRadius: 15,
                   paddingHorizontal: 10,
                 }}
               >

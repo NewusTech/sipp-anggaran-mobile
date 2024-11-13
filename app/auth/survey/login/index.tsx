@@ -32,8 +32,8 @@ export default function index() {
 
   const { control, handleSubmit, formState } = useForm<PostLoginPayloadSurvey>({
     defaultValues: {
-      email: "admin@mailinator.com",
-      password: "password",
+      email: "",
+      password: "",
     },
     resolver: zodResolver(postLoginPayloadSchemaSurvey),
     mode: "all",

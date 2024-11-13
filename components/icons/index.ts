@@ -23,3 +23,5 @@ export * from "./IconCamera";
 export * from "./IconCeretUp";
 export * from "./IconMapMarker";
 export * from "./IconCeretFillUp";
+export * from "./IconMoneyHand";
+export * from "./IconSaving";

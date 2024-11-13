@@ -36,8 +36,9 @@ export default function Header() {
             width: 50,
             height: 50,
             borderRadius: 100,
-            borderWidth: .2,
+            borderWidth: 0.2,
             borderColor: "gray",
+            backgroundColor: "gray",
           }}
         />
       </Pressable>
