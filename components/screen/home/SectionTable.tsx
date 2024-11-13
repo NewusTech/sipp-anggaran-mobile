@@ -1,5 +1,5 @@
 import Accordion from "@/components/ui/accordion";
-import { IconCaretFillDown, IconCaretFillLeft } from "@/components/icons";
+import { IconCaretFillDown, IconCeretFillUp } from "@/components/icons";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { AppColor } from "@/constants";
@@ -9,6 +9,7 @@ import { Dimensions, StyleSheet } from "react-native";
 import { useGetDashoardTableData } from "@/services/sipp";
 import PaginatedView from "@/components/ui/pagination";
 import { useRouter } from "expo-router";
+import { substring } from "@/utils";
 
 export default function SectionTable({ filterYear }: { filterYear: string }) {
   const { Colors } = useAppTheme();
@@ -24,6 +25,10 @@ export default function SectionTable({ filterYear }: { filterYear: string }) {
           backgroundColor: Colors["Info 500"],
           padding: 10,
           paddingLeft: 20,
+          borderTopLeftRadius: 15,
+          borderTopRightRadius: 15,
+          borderWidth: 1,
+          borderColor: Colors["Info 500"],
         }}
       >
         <Typography
@@ -34,7 +39,7 @@ export default function SectionTable({ filterYear }: { filterYear: string }) {
           Nama Pekerjaan
         </Typography>
       </View>
-      <View style={{ gap: 10, marginTop: 15 }}>
+      <View style={{ gap: 10 }}>
         {getTable.data?.data.data &&
           getTable.data?.data?.data.map((data, index) => (
             <Accordion
@@ -43,32 +48,53 @@ export default function SectionTable({ filterYear }: { filterYear: string }) {
                 <View
                   style={{
                     flexDirection: "row",
-                    width: Dimensions.get("window").width - 60,
+                    backgroundColor: "rgba(57, 106, 255, 0.05)",
+                    width: Dimensions.get("window").width - 40,
                     overflow: "hidden",
                     alignItems: "center",
+                    justifyContent: "center",
                     gap: 10,
+                    padding: 10,
+                    borderWidth: 1,
+                    borderTopWidth: index === 0 ? 0 : 1,
+                    borderTopLeftRadius: index === 0 ? 0 : 15,
+                    borderTopRightRadius: index === 0 ? 0 : 15,
+                    borderBottomWidth: isOpen ? 0 : 1,
+                    borderBottomLeftRadius: isOpen ? 0 : 15,
+                    borderBottomRightRadius: isOpen ? 0 : 15,
                   }}
                 >
-                  {isOpen ? <IconCaretFillDown /> : <IconCaretFillLeft />}
-                  <Typography color="Info 500" fontSize={15}>
+                  <Typography
+                    color="Info 500"
+                    fontSize={15}
+                    style={{ width: "90%" }}
+                  >
                     {data.title}
                   </Typography>
+                  {isOpen ? <IconCaretFillDown /> : <IconCeretFillUp />}
                 </View>
               )}
             >
-              <View style={{ marginTop: 5, paddingHorizontal: 10 }}>
-                <View style={style.rowTable}>
+              <View
+                style={{
+                  paddingTop: 5,
+                  borderTopWidth: 0,
+                  borderWidth: 1,
+                  borderBottomLeftRadius: 15,
+                  borderBottomRightRadius: 15,
+                  paddingHorizontal: 10,
+                }}
+              >
+                <View style={{}}>
                   <Typography style={{ width: 70 }} fontFamily="Poppins-Medium">
                     Bidang
                   </Typography>
-                  <Typography style={{ width: 10 }}>:</Typography>
                   <Typography>{data.kegiatan.bidang.name}</Typography>
                 </View>
-                <View style={style.rowTable}>
+                <View style={{}}>
                   <Typography style={{ width: 70 }} fontFamily="Poppins-Medium">
                     Progress
                   </Typography>
-                  <Typography style={{ width: 10 }}>:</Typography>
                   <Typography
                     color="Info 500"
                     onPress={() =>
@@ -83,18 +109,16 @@ export default function SectionTable({ filterYear }: { filterYear: string }) {
                     {data.progres[0]?.nilai || "-"}%
                   </Typography>
                 </View>
-                <View style={style.rowTable}>
+                <View style={{}}>
                   <Typography style={{ width: 70 }} fontFamily="Poppins-Medium">
                     Status
                   </Typography>
-                  <Typography style={{ width: 10 }}>:</Typography>
                   <Typography>-</Typography>
                 </View>
-                <View style={style.rowTable}>
+                <View style={{}}>
                   <Typography style={{ width: 70 }} fontFamily="Poppins-Medium">
                     Lokasi
                   </Typography>
-                  <Typography style={{ width: 10 }}>:</Typography>
                   <Typography>-</Typography>
                 </View>
               </View>
@@ -105,12 +129,3 @@ export default function SectionTable({ filterYear }: { filterYear: string }) {
     </View>
   );
 }
-
-const style = StyleSheet.create({
-  rowTable: {
-    flexDirection: "row",
-    borderWidth: 1,
-    borderColor: AppColor.light["Line 300"],
-    padding: 10,
-  },
-});

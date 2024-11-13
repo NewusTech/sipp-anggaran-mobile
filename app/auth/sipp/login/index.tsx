@@ -31,8 +31,8 @@ export default function index() {
 
   const { control, handleSubmit, formState } = useForm<PostLoginPayload>({
     defaultValues: {
-      email: "newustechnology@gmail.com",
-      password: "password",
+      email: "",
+      password: "",
     },
     resolver: zodResolver(postLoginPayloadSchema),
     mode: "all",

@@ -135,6 +135,7 @@ export default function SectionMap({
         fontSize={18}
         style={{
           marginBottom: 5,
+          marginTop: 10,
         }}
       >
         Lokasi Pekerjaan

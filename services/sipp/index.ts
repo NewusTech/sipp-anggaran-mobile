@@ -30,6 +30,7 @@ import {
   getBidangDanSumberDana,
   getSubKegiatan,
   getProgram,
+  postDetailAnggaranTitikLokasi,
 } from "@/api/sipp";
 import { useAccessToken } from "@/store/sipp";
 import { kegiatanPayload, kegiatanUpdatePayload } from "@/validation";
@@ -341,6 +342,18 @@ export const usePutKegiatan = () => {
 export const useDeleteKegiatan = () => {
   return useMutation({
     mutationFn: (payload: string) => deleteKegiatan(payload),
+    onError: (error: AxiosError<ResponseError>) => error,
+  });
+};
+export const usePostDetailAnggaranTitikLokasi = () => {
+  return useMutation({
+    mutationFn: (payload: {
+      id: string;
+      data: {
+        latitude: string;
+        longitude: string;
+      };
+    }) => postDetailAnggaranTitikLokasi(payload.id, payload.data),
     onError: (error: AxiosError<ResponseError>) => error,
   });
 };

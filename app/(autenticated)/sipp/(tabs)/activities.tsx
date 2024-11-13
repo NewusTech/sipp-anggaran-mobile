@@ -24,7 +24,7 @@ export default function Activities() {
   const [filterYear, setFilterYear] = useState<number | string>("");
   const { Colors } = useAppTheme();
 
-  const isPermission = useIsPermission
+  const isPermission = useIsPermission;
 
   const [modalTambah, setModalTambah] = useState<boolean>(false);
   const _addKegiatan = !isPermission("tambah kegiatan");
@@ -124,6 +124,8 @@ export default function Activities() {
                       backgroundColor: Colors["Info 500"],
                       borderTopLeftRadius: 15,
                       borderTopRightRadius: 15,
+                      borderBottomLeftRadius: isOpen ? 0 : 15,
+                      borderBottomRightRadius: isOpen ? 0 : 15,
                     }}
                   >
                     <Typography

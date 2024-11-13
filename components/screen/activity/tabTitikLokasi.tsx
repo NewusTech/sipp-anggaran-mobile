@@ -7,12 +7,17 @@ import { Dimensions, Linking, ScrollView, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Button } from "@/components/ui/button";
 import { IconFlopyDisk, IconMap, IconPhone } from "@/components/icons";
-import { useGetDetailAnggaranTitikLokasi } from "@/services/sipp";
+import {
+  useGetDetailAnggaranTitikLokasi,
+  usePostDetailAnggaranTitikLokasi,
+} from "@/services/sipp";
 import { useIsPermission } from "@/helper";
 import { formatDate, MAPBOX_ACCESS_TOKEN } from "@/constants";
 import CustomMarkerView from "@/components/customMarkerView";
 import Mapbox, { MapView, Camera, MarkerView } from "@rnmapbox/maps";
 import IconLocation from "@/components/icons/IconLocation";
+import Toast from "react-native-toast-message";
+import Loader from "@/components/ui/loader";
 
 Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN || "");
 
@@ -27,6 +32,8 @@ export default function TabTitikLokasi({ id }: { id: string }) {
   );
 
   const [isScrollEnabled, setIsScrollEnabled] = useState<boolean>(true);
+
+  const updateTitikLokasiMutation = usePostDetailAnggaranTitikLokasi();
 
   // Fungsi untuk menangani saat View ditekan
   const handleTouchStart = () => {
@@ -49,6 +56,36 @@ export default function TabTitikLokasi({ id }: { id: string }) {
     setMarkerCoordinate(coordinates);
     console.log("Koordinat yang dipilih:", coordinates); // Cetak ke console log
     // Anda dapat menambahkan logika untuk menyimpan koordinat ini ke database di sini
+  };
+
+  const handleUpdateTitikLokasi = () => {
+    if (markerCoordinate)
+      updateTitikLokasiMutation.mutate(
+        {
+          id,
+          data: {
+            latitude: markerCoordinate[1].toString(),
+            longitude: markerCoordinate[0].toString(),
+          },
+        },
+        {
+          onSuccess: async (response) => {
+            Toast.show({
+              type: "success",
+              text1: "Berhasi Update Data!",
+              text2: "Tamdan Data Titik Lokasi",
+            });
+            getTitikLokasi.refetch();
+          },
+          onError: (error) => {
+            Toast.show({
+              type: "error",
+              text1: "Gagal Update Data!",
+              text2: "Tambah Data Titik Lokasi",
+            });
+          },
+        }
+      );
   };
 
   return (
@@ -269,10 +306,19 @@ export default function TabTitikLokasi({ id }: { id: string }) {
         </View>
         <Button
           style={{ marginTop: 20 }}
-          disabled={!useIsPermission("ubah detail kegiatan")}
+          disabled={
+            !useIsPermission("ubah detail kegiatan") ||
+            updateTitikLokasiMutation.isPending
+          }
         >
-          <IconFlopyDisk color="Background 100" />
-          <Typography color="Background 100">Simpan</Typography>
+          {updateTitikLokasiMutation.isPending ? (
+            <Loader color="Background 100" />
+          ) : (
+            <>
+              <IconFlopyDisk color="Background 100" />
+              <Typography color="Background 100">Simpan</Typography>
+            </>
+          )}
         </Button>
       </View>
     </ScrollView>
