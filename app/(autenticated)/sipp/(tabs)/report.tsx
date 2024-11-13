@@ -4,6 +4,7 @@ import {
   IconCaretFillDown,
   IconCaretFillLeft,
   IconCaretUp,
+  IconCeretFillUp,
 } from "@/components/icons";
 import Accordion from "@/components/ui/accordion";
 import Appbar from "@/components/ui/appBar";
@@ -200,7 +201,7 @@ export default function report() {
                     {data.name}
                   </Typography>
                   {isOpen ? (
-                    <IconCaretUp
+                    <IconCeretFillUp
                       width={26}
                       height={24}
                       color="Background 100"

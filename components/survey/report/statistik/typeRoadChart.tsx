@@ -3,18 +3,28 @@ import Separator from '@/components/ui/separator';
 import { Typography } from '@/components/ui/typography';
 import View from '@/components/ui/view';
 import { useAppTheme } from '@/context';
+import { useGetStatistikPerkerasan } from '@/services/survey';
 import React from 'react';
 import { PieChart } from "react-native-gifted-charts";
 
-export default function TypeRoadChart() {
+interface SectionCardSurveyProps {
+    filterYear?: string | undefined;
+}
+export default function TypeRoadChart({ filterYear }: SectionCardSurveyProps) {
     const { Colors } = useAppTheme();
-    const pieData = [
-        { value: 54, color: '#22C55E', text: '54%' },
-        { value: 40, color: '#C084FC', text: '30%' },
-        { value: 20, color: '#2563EB', text: '26%' },
-        { value: 15, color: '#FB923C', text: '15%' }, // Warna baru
-        { value: 10, color: '#F71317', text: '10%' }, // Warna baru
-    ];
+
+    // Fetch data from the API
+    const { data, isLoading, error } = useGetStatistikPerkerasan(filterYear ? "year=" + filterYear : "");
+
+    // Fallback to default data for chart if data is not available yet
+    const pieData = data ? [
+        { value: parseFloat(data?.data?.hotmix_count), color: '#22C55E', text: `${(parseFloat(data?.data?.hotmix_count) || 0).toFixed(1)}` },
+        { value: parseFloat(data?.data?.rigit_count), color: '#C084FC', text: `${(parseFloat(data?.data?.rigit_count) || 0).toFixed(1)}` },
+        { value: parseFloat(data?.data?.lapen_count), color: '#2563EB', text: `${(parseFloat(data?.data?.lapen_count) || 0).toFixed(1)}` },
+        { value: data?.data?.telford_count ? parseFloat(data?.data?.telford_count) : 0, color: '#FB923C', text: `${data?.data?.telford_count ?? 0}` },
+        { value: data?.data?.tanah_count ? parseFloat(data?.data?.tanah_count) : 0, color: '#F71317', text: `${data?.data?.tanah_count ?? 0}` },
+    ] : [];
+
     return (
         <View
             style={{
@@ -51,16 +61,22 @@ export default function TypeRoadChart() {
                         paddingTop: 20,
                     }}
                 >
-                    <PieChart
-                        donut
-                        showText
-                        textColor="black"
-                        radius={140}
-                        textSize={12}
-                        showTextBackground
-                        textBackgroundRadius={23}
-                        data={pieData}
-                    />
+                    {isLoading ? (
+                        <Typography>Loading...</Typography>
+                    ) : error ? (
+                        <Typography>Error loading data</Typography>
+                    ) : (
+                        <PieChart
+                            donut
+                            showText
+                            textColor="black"
+                            radius={140}
+                            textSize={10}
+                            showTextBackground
+                            textBackgroundRadius={25}
+                            data={pieData}
+                        />
+                    )}
                 </View>
                 <View
                     style={{
@@ -80,7 +96,7 @@ export default function TypeRoadChart() {
                                 padding: 10,
                                 borderRadius: 10,
                                 color: Colors["Background 100"],
-                                backgroundColor: pieData[index].color,
+                                backgroundColor: pieData[index]?.color,
                             }}
                         >
                             {text}
@@ -88,7 +104,7 @@ export default function TypeRoadChart() {
                     ))}
                 </View>
             </View>
-            {/*  */}
+            {/* Statistics Section */}
             <View
                 style={{
                     borderRadius: 15,
@@ -108,62 +124,20 @@ export default function TypeRoadChart() {
                         gap: 5,
                     }}
                 >
-                    <View
-                        style={{
-                            flex: 1,
-                        }}
-                    >
+                    <View style={{ flex: 1 }}>
                         <Typography fontFamily="Poppins-Light" fontSize={14} color="Text 600">
-                            Panjang Ruas
+                            Hotmix
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            1
+                            {data?.data?.hotmix_count ?? '0'} KM
                         </Typography>
                     </View>
-                    <View
-                        style={{
-                            flex: 1,
-                        }}
-                    >
-                        <Typography fontFamily="Poppins-Light" fontSize={14} color="Text 600">
-                            Lebar Ruas
-                        </Typography>
-                        <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            1
-                        </Typography>
-                    </View>
-                </View>
-                <Separator />
-                <View
-                    style={{
-                        marginHorizontal: 20,
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: 5,
-                    }}
-                >
-                    <View
-                        style={{
-                            flex: 1,
-                        }}
-                    >
+                    <View style={{ flex: 1 }}>
                         <Typography fontFamily="Poppins-Light" fontSize={14} color="Text 600">
                             Rigit
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                        36.850
-                        </Typography>
-                    </View>
-                    <View
-                        style={{
-                            flex: 1,
-                        }}
-                    >
-                        <Typography fontFamily="Poppins-Light" fontSize={14} color="Text 600">
-                        Hotmix
-                        </Typography>
-                        <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                        5.140
+                            {data?.data?.rigit_count ?? '0'} KM
                         </Typography>
                     </View>
                 </View>
@@ -176,28 +150,46 @@ export default function TypeRoadChart() {
                         gap: 5,
                     }}
                 >
-                    <View
-                        style={{
-                            flex: 1,
-                        }}
-                    >
+                    <View style={{ flex: 1 }}>
                         <Typography fontFamily="Poppins-Light" fontSize={14} color="Text 600">
                             Lapen
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            1
+                            {data?.data?.lapen_count ?? '0'} KM
                         </Typography>
                     </View>
-                    <View
-                        style={{
-                            flex: 1,
-                        }}
-                    >
+                    <View style={{ flex: 1 }}>
                         <Typography fontFamily="Poppins-Light" fontSize={14} color="Text 600">
                             Telford
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            1
+                            {data?.data?.telford_count ?? '0'} KM
+                        </Typography>
+                    </View>
+                </View>
+                <Separator />
+                <View
+                    style={{
+                        marginHorizontal: 20,
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: 5,
+                    }}
+                >
+                    <View style={{ flex: 1 }}>
+                        <Typography fontFamily="Poppins-Light" fontSize={14} color="Text 600">
+                            Tanah
+                        </Typography>
+                        <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
+                            {data?.data?.tanah_count ?? 0} KM
+                        </Typography>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <Typography fontFamily="Poppins-Light" fontSize={14} color="Text 600">
+                            Total
+                        </Typography>
+                        <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
+                            {data?.data?.total ?? 0} KM
                         </Typography>
                     </View>
                 </View>

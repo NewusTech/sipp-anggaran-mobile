@@ -3,17 +3,26 @@ import Separator from '@/components/ui/separator';
 import { Typography } from '@/components/ui/typography';
 import View from '@/components/ui/view';
 import { useAppTheme } from '@/context';
+import { useGetStatistikDrainase } from '@/services/survey';
 import React from 'react';
 import { PieChart } from "react-native-gifted-charts";
 
-export default function DrainaseChartCondition() {
+interface SectionCardSurveyProps {
+    filterYear?: string | undefined;
+}
+
+export default function DrainaseChartCondition({ filterYear }: SectionCardSurveyProps) {
     const { Colors } = useAppTheme();
-    const pieData = [
-        { value: 54, color: '#22C55E', text: '54%' },
-        { value: 40, color: '#C084FC', text: '30%' },
-        { value: 20, color: '#2563EB', text: '26%' },
-        { value: 25, color: '#FB923C', text: '25%' }, // Warna baru
-    ];
+    // Fetch data from the API
+    const { data, isLoading, error } = useGetStatistikDrainase(filterYear ? "year=" + filterYear : "");
+
+    // Fallback to default data for chart if data is not available yet
+    const pieData = data ? [
+        { value: parseFloat(data?.data?.baik.toString()), color: '#22C55E', text: `${(parseFloat(data?.data?.baik.toString()) || 0).toFixed(1)}` },
+        { value: parseFloat(data?.data?.sedang.toString()), color: '#C084FC', text: `${(parseFloat(data?.data?.sedang.toString()) || 0).toFixed(1)}` },
+        { value: parseFloat(data?.data?.rusak.toString()), color: '#2563EB', text: `${(parseFloat(data?.data?.rusak.toString()) || 0).toFixed(1)}` },
+        { value: parseFloat(data?.data?.tanah.toString()), color: '#FB923C', text: `${(parseFloat(data?.data?.tanah.toString()) || 0).toFixed(1)}` },
+    ] : [];
     return (
         <View
             style={{
@@ -50,16 +59,22 @@ export default function DrainaseChartCondition() {
                         paddingTop: 20,
                     }}
                 >
-                    <PieChart
-                        donut
-                        showText
-                        textColor="black"
-                        radius={140}
-                        textSize={12}
-                        showTextBackground
-                        textBackgroundRadius={23}
-                        data={pieData}
-                    />
+                    {isLoading ? (
+                        <Typography>Loading...</Typography>
+                    ) : error ? (
+                        <Typography>Error loading data</Typography>
+                    ) : (
+                        <PieChart
+                            donut
+                            showText
+                            textColor="black"
+                            radius={140}
+                            textSize={10}
+                            showTextBackground
+                            textBackgroundRadius={25}
+                            data={pieData}
+                        />
+                    )}
                 </View>
                 <View
                     style={{
@@ -71,7 +86,7 @@ export default function DrainaseChartCondition() {
                         marginTop: 20,
                     }}
                 >
-                    {['Baik', 'Sedang', 'Rusak Ringan', 'Rusak Berat'].map((text, index) => (
+                    {['Baik', 'Sedang', 'Rusak', 'Tanah'].map((text, index) => (
                         <Typography
                             key={index}
                             style={{
@@ -79,7 +94,7 @@ export default function DrainaseChartCondition() {
                                 padding: 10,
                                 borderRadius: 10,
                                 color: Colors["Background 100"],
-                                backgroundColor: pieData[index].color,
+                                backgroundColor: pieData[index]?.color,
                             }}
                         >
                             {text}
@@ -116,7 +131,7 @@ export default function DrainaseChartCondition() {
                             Baik
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            50.329
+                        {data?.data?.baik ?? '0'}
                         </Typography>
                     </View>
                     <View
@@ -128,7 +143,7 @@ export default function DrainaseChartCondition() {
                             Sedang
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            17.285
+                        {data?.data?.sedang ?? '0'}
                         </Typography>
                     </View>
                 </View>
@@ -150,7 +165,7 @@ export default function DrainaseChartCondition() {
                             Rusak
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            15
+                        {data?.data?.rusak ?? '0'}
                         </Typography>
                     </View>
                     <View
@@ -162,7 +177,7 @@ export default function DrainaseChartCondition() {
                             Tanah
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            79
+                        {data?.data?.tanah ?? '0'}
                         </Typography>
                     </View>
                 </View>
