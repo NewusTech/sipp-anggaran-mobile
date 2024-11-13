@@ -36,17 +36,17 @@ export function IsPermission({
   return null;
 }
 
-export function isPermission(permission: string) {
+export function useIsPermission(permission: string) {
   const userPermissions = usePermission();
-
   const token = useAccessToken();
-  const decoded = jwtDecode(token || "") as any;
 
-  if (
-    userPermissions.includes(permission) ||
-    decoded.role[0] === "Super Admin"
-  ) {
-    return true;
+  let hasPermission = false;
+
+  if (token) {
+    const decoded = jwtDecode(token) as any;
+    hasPermission =
+      userPermissions.includes(permission) || decoded.role[0] === "Super Admin";
   }
-  return false;
+
+  return hasPermission;
 }

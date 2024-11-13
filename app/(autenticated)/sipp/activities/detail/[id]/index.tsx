@@ -226,10 +226,10 @@ export default function index() {
         {/*  */}
         {/* </ScrollView> */}
       </View>
-      <ScrollView
+      {/* <ScrollView
         contentContainerStyle={{ paddingBottom: 40 }}
         style={{ paddingTop: 10, marginTop: 20 }}
-      >
+      > */}
         {tabDetail === "Detail" && (
           <TabDetail
             data={{
@@ -259,7 +259,7 @@ export default function index() {
         )}
         {tabDetail === "Dokumentasi" && <TabDocumentation id={params.id} />}
         {tabDetail === "Titik Lokasi" && <TabTitikLokasi id={params.id} />}
-      </ScrollView>
+      {/* </ScrollView> */}
       {getDetailAnggaran.isFetching && (
         <View
           style={{

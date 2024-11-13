@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
-import { usePermission } from "@/store/sipp";
+import { useIsPermission } from "@/helper";
 import { getMonthName, substring } from "@/utils";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -24,7 +24,7 @@ export default function SectionFinancialRealization(
   const { Colors } = useAppTheme();
   const router = useRouter();
 
-  const userPermissions = usePermission();
+  const canViewDetail = !useIsPermission("lihat detail kegiatan");
 
   return (
     <>
@@ -110,7 +110,7 @@ export default function SectionFinancialRealization(
                 borderWidth: 1,
                 borderColor: Colors["Background 200"],
               }}
-              disabled={!userPermissions.includes("lihat detail kegiatan")}
+              disabled={canViewDetail}
               onPress={() =>
                 router.push({
                   pathname: "/(autenticated)/sipp/activities/detail/[id]",
