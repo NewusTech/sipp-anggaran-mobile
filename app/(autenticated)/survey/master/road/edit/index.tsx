@@ -131,14 +131,14 @@ export default function index() {
                 >Cari Alamat
                 </Button>
                 {/* map */}
-                <View style={{ flex: 1, width: "100%", height: 300, marginTop: 10, }}>
+                {/* <View style={{ flex: 1, width: "100%", height: 300, marginTop: 10, }}>
                     <LeafletView
                         mapCenterPosition={{
                             lat: -5.39714,
                             lng: 105.266792,
                         }}
                     />
-                </View>
+                </View> */}
                 <Separator
                 ></Separator>
                 {/* button */}
