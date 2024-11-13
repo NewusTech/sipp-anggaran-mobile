@@ -13,6 +13,7 @@ import {
   usePutDetailAnggaranPenanggungJawab,
 } from "@/services/sipp";
 import React, { useState } from "react";
+import { ScrollView } from "react-native";
 import Toast from "react-native-toast-message";
 
 export default function TabPersonInCharge({ id }: { id: string }) {
@@ -56,374 +57,381 @@ export default function TabPersonInCharge({ id }: { id: string }) {
   };
 
   return (
-    <View
-      style={{
-        paddingHorizontal: 20,
-        gap: 15,
+    <ScrollView
+      style={{ marginTop: 20 }}
+      contentContainerStyle={{
+        paddingBottom: 20,
       }}
     >
-      <Button
-        onPress={() => setModalPJ(true)}
-        disabled={!useIsPermission("ubah detail kegiatan")}
+      <View
+        style={{
+          paddingHorizontal: 20,
+          gap: 15,
+        }}
       >
-        <IconPencil color="Background 100" />
-        <Typography color="Background 100">Edit Penanggung Jawab</Typography>
-      </Button>
-      <View style={{ marginTop: 0, gap: 15 }}>
-        <View
-          style={{
-            borderRadius: 10,
-            borderWidth: 1,
-            borderColor: Colors["Line 400"],
-            overflow: "hidden",
-          }}
+        <Button
+          onPress={() => setModalPJ(true)}
+          disabled={!useIsPermission("ubah detail kegiatan")}
         >
+          <IconPencil color="Background 100" />
+          <Typography color="Background 100">Edit Penanggung Jawab</Typography>
+        </Button>
+        <View style={{ marginTop: 0, gap: 15 }}>
           <View
             style={{
-              flexDirection: "row",
-              backgroundColor: Colors["Line 400"],
-              padding: 15,
+              borderRadius: 10,
+              borderWidth: 1,
+              borderColor: Colors["Line 400"],
+              overflow: "hidden",
             }}
           >
-            <Typography color="Background 100">Pengawas</Typography>
-          </View>
-          <View
-            style={[
-              {
+            <View
+              style={{
                 flexDirection: "row",
+                backgroundColor: Colors["Line 400"],
                 padding: 15,
-                alignItems: "center",
-                borderColor: Colors["Line 400"],
-                borderBottomWidth: 1,
-              },
-            ]}
-          >
-            <Typography
-              style={{ width: "33%", textAlign: "left" }}
-              fontFamily="Poppins-Light"
+              }}
             >
-              Nama
-            </Typography>
-            <Typography fontFamily="Poppins-Light">
-              {pj?.kegiatan?.penanggung_jawab?.pptk_name || "-"}
-            </Typography>
-          </View>
-          <View
-            style={[
-              {
-                flexDirection: "row",
-                padding: 15,
-                alignItems: "center",
-                borderColor: Colors["Line 400"],
-                borderBottomWidth: 1,
-              },
-            ]}
-          >
-            <Typography
-              style={{ width: "33%", textAlign: "left" }}
-              fontFamily="Poppins-Light"
+              <Typography color="Background 100">Pengawas</Typography>
+            </View>
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  padding: 15,
+                  alignItems: "center",
+                  borderColor: Colors["Line 400"],
+                  borderBottomWidth: 1,
+                },
+              ]}
             >
-              NIP
-            </Typography>
-            <Typography fontFamily="Poppins-Light">
-              {pj?.kegiatan?.penanggung_jawab?.pptk_nip || "-"}
-            </Typography>
-          </View>
-          <View
-            style={[
-              {
-                flexDirection: "row",
-                padding: 15,
-                alignItems: "center",
-                borderColor: Colors["Line 400"],
-                borderBottomWidth: 1,
-              },
-            ]}
-          >
-            <Typography
-              style={{ width: "33%", textAlign: "left" }}
-              fontFamily="Poppins-Light"
+              <Typography
+                style={{ width: "33%", textAlign: "left" }}
+                fontFamily="Poppins-Light"
+              >
+                Nama
+              </Typography>
+              <Typography fontFamily="Poppins-Light">
+                {pj?.kegiatan?.penanggung_jawab?.pptk_name || "-"}
+              </Typography>
+            </View>
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  padding: 15,
+                  alignItems: "center",
+                  borderColor: Colors["Line 400"],
+                  borderBottomWidth: 1,
+                },
+              ]}
             >
-              Email
-            </Typography>
-            <Typography fontFamily="Poppins-Light">
-              {pj?.kegiatan?.penanggung_jawab?.pptk_email || "-"}
-            </Typography>
-          </View>
-          <View
-            style={[
-              {
-                flexDirection: "row",
-                padding: 15,
-                alignItems: "center",
-                borderColor: Colors["Line 400"],
-                borderBottomWidth: 1,
-              },
-            ]}
-          >
-            <Typography
-              style={{ width: "33%", textAlign: "left" }}
-              fontFamily="Poppins-Light"
+              <Typography
+                style={{ width: "33%", textAlign: "left" }}
+                fontFamily="Poppins-Light"
+              >
+                NIP
+              </Typography>
+              <Typography fontFamily="Poppins-Light">
+                {pj?.kegiatan?.penanggung_jawab?.pptk_nip || "-"}
+              </Typography>
+            </View>
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  padding: 15,
+                  alignItems: "center",
+                  borderColor: Colors["Line 400"],
+                  borderBottomWidth: 1,
+                },
+              ]}
             >
-              Telepon
-            </Typography>
-            <Typography fontFamily="Poppins-Light">
-              {pj?.kegiatan?.penanggung_jawab?.pptk_telpon || "-"}
-            </Typography>
-          </View>
-          <View
-            style={[
-              {
-                flexDirection: "row",
-                padding: 15,
-                alignItems: "center",
-              },
-            ]}
-          >
-            <Typography
-              style={{ width: "33%", textAlign: "left" }}
-              fontFamily="Poppins-Light"
+              <Typography
+                style={{ width: "33%", textAlign: "left" }}
+                fontFamily="Poppins-Light"
+              >
+                Email
+              </Typography>
+              <Typography fontFamily="Poppins-Light">
+                {pj?.kegiatan?.penanggung_jawab?.pptk_email || "-"}
+              </Typography>
+            </View>
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  padding: 15,
+                  alignItems: "center",
+                  borderColor: Colors["Line 400"],
+                  borderBottomWidth: 1,
+                },
+              ]}
             >
-              Bidang
-            </Typography>
-            <Typography fontFamily="Poppins-Light">
-              {pj?.kegiatan.penanggung_jawab?.bidang_pptk || "-"}
-            </Typography>
+              <Typography
+                style={{ width: "33%", textAlign: "left" }}
+                fontFamily="Poppins-Light"
+              >
+                Telepon
+              </Typography>
+              <Typography fontFamily="Poppins-Light">
+                {pj?.kegiatan?.penanggung_jawab?.pptk_telpon || "-"}
+              </Typography>
+            </View>
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  padding: 15,
+                  alignItems: "center",
+                },
+              ]}
+            >
+              <Typography
+                style={{ width: "33%", textAlign: "left" }}
+                fontFamily="Poppins-Light"
+              >
+                Bidang
+              </Typography>
+              <Typography fontFamily="Poppins-Light">
+                {pj?.kegiatan.penanggung_jawab?.bidang_pptk || "-"}
+              </Typography>
+            </View>
           </View>
-        </View>
 
-        <View
-          style={{
-            borderRadius: 10,
-            borderWidth: 1,
-            borderColor: Colors["Line 400"],
-            overflow: "hidden",
-          }}
-        >
           <View
             style={{
-              flexDirection: "row",
-              backgroundColor: Colors["Line 400"],
-              padding: 15,
+              borderRadius: 10,
+              borderWidth: 1,
+              borderColor: Colors["Line 400"],
+              overflow: "hidden",
             }}
           >
-            <Typography color="Background 100">Admin</Typography>
-          </View>
-          <View
-            style={[
-              {
+            <View
+              style={{
                 flexDirection: "row",
+                backgroundColor: Colors["Line 400"],
                 padding: 15,
-                alignItems: "center",
-                borderColor: Colors["Line 400"],
-                borderBottomWidth: 1,
-              },
-            ]}
-          >
-            <Typography
-              style={{ width: "33%", textAlign: "left" }}
-              fontFamily="Poppins-Light"
+              }}
             >
-              Nama
-            </Typography>
-            <Typography fontFamily="Poppins-Light">
-              {pj?.kegiatan?.penanggung_jawab?.ppk_name || "-"}
-            </Typography>
-          </View>
-          <View
-            style={[
-              {
-                flexDirection: "row",
-                padding: 15,
-                alignItems: "center",
-                borderColor: Colors["Line 400"],
-                borderBottomWidth: 1,
-              },
-            ]}
-          >
-            <Typography
-              style={{ width: "33%", textAlign: "left" }}
-              fontFamily="Poppins-Light"
+              <Typography color="Background 100">Admin</Typography>
+            </View>
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  padding: 15,
+                  alignItems: "center",
+                  borderColor: Colors["Line 400"],
+                  borderBottomWidth: 1,
+                },
+              ]}
             >
-              NIP
-            </Typography>
-            <Typography fontFamily="Poppins-Light">
-              {" "}
-              {pj?.kegiatan?.penanggung_jawab?.pptk_nip || "-"}
-            </Typography>
-          </View>
-          <View
-            style={[
-              {
-                flexDirection: "row",
-                padding: 15,
-                alignItems: "center",
-                borderColor: Colors["Line 400"],
-                borderBottomWidth: 1,
-              },
-            ]}
-          >
-            <Typography
-              style={{ width: "33%", textAlign: "left" }}
-              fontFamily="Poppins-Light"
+              <Typography
+                style={{ width: "33%", textAlign: "left" }}
+                fontFamily="Poppins-Light"
+              >
+                Nama
+              </Typography>
+              <Typography fontFamily="Poppins-Light">
+                {pj?.kegiatan?.penanggung_jawab?.ppk_name || "-"}
+              </Typography>
+            </View>
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  padding: 15,
+                  alignItems: "center",
+                  borderColor: Colors["Line 400"],
+                  borderBottomWidth: 1,
+                },
+              ]}
             >
-              Email
-            </Typography>
-            <Typography fontFamily="Poppins-Light">
-              {pj?.kegiatan?.penanggung_jawab?.ppk_email || "-"}
-            </Typography>
-          </View>
-          <View
-            style={[
-              {
-                flexDirection: "row",
-                padding: 15,
-                alignItems: "center",
-                borderColor: Colors["Line 400"],
-                borderBottomWidth: 1,
-              },
-            ]}
-          >
-            <Typography
-              style={{ width: "33%", textAlign: "left" }}
-              fontFamily="Poppins-Light"
+              <Typography
+                style={{ width: "33%", textAlign: "left" }}
+                fontFamily="Poppins-Light"
+              >
+                NIP
+              </Typography>
+              <Typography fontFamily="Poppins-Light">
+                {" "}
+                {pj?.kegiatan?.penanggung_jawab?.pptk_nip || "-"}
+              </Typography>
+            </View>
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  padding: 15,
+                  alignItems: "center",
+                  borderColor: Colors["Line 400"],
+                  borderBottomWidth: 1,
+                },
+              ]}
             >
-              Telepon
-            </Typography>
-            <Typography fontFamily="Poppins-Light">
-              {" "}
-              {pj?.kegiatan?.penanggung_jawab?.ppk_telpon || "-"}
-            </Typography>
-          </View>
-          <View
-            style={[
-              {
-                flexDirection: "row",
-                padding: 15,
-                alignItems: "center",
-              },
-            ]}
-          >
-            <Typography
-              style={{ width: "33%", textAlign: "left" }}
-              fontFamily="Poppins-Light"
+              <Typography
+                style={{ width: "33%", textAlign: "left" }}
+                fontFamily="Poppins-Light"
+              >
+                Email
+              </Typography>
+              <Typography fontFamily="Poppins-Light">
+                {pj?.kegiatan?.penanggung_jawab?.ppk_email || "-"}
+              </Typography>
+            </View>
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  padding: 15,
+                  alignItems: "center",
+                  borderColor: Colors["Line 400"],
+                  borderBottomWidth: 1,
+                },
+              ]}
             >
-              Bidang
-            </Typography>
-            <Typography fontFamily="Poppins-Light">
-              {" "}
-              {pj?.kegiatan?.penanggung_jawab?.bidang_ppk || "-"}
-            </Typography>
+              <Typography
+                style={{ width: "33%", textAlign: "left" }}
+                fontFamily="Poppins-Light"
+              >
+                Telepon
+              </Typography>
+              <Typography fontFamily="Poppins-Light">
+                {" "}
+                {pj?.kegiatan?.penanggung_jawab?.ppk_telpon || "-"}
+              </Typography>
+            </View>
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  padding: 15,
+                  alignItems: "center",
+                },
+              ]}
+            >
+              <Typography
+                style={{ width: "33%", textAlign: "left" }}
+                fontFamily="Poppins-Light"
+              >
+                Bidang
+              </Typography>
+              <Typography fontFamily="Poppins-Light">
+                {" "}
+                {pj?.kegiatan?.penanggung_jawab?.bidang_ppk || "-"}
+              </Typography>
+            </View>
           </View>
-        </View>
 
-        <View
-          style={{
-            borderRadius: 10,
-            borderWidth: 1,
-            borderColor: Colors["Line 400"],
-            overflow: "hidden",
-          }}
-        >
           <View
             style={{
-              flexDirection: "row",
-              backgroundColor: Colors["Line 400"],
-              padding: 15,
+              borderRadius: 10,
+              borderWidth: 1,
+              borderColor: Colors["Line 400"],
+              overflow: "hidden",
             }}
           >
-            <Typography color="Background 100">Penyedia Jasa</Typography>
-          </View>
-          <View
-            style={[
-              {
+            <View
+              style={{
                 flexDirection: "row",
+                backgroundColor: Colors["Line 400"],
                 padding: 15,
-                alignItems: "center",
-                borderColor: Colors["Line 400"],
-                borderBottomWidth: 1,
-              },
-            ]}
-          >
-            <Typography
-              style={{ width: "33%", textAlign: "left" }}
-              fontFamily="Poppins-Light"
+              }}
             >
-              Nama
-            </Typography>
-            <Typography fontFamily="Poppins-Light">
-              {pj?.detail_kegiatan.penyedia_jasa || "-"}
-            </Typography>
-          </View>
-          <View
-            style={[
-              {
-                flexDirection: "row",
-                padding: 15,
-                alignItems: "center",
-              },
-            ]}
-          >
-            <Typography
-              style={{ width: "33%", textAlign: "left" }}
-              fontFamily="Poppins-Light"
+              <Typography color="Background 100">Penyedia Jasa</Typography>
+            </View>
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  padding: 15,
+                  alignItems: "center",
+                  borderColor: Colors["Line 400"],
+                  borderBottomWidth: 1,
+                },
+              ]}
             >
-              Telepon
-            </Typography>
-            <Typography fontFamily="Poppins-Light">(belum)</Typography>
+              <Typography
+                style={{ width: "33%", textAlign: "left" }}
+                fontFamily="Poppins-Light"
+              >
+                Nama
+              </Typography>
+              <Typography fontFamily="Poppins-Light">
+                {pj?.detail_kegiatan.penyedia_jasa || "-"}
+              </Typography>
+            </View>
+            <View
+              style={[
+                {
+                  flexDirection: "row",
+                  padding: 15,
+                  alignItems: "center",
+                },
+              ]}
+            >
+              <Typography
+                style={{ width: "33%", textAlign: "left" }}
+                fontFamily="Poppins-Light"
+              >
+                Telepon
+              </Typography>
+              <Typography fontFamily="Poppins-Light">(belum)</Typography>
+            </View>
           </View>
         </View>
-      </View>
-      <ModalSwipe modalVisible={modalPJ} setModalVisible={setModalPJ}>
-        <View>
-          <Typography
-            style={{ marginVertical: 10 }}
-            fontFamily="Poppins-Medium"
-            fontSize={18}
-            color="Info 500"
-          >
-            Edit Pengawas / Admin
-          </Typography>
+        <ModalSwipe modalVisible={modalPJ} setModalVisible={setModalPJ}>
+          <View>
+            <Typography
+              style={{ marginVertical: 10 }}
+              fontFamily="Poppins-Medium"
+              fontSize={18}
+              color="Info 500"
+            >
+              Edit Pengawas / Admin
+            </Typography>
 
-          <SelectInput
-            label="Pilih Pengawas"
-            data={
-              getDataPenanggungJawab?.data?.data.map((data) => {
-                return {
-                  title: data.pptk_name,
-                };
-              }) || []
-            }
-            placeholder="Pelih Pengawas"
-            onSelect={(dataItem: any, index: any) =>
-              setPenanggungJawab(
+            <SelectInput
+              label="Pilih Pengawas"
+              data={
+                getDataPenanggungJawab?.data?.data.map((data) => {
+                  return {
+                    title: data.pptk_name,
+                  };
+                }) || []
+              }
+              placeholder="Pelih Pengawas"
+              onSelect={(dataItem: any, index: any) =>
+                setPenanggungJawab(
+                  getDataPenanggungJawab.data?.data.find(
+                    (f) => f.pptk_name === dataItem.title
+                  )?.id || ""
+                )
+              }
+              value={
                 getDataPenanggungJawab.data?.data.find(
-                  (f) => f.pptk_name === dataItem.title
-                )?.id || ""
-              )
-            }
-            value={
-              getDataPenanggungJawab.data?.data.find(
-                (f) => f.id === penanggungJawab
-              )?.pptk_name || ""
-            }
-            trailingIcon={<IconCaretDown color="Text 900" />}
-            padding={12}
-            borderRadius={15}
-          />
-          <Button
-            style={{ marginTop: 20 }}
-            onPress={handleUpdatePj}
-            disabled={putPenanggungJawabMutation.isPending}
-          >
-            {putPenanggungJawabMutation.isPending ? (
-              <Loader color="Background 100" />
-            ) : (
-              "Simpan"
-            )}
-          </Button>
-        </View>
-      </ModalSwipe>
-    </View>
+                  (f) => f.id === penanggungJawab
+                )?.pptk_name || ""
+              }
+              trailingIcon={<IconCaretDown color="Text 900" />}
+              padding={12}
+              borderRadius={15}
+            />
+            <Button
+              style={{ marginTop: 20 }}
+              onPress={handleUpdatePj}
+              disabled={putPenanggungJawabMutation.isPending}
+            >
+              {putPenanggungJawabMutation.isPending ? (
+                <Loader color="Background 100" />
+              ) : (
+                "Simpan"
+              )}
+            </Button>
+          </View>
+        </ModalSwipe>
+      </View>
+    </ScrollView>
   );
 }

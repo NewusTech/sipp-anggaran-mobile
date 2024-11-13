@@ -28,6 +28,9 @@ export default function home() {
     filterYear ? "year=" + filterYear : ""
   );
 
+  // State untuk mengontrol scroll
+  const [isScrollEnabled, setIsScrollEnabled] = useState(true);
+
   return (
     <View
       style={{
@@ -44,6 +47,7 @@ export default function home() {
           paddingBottom: 60,
         }}
         removeClippedSubviews={true}
+        scrollEnabled={isScrollEnabled}
       >
         <SelectInput
           data={getLastYears(24).map((d) => {
@@ -57,33 +61,42 @@ export default function home() {
           placeholder="Pilih Tahun"
           trailingIcon={<IconCaretDown />}
         />
-        <IsPermission permission="lihat total keuangan">
-          <SectionCard filterYear={filterYear.toString()} />
-        </IsPermission>
-        <IsPermission permission="lihat total keuangan">
-          <SectionFinancialRealization
+        <View onTouchStart={() => setIsScrollEnabled(true)}>
+          <IsPermission permission="lihat total keuangan">
+            <SectionCard filterYear={filterYear.toString()} />
+          </IsPermission>
+          <IsPermission permission="lihat total keuangan">
+            <SectionFinancialRealization
+              chartLabel={getCart.data?.data.chart_data.labels || []}
+              chartDdata={getCart.data?.data.chart_data.data_keuangan || []}
+              data={getRealisasi.data?.data.realisasi_keuangan || []}
+            />
+          </IsPermission>
+          <SectionPhysicalProgress
             chartLabel={getCart.data?.data.chart_data.labels || []}
-            chartDdata={getCart.data?.data.chart_data.data_keuangan || []}
-            data={getRealisasi.data?.data.realisasi_keuangan || []}
+            chartDdata={getCart.data?.data.chart_data.data_fisik || []}
+            data={getRealisasi.data?.data.realisasi_fisik || []}
           />
-        </IsPermission>
-        <SectionPhysicalProgress
-          chartLabel={getCart.data?.data.chart_data.labels || []}
-          chartDdata={getCart.data?.data.chart_data.data_fisik || []}
-          data={getRealisasi.data?.data.realisasi_fisik || []}
+          <SectionPackage
+            total_paket={getRealisasi.data?.data.total_paket || 0}
+            total_paket_belum_mulai={
+              getRealisasi.data?.data.total_paket_belum_mulai || 0
+            }
+            total_paket_dikerjakan={
+              getRealisasi.data?.data.total_paket_dikerjakan || 0
+            }
+            total_paket_selesai={
+              getRealisasi.data?.data.total_paket_selesai || 0
+            }
+          />
+        </View>
+        <SectionMap
+          setIsScrollEnabled={setIsScrollEnabled}
+          filterYear={filterYear.toString()}
         />
-        <SectionPackage
-          total_paket={getRealisasi.data?.data.total_paket || 0}
-          total_paket_belum_mulai={
-            getRealisasi.data?.data.total_paket_belum_mulai || 0
-          }
-          total_paket_dikerjakan={
-            getRealisasi.data?.data.total_paket_dikerjakan || 0
-          }
-          total_paket_selesai={getRealisasi.data?.data.total_paket_selesai || 0}
-        />
-        <SectionMap />
-        <SectionTable filterYear={filterYear.toString()} />
+        <View onTouchStart={() => setIsScrollEnabled(true)}>
+          <SectionTable filterYear={filterYear.toString()} />
+        </View>
       </ScrollView>
     </View>
   );

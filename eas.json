@@ -12,7 +12,14 @@
       "distribution": "internal"
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_API_URL_SIPP": "https://anggaran.sippp-puprtubabakab.com/api",
+        "EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN": "sk."
+      },
+      "android": {
+        "buildType": "app-bundle"
+      }
     }
   },
   "submit": {

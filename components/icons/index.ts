@@ -21,3 +21,4 @@ export * from "./IconMonyBag";
 export * from "./IconFileReport";
 export * from "./IconCamera";
 export * from "./IconCeretUp";
+export * from "./IconMapMarker";

@@ -30,17 +30,23 @@
     "plugins": [
       "expo-router",
       [
-        // highlight-start
         "@rnmapbox/maps",
         {
           "RNMapboxMapsDownloadToken": "sk.eyJ1IjoiaGFtZGFuaGFiaWJpNyIsImEiOiJjbTNlMnYxZnUwOTlpMmlxeWlrcGpkdWduIn0.ggPa_ZGlRITxWRrgDxgk7A",
           "locationWhenInUsePermission": "Show current location on map."
         }
-        // highlight-end
       ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "be303033-7dee-4a22-895f-3c756b35066a"
+      }
     }
   }
 }

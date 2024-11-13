@@ -4,6 +4,7 @@ import { formatDate } from "@/constants";
 import { useAppTheme } from "@/context";
 import { formatCurrency } from "@/utils";
 import React from "react";
+import { ScrollView } from "react-native";
 
 type TabDetail = {
   data: {
@@ -29,14 +30,18 @@ export default function TabDetail(props: TabDetail) {
   const { Colors } = useAppTheme();
 
   return (
-    <View
-      style={{
+    <ScrollView
+      contentContainerStyle={{
         borderRadius: 15,
         borderWidth: 1,
         borderColor: Colors["Line 300"],
         marginHorizontal: 20,
         padding: 15,
         gap: 15,
+      }}
+      style={{
+        marginTop: 20,
+        marginBottom: 20,
       }}
     >
       <View>
@@ -155,6 +160,6 @@ export default function TabDetail(props: TabDetail) {
           {data.target}
         </Typography>
       </View>
-    </View>
+    </ScrollView>
   );
 }

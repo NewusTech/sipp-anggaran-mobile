@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
+import { useIsPermission } from "@/helper";
 import { getMonthName, substring } from "@/utils";
 import { router } from "expo-router";
 import React from "react";
@@ -20,6 +21,8 @@ export default function SectionPhysicalProgress(
 ) {
   const { Colors } = useAppTheme();
   const { chartDdata, chartLabel, data } = props;
+
+  const canViewDetail = !useIsPermission("lihat detail kegiatan");
 
   return (
     <>
@@ -113,6 +116,7 @@ export default function SectionPhysicalProgress(
                   },
                 })
               }
+              disabled={canViewDetail}
             >
               <Typography
                 fontFamily="Poppins-Light"
