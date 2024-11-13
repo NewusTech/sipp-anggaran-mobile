@@ -1,6 +1,6 @@
 import Accordion from "@/components/ui/accordion";
 import Header from "@/components/header";
-import { IconCaretDown, IconCaretUp, IconPlus } from "@/components/icons";
+import { IconCaretDown, IconCaretUp, IconCeretFillUp, IconPlus } from "@/components/icons";
 import { SelectInput } from "@/components/ui/selectInput";
 import Separator from "@/components/ui/separator";
 import { Typography } from "@/components/ui/typography";
@@ -136,7 +136,7 @@ export default function Activities() {
                       {data.name}
                     </Typography>
                     {isOpen ? (
-                      <IconCaretUp
+                      <IconCeretFillUp
                         width={26}
                         height={24}
                         color="Background 100"

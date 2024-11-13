@@ -4,6 +4,7 @@ import {
     IconCaretFillLeft,
     IconCaretLeft,
     IconCaretRight,
+    IconCeretFillUp,
 } from "@/components/icons";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
@@ -104,7 +105,7 @@ export default function VerificationTableBridge({ filterYear }: SectionCardSurve
                                         color="Primary Blue" fontSize={15}>
                                         {section?.nama_ruas || "-"}
                                     </Typography>
-                                    {isOpen ? <IconCaretFillDown /> : <IconCaretUp />}
+                                    {isOpen ? <IconCaretFillDown /> : <IconCeretFillUp />}
                                 </View>
                             )}
                         >
