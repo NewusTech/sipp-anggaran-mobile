@@ -7,7 +7,7 @@ export default ({ config }) => {
       [
         "@rnmapbox/maps",
         {
-          RNMapboxMapsDownloadToken: process.env.RNMAPBOX_MAPS_TOKEN,
+          RNMapboxMapsDownloadToken: process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN,
           locationWhenInUsePermission: "Show current location on map.",
         },
       ],
