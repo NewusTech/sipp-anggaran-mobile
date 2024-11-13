@@ -27,16 +27,6 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": [
-      "expo-router",
-      [
-        "@rnmapbox/maps",
-        {
-          "RNMapboxMapsDownloadToken": "./mapbox.secrect.txt",
-          "locationWhenInUsePermission": "Show current location on map."
-        }
-      ]
-    ],
     "experiments": {
       "typedRoutes": true
     },

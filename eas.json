@@ -13,10 +13,6 @@
     },
     "production": {
       "autoIncrement": true,
-      "env": {
-        "EXPO_PUBLIC_API_URL_SIPP": "https://anggaran.sippp-puprtubabakab.com/api",
-        "EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN": "./mapbox.secrect.txt"
-      },
       "android": {
         "buildType": "app-bundle"
       }
