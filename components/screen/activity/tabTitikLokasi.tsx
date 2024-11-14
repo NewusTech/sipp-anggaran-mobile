@@ -228,17 +228,23 @@ export default function TabTitikLokasi({ id }: { id: string }) {
               justifyContent: "center",
             }}
           >
-            <Typography color="Background 100" fontSize={16}>
-              -
-            </Typography>
+            <View>
+              <Typography color="Background 100" fontSize={15}>
+                Kontraktor
+              </Typography>
+              <Typography color="Background 100" fontSize={16}>
+                {titikLokasi?.detail_kegiatan.penyedia_jasa}
+              </Typography>
+            </View>
             <Separator orientation="vertical" color="Background 100" />
-            <Typography color="Background 100" fontSize={16}>
-              {titikLokasi?.detail_kegiatan.penyedia_jasa}
-            </Typography>
-            <Separator orientation="vertical" color="Background 100" />
-            <Typography color="Background 100" fontSize={16}>
-              -
-            </Typography>
+            <View>
+              <Typography color="Background 100" fontSize={15}>
+                Nilai Kontrak
+              </Typography>
+              <Typography color="Background 100" fontSize={16}>
+                {"-"}
+              </Typography>
+            </View>
           </View>
         </LinearGradient>
         <View
@@ -263,7 +269,7 @@ export default function TabTitikLokasi({ id }: { id: string }) {
               fontSize={15}
               color="Text 900"
             >
-              belum
+              -
             </Typography>
           </View>
           <View>
@@ -279,7 +285,7 @@ export default function TabTitikLokasi({ id }: { id: string }) {
               fontSize={15}
               color="Text 900"
             >
-              belum
+              -
             </Typography>
           </View>
           <View

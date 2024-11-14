@@ -67,7 +67,7 @@ export default function InitialScreen() {
         fontSize={24}
         style={{ marginVertical: 10 }}
       >
-        SIPP - Tubaba
+        SIPPP - Tubaba
       </Typography>
     </View>
   );

@@ -76,7 +76,7 @@ export function SelectInput(props: SelectInputProps) {
                 paddingHorizontal,
                 borderRadius,
                 gap,
-                backgroundColor: disabled ? Colors["Line 200"] : "transparent",
+                backgroundColor: disabled ? Colors["Line 100"] : "transparent",
               },
             ]}
           >

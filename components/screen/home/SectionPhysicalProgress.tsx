@@ -2,9 +2,10 @@ import { dashboardRealisasiResponseSuccess } from "@/api/sipp";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
+import { formatDate } from "@/constants";
 import { useAppTheme } from "@/context";
 import { useIsPermission } from "@/helper";
-import { getMonthName, substring } from "@/utils";
+import { formatCurrency, getMonthName, substring } from "@/utils";
 import { router } from "expo-router";
 import React from "react";
 import { Dimensions, FlatList, Pressable } from "react-native";
@@ -13,7 +14,7 @@ import { LineChart } from "react-native-gifted-charts";
 type SectionPhysicalProgress = {
   chartLabel: number[];
   chartDdata: number[];
-  data: dashboardRealisasiResponseSuccess["data"]["realisasi_fisik"] | [];
+  data: dashboardRealisasiResponseSuccess["data"]["realisasi_fisik"];
 };
 
 export default function SectionPhysicalProgress(
@@ -22,7 +23,16 @@ export default function SectionPhysicalProgress(
   const { Colors } = useAppTheme();
   const { chartDdata, chartLabel, data } = props;
 
+  const dataChart = chartDdata.map((data, index) => {
+    return {
+      value: data,
+      label: getMonthName(index + 1),
+    };
+  });
+
   const canViewDetail = !useIsPermission("lihat detail kegiatan");
+  const parseMonth = (dateString: string) =>
+    Number.parseInt(dateString?.split("-")[1] || dateString);
 
   return (
     <>
@@ -64,25 +74,17 @@ export default function SectionPhysicalProgress(
           <Typography>Progres Fisik (%)</Typography>
         </View>
         <LineChart
-          data={chartDdata.map((data, index) => {
-            return {
-              value: data,
-              label: getMonthName(index + 1),
-            };
-          })}
+          key={dataChart.length}
+          data={dataChart}
           noOfSections={10}
           showYAxisIndices
-          areaChart
-          curved
-          hideDataPoints
           isAnimated
           animateOnDataChange
           spacing={55}
           animationDuration={300}
-          thickness={5}
+          thickness={1}
           width={Dimensions.get("window").width - 125}
           color={Colors["Info 600"]}
-          startFillColor={Colors["Info 200"]}
         />
       </View>
       <View style={{ marginTop: 20 }}>
@@ -96,18 +98,19 @@ export default function SectionPhysicalProgress(
           scrollEnabled={true}
           data={data || []}
           removeClippedSubviews={true}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <Pressable
+              key={index}
               style={{
                 backgroundColor: Colors["Background 100"],
-                marginTop: 20,
-                width: Dimensions.get("window").width - 90,
-                height: 280,
-                padding: 20,
+                width: Dimensions.get("window").width - 80,
                 borderRadius: 15,
                 borderWidth: 1,
                 borderColor: Colors["Background 200"],
+                overflow: "hidden",
+                height: 470,
               }}
+              disabled={canViewDetail}
               onPress={() =>
                 router.push({
                   pathname: "/(autenticated)/sipp/activities/detail/[id]",
@@ -116,56 +119,178 @@ export default function SectionPhysicalProgress(
                   },
                 })
               }
-              disabled={canViewDetail}
             >
               <Typography
-                fontFamily="Poppins-Light"
-                fontSize={14}
-                color="Text 500"
+                style={{
+                  textAlignVertical: "center",
+                  textAlign: "center",
+                  backgroundColor: Colors["Info 500"],
+                  paddingVertical: 15,
+                }}
+                color="Background 100"
               >
-                Nama Pekerjaan
+                {item?.kegiatan?.bidang?.name || "-"}
               </Typography>
-              <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                {substring(item.title, 47)}
-              </Typography>
-              <View style={{ marginVertical: 5, marginTop: 10 }}>
+              <View
+                style={{
+                  padding: 20,
+                  paddingTop: 10,
+                }}
+              >
                 <Typography
                   fontFamily="Poppins-Light"
                   fontSize={14}
                   color="Text 500"
+                  style={{
+                    textAlign: "center",
+                  }}
                 >
-                  Bulan
+                  Nama Pekerjaan
                 </Typography>
-                <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                  {getMonthName(
-                    Number.parseInt(item.progres[0]?.bulan),
-                    "Normal"
-                  ) || "-"}
-                </Typography>
-              </View>
-              <View style={{ marginVertical: 5 }}>
                 <Typography
-                  fontFamily="Poppins-Light"
-                  fontSize={14}
-                  color="Text 500"
+                  fontFamily="Poppins-Regular"
+                  fontSize={15}
+                  style={{
+                    textAlign: "center",
+                  }}
                 >
-                  Minggu-Ke
+                  {substring(item.title, 50)}
                 </Typography>
-                <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                  {item.progres[0]?.minggu || "-"}
-                </Typography>
-              </View>
-              <View style={{ marginVertical: 5 }}>
-                <Typography
-                  fontFamily="Poppins-Light"
-                  fontSize={14}
-                  color="Text 500"
-                >
-                  Fisik%
-                </Typography>
-                <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                  {item.progres[0]?.nilai || "-"}%
-                </Typography>
+                <View style={{ flexDirection: "row" }}>
+                  <View style={{ marginVertical: 5, width: "50%" }}>
+                    <Typography
+                      fontFamily="Poppins-Light"
+                      fontSize={14}
+                      color="Text 500"
+                    >
+                      Penyedia Jasa
+                    </Typography>
+                    <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                      {substring(item?.penyedia_jasa || "-", 20)}
+                    </Typography>
+                  </View>
+                  <View style={{ marginVertical: 5, width: "50%" }}>
+                    <Typography
+                      fontFamily="Poppins-Light"
+                      fontSize={14}
+                      color="Text 500"
+                    >
+                      Nomor Kontrak
+                    </Typography>
+                    <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                      {substring(item.no_kontrak || "-", 20)}
+                    </Typography>
+                  </View>
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                  <View style={{ marginVertical: 5, width: "50%" }}>
+                    <Typography
+                      fontFamily="Poppins-Light"
+                      fontSize={14}
+                      color="Text 500"
+                    >
+                      Jenis Pengadaan
+                    </Typography>
+                    <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                      {item?.jenis_pengadaan || "-"}
+                    </Typography>
+                  </View>
+                  <View style={{ marginVertical: 5, width: "50%" }}>
+                    <Typography
+                      fontFamily="Poppins-Light"
+                      fontSize={14}
+                      color="Text 500"
+                    >
+                      Nomor SPMK
+                    </Typography>
+                    <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                      {substring(item.no_spmk || "-", 20)}
+                    </Typography>
+                  </View>
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                  <View style={{ marginVertical: 5, width: "50%" }}>
+                    <Typography
+                      fontFamily="Poppins-Light"
+                      fontSize={14}
+                      color="Text 500"
+                    >
+                      Lokasi
+                    </Typography>
+                    <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                      {item?.alamat || "-"}
+                    </Typography>
+                  </View>
+                  <View style={{ marginVertical: 5, width: "50%" }}>
+                    <Typography
+                      fontFamily="Poppins-Light"
+                      fontSize={14}
+                      color="Text 500"
+                    >
+                      Tanggal Kontrak
+                    </Typography>
+                    <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                      {formatDate(new Date(item.awal_kontrak), {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      }) || "-"}
+                    </Typography>
+                  </View>
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                  <View style={{ marginVertical: 5, width: "50%" }}>
+                    <Typography
+                      fontFamily="Poppins-Light"
+                      fontSize={14}
+                      color="Text 500"
+                    >
+                      Bulan
+                    </Typography>
+                    <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                      {getMonthName(parseMonth(item.progres[0]?.bulan))}
+                    </Typography>
+                  </View>
+                  <View style={{ marginVertical: 5, width: "50%" }}>
+                    <Typography
+                      fontFamily="Poppins-Light"
+                      fontSize={14}
+                      color="Text 500"
+                    >
+                      Nilai Kontrak
+                    </Typography>
+                    <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                      {formatCurrency(Number.parseInt(item.nilai_kontrak)) ||
+                        "-"}
+                    </Typography>
+                  </View>
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                  <View style={{ marginVertical: 5, width: "50%" }}>
+                    <Typography
+                      fontFamily="Poppins-Light"
+                      fontSize={14}
+                      color="Text 500"
+                    >
+                      Minggu-Ke
+                    </Typography>
+                    <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                      {item.progres[0]?.minggu || "-"}
+                    </Typography>
+                  </View>
+                  <View style={{ marginVertical: 5, width: "50%" }}>
+                    <Typography
+                      fontFamily="Poppins-Light"
+                      fontSize={14}
+                      color="Text 500"
+                    >
+                      {item.progres[0]?.jenis_progres || "Jenis Progres"}%
+                    </Typography>
+                    <Typography fontFamily="Poppins-Regular" fontSize={15}>
+                      {item.progres[0]?.nilai || "-"}%
+                    </Typography>
+                  </View>
+                </View>
               </View>
             </Pressable>
           )}

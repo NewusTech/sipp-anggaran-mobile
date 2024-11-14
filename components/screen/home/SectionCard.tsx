@@ -1,7 +1,7 @@
 import React from "react";
 import View from "../../ui/view";
 import { useAppTheme } from "@/context";
-import { IconMedical } from "../../icons";
+import { IconMedical, IconMoneyHand, IconSaving } from "../../icons";
 import { Typography } from "../../ui/typography";
 import { useGetDashoardKegiatan } from "@/services/sipp";
 import { formatCurrency } from "@/utils";
@@ -15,7 +15,7 @@ export default function SectionCard({ filterYear }: { filterYear: string }) {
     {
       title: "Total Pagu",
       content: formatCurrency(getKegiatan.data?.data.total_pagu || 0),
-      icon: <IconMedical color="Info 500" width={30} height={30} />,
+      icon: <IconMoneyHand color="Info 500" width={30} height={30} />,
       color: "#396AFF",
     },
     {
@@ -27,7 +27,7 @@ export default function SectionCard({ filterYear }: { filterYear: string }) {
     {
       title: "Total Sisa Anggaran",
       content: formatCurrency(getKegiatan.data?.data.total_sisa || 0),
-      icon: <IconMedical color="Success 700" width={30} height={30} />,
+      icon: <IconSaving color="Success 700" width={30} height={30} />,
       color: "#399918",
     },
   ];

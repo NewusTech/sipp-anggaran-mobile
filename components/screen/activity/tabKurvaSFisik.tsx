@@ -22,6 +22,33 @@ export default function TabKurvaSFisik({ id }: { id: string }) {
   const getkurvaFisik = useGetDetailAnggaranKurvaFisik(id);
   const kurvaFisik = getkurvaFisik.data?.data;
 
+  const _dataRencana = kurvaFisik?.chart.labels.map((label, index) => {
+    const value = kurvaFisik.chart.data_rencana[index];
+    return {
+      value: value,
+      label: getMonthName(
+        typeof label === "number"
+          ? label
+          : Number.parseInt(label.split("-")[1]), // Ekstrak bulan jika format "YYYY-MM"
+        "Short"
+      ),
+    };
+  });
+
+  const _dataRealisasi = kurvaFisik?.chart.labels.map((label, index) => {
+    // Periksa apakah `label` dan `data_fisik` di indeks yang sama tersedia
+    const value = kurvaFisik.chart.data_fisik[index];
+    return {
+      value: value,
+      label: getMonthName(
+        typeof label === "number"
+          ? label
+          : Number.parseInt(label.split("-")[1]), // Ekstrak bulan jika format "YYYY-MM"
+        "Short"
+      ),
+    };
+  });
+
   const [dataKurvaFisik, setDataKurvaFisik] = useState<Record<string, number>>(
     {}
   );
@@ -367,31 +394,9 @@ export default function TabKurvaSFisik({ id }: { id: string }) {
             </Pressable>
           </View>
           <LineChart
-            data2={kurvaFisik?.chart.labels.map((label, index) => {
-              // Periksa apakah `label` dan `data_fisik` di indeks yang sama tersedia
-              const value = kurvaFisik.chart.data_fisik[index];
-              return {
-                value: value,
-                label: getMonthName(
-                  typeof label === "number"
-                    ? label
-                    : Number.parseInt(label.split("-")[1]), // Ekstrak bulan jika format "YYYY-MM"
-                  "Short"
-                ),
-              };
-            })}
-            data={kurvaFisik?.chart.labels.map((label, index) => {
-              const value = kurvaFisik.chart.data_rencana[index];
-              return {
-                value: value,
-                label: getMonthName(
-                  typeof label === "number"
-                    ? label
-                    : Number.parseInt(label.split("-")[1]), // Ekstrak bulan jika format "YYYY-MM"
-                  "Short"
-                ),
-              };
-            })}
+            key={_dataRencana?.length + "-" + _dataRealisasi?.length}
+            data2={_dataRealisasi}
+            data={_dataRencana}
             noOfSections={10}
             showYAxisIndices
             curved
@@ -403,7 +408,7 @@ export default function TabKurvaSFisik({ id }: { id: string }) {
             color1={Colors["Error 600"]}
             spacing={55}
             animationDuration={300}
-            thickness={3}
+            thickness={1}
             width={Dimensions.get("window").width - 125}
             startFillColor={Colors["Success 200"]}
           />
