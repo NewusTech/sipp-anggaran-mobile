@@ -11,9 +11,13 @@ import { Typography } from "@/components/ui/typography";
 import UploadFoto from "@/components/ui/uploadFileFoto";
 import View from "@/components/ui/view";
 import { useAppTheme } from "@/context";
+import { useGetMasterDataDesa } from "@/services/survey";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Dimensions, Modal, Pressable, ScrollView } from "react-native";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { drainaseFotoPayload, drainaseFotoSchema } from "@/validation/survey";
 
 
 
@@ -25,6 +29,19 @@ export default function index() {
 
     // const updateProfile = useUpdatePrfoile();
     // const uploadFotoProfile = useUploadFotoProfile();
+
+    const getMasterDesa = useGetMasterDataDesa();
+    const masterDataDesa = getMasterDesa.data?.data;
+
+    // intergasi
+    const { control, handleSubmit, formState, setValue, watch } =
+    useForm<drainaseFotoPayload>({
+      defaultValues: {},
+      resolver: zodResolver(drainaseFotoSchema),
+      mode: "all",
+    });
+    // intergasi
+
 
     return (
         <View backgroundColor="Background 100" style={{ flex: 1 }}>
@@ -42,18 +59,36 @@ export default function index() {
                     gap: 20,
                 }}
             >
-                <SelectInput
-                    label="Pilih Desa"
-                    data={[]}
-                    placeholder="Pilih Desa"
-                    onSelect={(dataItem: any, index: any) =>
-                        // field.onChange(dataItem.title)
-                        console.log("")
-                    }
-                    value={"field.value"}
-                    trailingIcon={<IconCaretDown color="Text 900" />}
-                    padding={12}
-                    borderRadius={15}
+                <Controller
+                    control={control}
+                    name="desa_id"
+                    render={({ field, fieldState }) => (
+                        <SelectInput
+                            label="Pilih Desa"
+                            data={
+                                masterDataDesa?.map((data) => {
+                                    return {
+                                        title: data.nama,
+                                    };
+                                }) || []
+                            }
+                            placeholder="Pilih Desa"
+                            onSelect={(dataItem: any, index: any) => {
+                                const id = masterDataDesa?.find(
+                                    (f) => f.nama === dataItem.title
+                                )?.id;
+                                field.onChange(id);
+                            }}
+                            value={
+                                masterDataDesa?.find(
+                                    (f) => f.id.toString() === field.name.toString()
+                                )?.nama || "-"
+                            }
+                            trailingIcon={<IconCaretDown color="Text 900" />}
+                            padding={12}
+                            borderRadius={15}
+                        />
+                    )}
                 />
                 {/*  */}
                 <Pressable
@@ -67,13 +102,13 @@ export default function index() {
                     }}
                     onPress={() => setModalProfile(true)}
                 >
-                    
+
                     <Typography
-                    style={{
-                        textAlign: "center",
-                    }}
+                        style={{
+                            textAlign: "center",
+                        }}
                     >
-                    Upload Foto
+                        Upload Foto
                     </Typography>
                 </Pressable>
                 {/*  */}
@@ -118,7 +153,7 @@ export default function index() {
                             aspect={[1, 1]}
                         />
                         <Button
-                        color="Primary Blue"
+                            color="Primary Blue"
                         // onPress={handleUploadFotoProfile}
                         // disabled={uploadFotoProfile.isPending}
                         >

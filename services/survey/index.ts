@@ -9,6 +9,7 @@ import {
     getDashboardTableRoadSectionDetail,
     getMasterDataDrainase,
     getMasterDataRuasJalan,
+    getMasterDesa,
     getStatistikDrainase,
     getStatistikJembatan,
     getStatistikKondisi,
@@ -213,3 +214,17 @@ export const useGetMasterDataRuasJalan = (query?: string) => {
   });
 };
 //   get master data RuasJalan
+
+//   get master data Desa
+export const useGetMasterDataDesa = (query?: string) => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetMasterDataDesa", query, accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getMasterDesa(query),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+//   get master data Desa
