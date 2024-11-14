@@ -516,3 +516,26 @@ export const getMasterDataRuasJalan = async (query?: string) => {
   return response.data;
 };
 // getMasterDataRuasJalan
+
+// getMasterDesa
+export type MasterDesa = {
+  id: number;
+  nama: string;
+  kecamatan_id: number;
+  kecamatan_name: string;
+  created_at: string | null;
+};
+
+export type MasterDesaResponse = {
+  success: boolean;
+  data: MasterDesa[];
+};
+
+export const getMasterDesa = async (query?: string) => {
+  const response = await apiClientSurvey<MasterDesaResponse>({
+    method: "GET",
+    url: `/master_desa?${query && query}`,
+  });
+  return response.data;
+};
+// getMasterDesa
