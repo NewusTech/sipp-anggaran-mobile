@@ -2,9 +2,10 @@ import { dashboardRealisasiResponseSuccess } from "@/api/sipp";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
+import { formatDate } from "@/constants";
 import { useAppTheme } from "@/context";
 import { useIsPermission } from "@/helper";
-import { getMonthName, substring } from "@/utils";
+import { formatCurrency, getMonthName, substring } from "@/utils";
 import { router } from "expo-router";
 import React from "react";
 import { Dimensions, FlatList, Pressable } from "react-native";
@@ -13,7 +14,7 @@ import { LineChart } from "react-native-gifted-charts";
 type SectionPhysicalProgress = {
   chartLabel: number[];
   chartDdata: number[];
-  data: dashboardRealisasiResponseSuccess["data"]["realisasi_fisik"] | any[];
+  data: dashboardRealisasiResponseSuccess["data"]["realisasi_fisik"];
 };
 
 export default function SectionPhysicalProgress(
@@ -30,6 +31,8 @@ export default function SectionPhysicalProgress(
   });
 
   const canViewDetail = !useIsPermission("lihat detail kegiatan");
+  const parseMonth = (dateString: string) =>
+    Number.parseInt(dateString?.split("-")[1] || dateString);
 
   return (
     <>
@@ -100,12 +103,12 @@ export default function SectionPhysicalProgress(
               key={index}
               style={{
                 backgroundColor: Colors["Background 100"],
-                width: Dimensions.get("window").width - 40,
+                width: Dimensions.get("window").width - 80,
                 borderRadius: 15,
                 borderWidth: 1,
                 borderColor: Colors["Background 200"],
                 overflow: "hidden",
-                height:470
+                height: 470,
               }}
               disabled={canViewDetail}
               onPress={() =>
@@ -151,7 +154,7 @@ export default function SectionPhysicalProgress(
                     textAlign: "center",
                   }}
                 >
-                  {item.title}
+                  {substring(item.title, 50)}
                 </Typography>
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ marginVertical: 5, width: "50%" }}>
@@ -163,7 +166,7 @@ export default function SectionPhysicalProgress(
                       Penyedia Jasa
                     </Typography>
                     <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                      {item?.penyedia_jasa || "-"}
+                      {substring(item?.penyedia_jasa || "-", 20)}
                     </Typography>
                   </View>
                   <View style={{ marginVertical: 5, width: "50%" }}>
@@ -175,7 +178,7 @@ export default function SectionPhysicalProgress(
                       Nomor Kontrak
                     </Typography>
                     <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                      {"-"}
+                      {substring(item.no_kontrak || "-", 20)}
                     </Typography>
                   </View>
                 </View>
@@ -201,7 +204,7 @@ export default function SectionPhysicalProgress(
                       Nomor SPMK
                     </Typography>
                     <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                      {"-"}
+                      {substring(item.no_spmk || "-", 20)}
                     </Typography>
                   </View>
                 </View>
@@ -227,7 +230,11 @@ export default function SectionPhysicalProgress(
                       Tanggal Kontrak
                     </Typography>
                     <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                      {"-"}
+                      {formatDate(new Date(item.awal_kontrak), {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      }) || "-"}
                     </Typography>
                   </View>
                 </View>
@@ -241,7 +248,7 @@ export default function SectionPhysicalProgress(
                       Bulan
                     </Typography>
                     <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                      {getMonthName(Number.parseInt(item.progres[0]?.bulan))}
+                      {getMonthName(parseMonth(item.progres[0]?.bulan))}
                     </Typography>
                   </View>
                   <View style={{ marginVertical: 5, width: "50%" }}>
@@ -253,7 +260,8 @@ export default function SectionPhysicalProgress(
                       Nilai Kontrak
                     </Typography>
                     <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                      {"-"}
+                      {formatCurrency(Number.parseInt(item.nilai_kontrak)) ||
+                        "-"}
                     </Typography>
                   </View>
                 </View>

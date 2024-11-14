@@ -31,6 +31,8 @@ import {
   getSubKegiatan,
   getProgram,
   postDetailAnggaranTitikLokasi,
+  putKegiatanVerifikasiPengawas,
+  putKegiatanVerifikasiAdmin,
 } from "@/api/sipp";
 import { useAccessToken } from "@/store/sipp";
 import { kegiatanPayload, kegiatanUpdatePayload } from "@/validation";
@@ -354,6 +356,27 @@ export const usePostDetailAnggaranTitikLokasi = () => {
         longitude: string;
       };
     }) => postDetailAnggaranTitikLokasi(payload.id, payload.data),
+    onError: (error: AxiosError<ResponseError>) => error,
+  });
+};
+
+export const usePutKegiatanVerifikasiPengawas = () => {
+  return useMutation({
+    mutationFn: (payload: {
+      id: string;
+      verifikasi_pengawas: boolean;
+      komentar_pengawas: string;
+    }) => putKegiatanVerifikasiPengawas(payload),
+    onError: (error: AxiosError<ResponseError>) => error,
+  });
+};
+export const usePutKegiatanVerifikasiAdmin = () => {
+  return useMutation({
+    mutationFn: (payload: {
+      id: string;
+      verifikasi_admin: boolean;
+      komentar_admin: string;
+    }) => putKegiatanVerifikasiAdmin(payload),
     onError: (error: AxiosError<ResponseError>) => error,
   });
 };

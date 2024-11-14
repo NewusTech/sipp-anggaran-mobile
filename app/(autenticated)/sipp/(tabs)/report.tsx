@@ -6,6 +6,7 @@ import {
   IconCaretUp,
 } from "@/components/icons";
 import Accordion from "@/components/ui/accordion";
+import AccordionGroup from "@/components/ui/accordion/AccordionGroup";
 import Appbar from "@/components/ui/appBar";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/ui/loader";
@@ -19,9 +20,10 @@ import { getLastYears } from "@/helper";
 import downloadFile from "@/helper/downloadFile";
 import useDebounce from "@/hooks/useDebounce";
 import { useGetBidang, useGetLaporan } from "@/services/sipp";
-import { getAccessToken } from "@/store/sipp";
+import { getAccessToken, useAccessToken } from "@/store/sipp";
 import { formatCurrency } from "@/utils";
 import { useRouter } from "expo-router";
+import { jwtDecode } from "jwt-decode";
 import React, { useState } from "react";
 import { Dimensions, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -40,6 +42,10 @@ export default function report() {
   const [filterYear, setFilterYear] = useState<number | string>("");
   const [filterSearch, setFilterSearch] = useState<string>("");
   const searchValueDebounce = useDebounce(filterSearch, 1000);
+
+  const token = useAccessToken();
+  const decoded = jwtDecode(token || "") as any;
+  const isSuperAdmin = decoded.role[0] === "Super Admin";
 
   const getLaporan = useGetLaporan(
     `bidang=${filterBidang}&tahun=${filterYear}&bulan=${filterBulan}&search=${searchValueDebounce}`
@@ -124,6 +130,7 @@ export default function report() {
                   };
                 }) || []),
               ]}
+              disabled={!isSuperAdmin}
               value={bidang?.find((f) => f.id === filterBidang)?.name || ""}
               onSelect={(data) =>
                 setFilterBidang(
@@ -171,272 +178,276 @@ export default function report() {
             Download
           </Button>
         </View>
-        {!getLaporan.isFetching &&
-          getLaporan.data?.data.bidang.map((data) => (
-            <Accordion
-              key={data.name + "data"}
-              header={(isOpen) => (
-                <View
-                  style={[
-                    {
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      padding: 15,
-                      backgroundColor: Colors["Text 700"],
-                      borderTopLeftRadius: 15,
-                      borderTopRightRadius: 15,
-                    },
-                    !isOpen && {
-                      borderBottomRightRadius: 15,
-                      borderBottomLeftRadius: 15,
-                    },
-                  ]}
-                >
-                  <Typography
-                    fontFamily="Poppins-Medium"
-                    fontSize={16}
-                    color="Background 100"
+        <AccordionGroup style={{ gap: 20 }}>
+          {!getLaporan.isFetching &&
+            getLaporan.data?.data.bidang.map((data, index) => (
+              <Accordion
+                index={index}
+                key={data.name + "data"}
+                header={(isOpen) => (
+                  <View
+                    style={[
+                      {
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        padding: 15,
+                        backgroundColor: Colors["Text 700"],
+                        borderTopLeftRadius: 15,
+                        borderTopRightRadius: 15,
+                      },
+                      !isOpen && {
+                        borderBottomRightRadius: 15,
+                        borderBottomLeftRadius: 15,
+                      },
+                    ]}
                   >
-                    {data.name}
-                  </Typography>
-                  {isOpen ? (
-                    <IconCaretUp
-                      width={26}
-                      height={24}
+                    <Typography
+                      fontFamily="Poppins-Medium"
+                      fontSize={16}
                       color="Background 100"
-                    />
-                  ) : (
-                    <IconCaretDown
-                      width={26}
-                      height={24}
-                      color="Background 100"
-                    />
-                  )}
-                </View>
-              )}
-              style={{
-                borderWidth: 1,
-                borderRadius: 16,
-                borderColor: Colors["Text 700"],
-              }}
-            >
-              <View style={{ padding: 20, gap: 20 }}>
-                {data.kegiatan.map((kegiatan, index) => (
-                  <Accordion
-                    key={kegiatan.title + "kegiatan"}
-                    header={(isOpen) => (
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          padding: 15,
-                          backgroundColor: Colors["Info 500"],
-                          borderTopLeftRadius: 15,
-                          borderTopRightRadius: 15,
-                        }}
-                      >
+                    >
+                      {data.name}
+                    </Typography>
+                    {isOpen ? (
+                      <IconCaretUp
+                        width={26}
+                        height={24}
+                        color="Background 100"
+                      />
+                    ) : (
+                      <IconCaretDown
+                        width={26}
+                        height={24}
+                        color="Background 100"
+                      />
+                    )}
+                  </View>
+                )}
+                style={{
+                  borderWidth: 1,
+                  borderRadius: 16,
+                  borderColor: Colors["Text 700"],
+                }}
+              >
+                <AccordionGroup style={{ padding: 20, gap: 20 }}>
+                  {data.kegiatan.map((kegiatan, index) => (
+                    <Accordion
+                      index={index}
+                      key={kegiatan.title + "kegiatan"}
+                      header={(isOpen) => (
                         <View
                           style={{
                             flexDirection: "row",
-                            gap: 10,
-                            width: "80%",
+                            justifyContent: "space-between",
+                            padding: 15,
+                            backgroundColor: Colors["Info 500"],
+                            borderTopLeftRadius: 15,
+                            borderTopRightRadius: 15,
                           }}
                         >
-                          <Typography
-                            fontFamily="Poppins-Medium"
-                            fontSize={16}
-                            color="Background 100"
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              gap: 10,
+                              width: "80%",
+                            }}
                           >
-                            {index + 1}.
-                          </Typography>
-                          <Typography
-                            fontFamily="Poppins-Medium"
-                            fontSize={16}
-                            color="Background 100"
-                          >
-                            {kegiatan.title}
-                          </Typography>
+                            <Typography
+                              fontFamily="Poppins-Medium"
+                              fontSize={16}
+                              color="Background 100"
+                            >
+                              {index + 1}.
+                            </Typography>
+                            <Typography
+                              fontFamily="Poppins-Medium"
+                              fontSize={16}
+                              color="Background 100"
+                            >
+                              {kegiatan.title}
+                            </Typography>
+                          </View>
+                          {isOpen ? (
+                            <IconCaretFillLeft
+                              width={26}
+                              height={24}
+                              color="Background 100"
+                            />
+                          ) : (
+                            <IconCaretFillDown
+                              width={26}
+                              height={24}
+                              color="Background 100"
+                            />
+                          )}
                         </View>
-                        {isOpen ? (
-                          <IconCaretFillLeft
-                            width={26}
-                            height={24}
-                            color="Background 100"
-                          />
-                        ) : (
-                          <IconCaretFillDown
-                            width={26}
-                            height={24}
-                            color="Background 100"
-                          />
-                        )}
+                      )}
+                    >
+                      <View style={{ gap: 10 }}>
+                        {kegiatan.detail.map((detail, index) => (
+                          <View key={detail.id + "detail"}>
+                            <View
+                              style={{
+                                borderWidth: 1,
+                                borderColor: Colors["Text 700"],
+                                padding: 10,
+                                borderTopWidth: index !== 0 ? 1 : 0,
+                              }}
+                            >
+                              <Typography
+                                fontFamily="Poppins-Medium"
+                                fontSize={15}
+                              >
+                                Nomor Kontrak
+                              </Typography>
+                              <Typography fontSize={15}>
+                                {detail.no_kontrak}
+                              </Typography>
+                            </View>
+                            <View
+                              style={{
+                                borderWidth: 1,
+                                borderColor: Colors["Text 700"],
+                                padding: 10,
+                                borderTopWidth: 0,
+                              }}
+                            >
+                              <Typography
+                                fontFamily="Poppins-Medium"
+                                fontSize={15}
+                              >
+                                Nama Pekerjaan
+                              </Typography>
+                              <Typography fontSize={15}>
+                                {detail.title}
+                              </Typography>
+                            </View>
+                            <View
+                              style={{
+                                borderWidth: 1,
+                                borderColor: Colors["Text 700"],
+                                padding: 10,
+                                borderTopWidth: 0,
+                              }}
+                            >
+                              <Typography
+                                fontFamily="Poppins-Medium"
+                                fontSize={15}
+                              >
+                                Perusahaan
+                              </Typography>
+                              <Typography fontSize={15}>
+                                {detail.penyedia_jasa || "-"}
+                              </Typography>
+                            </View>
+                            <View
+                              style={{
+                                borderWidth: 1,
+                                borderColor: Colors["Text 700"],
+                                padding: 10,
+                                borderTopWidth: 0,
+                              }}
+                            >
+                              <Typography
+                                fontFamily="Poppins-Medium"
+                                fontSize={15}
+                              >
+                                Tanggal Kontrak
+                              </Typography>
+                              <Typography fontSize={15}>
+                                {formatDate(new Date(detail.awal_kontrak))}
+                              </Typography>
+                            </View>
+                            <View
+                              style={{
+                                borderWidth: 1,
+                                borderColor: Colors["Text 700"],
+                                padding: 10,
+                                borderTopWidth: 0,
+                              }}
+                            >
+                              <Typography
+                                fontFamily="Poppins-Medium"
+                                fontSize={15}
+                              >
+                                Nilai Kontrak
+                              </Typography>
+                              <Typography fontSize={15}>
+                                {formatCurrency(
+                                  Number.parseFloat(detail.nilai_kontrak)
+                                )}
+                              </Typography>
+                            </View>
+                            <View
+                              style={{
+                                borderWidth: 1,
+                                borderColor: Colors["Text 700"],
+                                padding: 10,
+                                borderTopWidth: 0,
+                              }}
+                            >
+                              <Typography
+                                fontFamily="Poppins-Medium"
+                                fontSize={15}
+                              >
+                                Nomor SPMK
+                              </Typography>
+                              <Typography fontSize={15}>
+                                {detail.no_spmk || "-"}
+                              </Typography>
+                            </View>
+                            <View
+                              style={{
+                                borderWidth: 1,
+                                borderColor: Colors["Text 700"],
+                                padding: 10,
+                                borderTopWidth: 0,
+                              }}
+                            >
+                              <Typography
+                                fontFamily="Poppins-Medium"
+                                fontSize={15}
+                              >
+                                Tanggal Akhir Kontrak
+                              </Typography>
+                              <Typography fontSize={15}>
+                                {formatDate(new Date(detail.akhir_kontrak))}
+                              </Typography>
+                            </View>
+                            <View
+                              style={{
+                                borderWidth: 1,
+                                borderColor: Colors["Text 700"],
+                                padding: 10,
+                                borderTopWidth: 0,
+                              }}
+                            >
+                              <Typography
+                                fontFamily="Poppins-Medium"
+                                fontSize={15}
+                              >
+                                Progress
+                              </Typography>
+                              <Typography fontSize={15}>23%</Typography>
+                            </View>
+                          </View>
+                        ))}
                       </View>
-                    )}
-                  >
-                    <View style={{ gap: 10 }}>
-                      {kegiatan.detail.map((detail, index) => (
-                        <View key={detail.id + "detail"}>
-                          <View
-                            style={{
-                              borderWidth: 1,
-                              borderColor: Colors["Text 700"],
-                              padding: 10,
-                              borderTopWidth: index !== 0 ? 1 : 0,
-                            }}
-                          >
-                            <Typography
-                              fontFamily="Poppins-Medium"
-                              fontSize={15}
-                            >
-                              Nomor Kontrak
-                            </Typography>
-                            <Typography fontSize={15}>
-                              {detail.no_kontrak}
-                            </Typography>
-                          </View>
-                          <View
-                            style={{
-                              borderWidth: 1,
-                              borderColor: Colors["Text 700"],
-                              padding: 10,
-                              borderTopWidth: 0,
-                            }}
-                          >
-                            <Typography
-                              fontFamily="Poppins-Medium"
-                              fontSize={15}
-                            >
-                              Nama Pekerjaan
-                            </Typography>
-                            <Typography fontSize={15}>
-                              {detail.title}
-                            </Typography>
-                          </View>
-                          <View
-                            style={{
-                              borderWidth: 1,
-                              borderColor: Colors["Text 700"],
-                              padding: 10,
-                              borderTopWidth: 0,
-                            }}
-                          >
-                            <Typography
-                              fontFamily="Poppins-Medium"
-                              fontSize={15}
-                            >
-                              Perusahaan
-                            </Typography>
-                            <Typography fontSize={15}>
-                              {detail.penyedia_jasa || "-"}
-                            </Typography>
-                          </View>
-                          <View
-                            style={{
-                              borderWidth: 1,
-                              borderColor: Colors["Text 700"],
-                              padding: 10,
-                              borderTopWidth: 0,
-                            }}
-                          >
-                            <Typography
-                              fontFamily="Poppins-Medium"
-                              fontSize={15}
-                            >
-                              Tanggal Kontrak
-                            </Typography>
-                            <Typography fontSize={15}>
-                              {formatDate(new Date(detail.awal_kontrak))}
-                            </Typography>
-                          </View>
-                          <View
-                            style={{
-                              borderWidth: 1,
-                              borderColor: Colors["Text 700"],
-                              padding: 10,
-                              borderTopWidth: 0,
-                            }}
-                          >
-                            <Typography
-                              fontFamily="Poppins-Medium"
-                              fontSize={15}
-                            >
-                              Nilai Kontrak
-                            </Typography>
-                            <Typography fontSize={15}>
-                              {formatCurrency(
-                                Number.parseFloat(detail.nilai_kontrak)
-                              )}
-                            </Typography>
-                          </View>
-                          <View
-                            style={{
-                              borderWidth: 1,
-                              borderColor: Colors["Text 700"],
-                              padding: 10,
-                              borderTopWidth: 0,
-                            }}
-                          >
-                            <Typography
-                              fontFamily="Poppins-Medium"
-                              fontSize={15}
-                            >
-                              Nomor SPMK
-                            </Typography>
-                            <Typography fontSize={15}>
-                              {detail.no_spmk || "-"}
-                            </Typography>
-                          </View>
-                          <View
-                            style={{
-                              borderWidth: 1,
-                              borderColor: Colors["Text 700"],
-                              padding: 10,
-                              borderTopWidth: 0,
-                            }}
-                          >
-                            <Typography
-                              fontFamily="Poppins-Medium"
-                              fontSize={15}
-                            >
-                              Tanggal Akhir Kontrak
-                            </Typography>
-                            <Typography fontSize={15}>
-                              {formatDate(new Date(detail.akhir_kontrak))}
-                            </Typography>
-                          </View>
-                          <View
-                            style={{
-                              borderWidth: 1,
-                              borderColor: Colors["Text 700"],
-                              padding: 10,
-                              borderTopWidth: 0,
-                            }}
-                          >
-                            <Typography
-                              fontFamily="Poppins-Medium"
-                              fontSize={15}
-                            >
-                              Progress
-                            </Typography>
-                            <Typography fontSize={15}>23%</Typography>
-                          </View>
-                        </View>
-                      ))}
-                    </View>
-                  </Accordion>
-                ))}
-                {data.kegiatan.length === 0 && (
-                  <Typography
-                    fontFamily="Poppins-RegularItalic"
-                    color="Text 500"
-                    style={{ textAlign: "center" }}
-                  >
-                    Data Kosong
-                  </Typography>
-                )}
-              </View>
-            </Accordion>
-          ))}
+                    </Accordion>
+                  ))}
+                  {data.kegiatan.length === 0 && (
+                    <Typography
+                      fontFamily="Poppins-RegularItalic"
+                      color="Text 500"
+                      style={{ textAlign: "center" }}
+                    >
+                      Data Kosong
+                    </Typography>
+                  )}
+                </AccordionGroup>
+              </Accordion>
+            ))}
+        </AccordionGroup>
         {getLaporan.isFetching && (
           <View
             style={{

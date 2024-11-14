@@ -230,7 +230,7 @@ export default function TabTitikLokasi({ id }: { id: string }) {
           >
             <View>
               <Typography color="Background 100" fontSize={15}>
-                Nilai Kontrak
+                Kontraktor
               </Typography>
               <Typography color="Background 100" fontSize={16}>
                 {titikLokasi?.detail_kegiatan.penyedia_jasa}

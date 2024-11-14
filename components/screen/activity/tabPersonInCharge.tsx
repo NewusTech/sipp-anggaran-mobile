@@ -401,7 +401,7 @@ export default function TabPersonInCharge({ id }: { id: string }) {
                   };
                 }) || []
               }
-              placeholder="Pelih Pengawas"
+              placeholder="Pilih Pengawas"
               onSelect={(dataItem: any, index: any) =>
                 setPenanggungJawab(
                   getDataPenanggungJawab.data?.data.find(

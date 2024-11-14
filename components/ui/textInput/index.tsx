@@ -48,7 +48,7 @@ export default function TextInput(props: TextInputProps) {
         </Typography>
       )}
       <View
-        backgroundColor={editable ? "transparent" : "Line 200"}
+        backgroundColor={editable ? "transparent" : "Line 100"}
         style={[
           styles.inputWrapper,
           {
@@ -57,7 +57,7 @@ export default function TextInput(props: TextInputProps) {
                 ? Colors["Error 600"]
                 : focused
                 ? Colors[color]
-                : Colors["Line 300"],
+                : Colors["Line 500"],
             borderRadius,
           },
         ]}

@@ -6,12 +6,12 @@ import Loader from "@/components/ui/loader";
 import { SelectInput } from "@/components/ui/selectInput";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
-import { formatDateYMD } from "@/constants";
+import { formatDate, formatDateYMD } from "@/constants";
 import { useAppTheme } from "@/context";
 import { getLastYears } from "@/helper";
 import { useGetRealisasiFisik } from "@/services/sipp";
 import { usePermission } from "@/store/sipp";
-import { getMonthName } from "@/utils";
+import { formatCurrency, getMonthName } from "@/utils";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Dimensions, Pressable, ScrollView } from "react-native";
@@ -188,7 +188,7 @@ export default function physicalProgress() {
                           Nomor Kontrak
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                          {"-"}
+                          {data.no_kontrak || "-"}
                         </Typography>
                       </View>
                     </View>
@@ -214,7 +214,7 @@ export default function physicalProgress() {
                           Nomor SPMK
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                          {"-"}
+                          {data.no_spmk || "-"}
                         </Typography>
                       </View>
                     </View>
@@ -240,7 +240,7 @@ export default function physicalProgress() {
                           Tanggal Kontrak
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                          {"-"}
+                          {formatDate(new Date(data.awal_kontrak)) || "-"}
                         </Typography>
                       </View>
                     </View>
@@ -268,7 +268,9 @@ export default function physicalProgress() {
                           Nilai Kontrak
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15}>
-                          {"-"}
+                          {formatCurrency(
+                            Number.parseInt(data.nilai_kontrak)
+                          ) || "-"}
                         </Typography>
                       </View>
                     </View>

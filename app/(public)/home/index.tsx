@@ -1,3 +1,4 @@
+import { IconForm } from "@/components/icons";
 import { IconTools } from "@/components/icons/IconTools";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
@@ -137,7 +138,7 @@ export default function index() {
           }}
           onPress={handleSurvey}
         >
-          <IconTools width={70} height={70} />
+          <IconForm width={70} height={70} />
           <Typography
             fontSize={18}
             fontFamily="Poppins-Medium"

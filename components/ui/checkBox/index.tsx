@@ -9,21 +9,27 @@ export type CheckboxProps = {
   selected?: boolean;
   width?: number;
   height?: number;
+  borderRadius?: number;
 };
 export function Checkbox(props: CheckboxProps) {
-  const { selected = false, width = 16, height = 16 } = props;
+  const {
+    selected = false,
+    width = 16,
+    borderRadius = 10,
+    height = 16,
+  } = props;
 
   const { Colors } = useAppTheme();
 
   return (
     <View
-      backgroundColor={selected ? "Primary Blue-20" : "Background 100"}
+      backgroundColor={selected ? "Line 300" : "Background 100"}
       style={[
         styles.container,
-        { borderColor: Colors["Line 300"], borderRadius: 10, width, height },
+        { borderColor: Colors["Line 300"], borderRadius, width, height },
       ]}
     >
-      {selected && <IconChecklist size={15} color="Primary Blue" />}
+      {selected && <IconChecklist size={15} color="Background 100" />}
     </View>
   );
 }

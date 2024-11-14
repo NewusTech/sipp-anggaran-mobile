@@ -2,14 +2,13 @@ import Accordion from "@/components/ui/accordion";
 import { IconCaretFillDown, IconCeretFillUp } from "@/components/icons";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
-import { AppColor } from "@/constants";
 import { useAppTheme } from "@/context";
 import React, { useState } from "react";
-import { Dimensions, StyleSheet } from "react-native";
+import { Dimensions } from "react-native";
 import { useGetDashoardTableData } from "@/services/sipp";
 import PaginatedView from "@/components/ui/pagination";
 import { useRouter } from "expo-router";
-import { substring } from "@/utils";
+import AccordionGroup from "@/components/ui/accordion/AccordionGroup";
 
 export default function SectionTable({ filterYear }: { filterYear: string }) {
   const { Colors } = useAppTheme();
@@ -39,15 +38,16 @@ export default function SectionTable({ filterYear }: { filterYear: string }) {
           Nama Pekerjaan
         </Typography>
       </View>
-      <View style={{ gap: 10 }}>
+      <AccordionGroup style={{ gap: 10 }}>
         {getTable.data?.data.data &&
           getTable.data?.data?.data.map((data, index) => (
             <Accordion
+              index={index}
               style={{
                 borderWidth: 1,
                 borderRadius: 15,
                 backgroundColor: "white",
-                borderTopWidth:index === 0 ? 0 : 1,
+                borderTopWidth: index === 0 ? 0 : 1,
                 borderTopLeftRadius: index === 0 ? 0 : 15,
                 borderTopRightRadius: index === 0 ? 0 : 15,
               }}
@@ -122,7 +122,7 @@ export default function SectionTable({ filterYear }: { filterYear: string }) {
               </View>
             </Accordion>
           ))}
-      </View>
+      </AccordionGroup>
       <PaginatedView getTable={getTable} setActivePage={setPage} />
     </View>
   );

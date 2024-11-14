@@ -25,3 +25,4 @@ export * from "./IconMapMarker";
 export * from "./IconCeretFillUp";
 export * from "./IconMoneyHand";
 export * from "./IconSaving";
+export * from "./IconForm";

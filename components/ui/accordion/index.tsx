@@ -2,7 +2,6 @@ import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import {
   Pressable,
   LayoutChangeEvent,
-  PressableProps,
   StyleProp,
   ViewStyle,
 } from "react-native";
@@ -12,24 +11,36 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import View from "../view";
+import { useAccordionContext } from "./AccordionProvider";
 
 type AccordionProps = {
   header: (isOpen: boolean) => ReactNode;
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
+  index?: number; // Tambahkan prop index untuk penggunaan dalam grup
 };
 
-export default function Accordion({ header, children, style }: AccordionProps) {
+export default function Accordion({
+  header,
+  children,
+  style,
+  index,
+}: AccordionProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const context = useAccordionContext();
+
+  // Jika Accordion digunakan dalam grup, gunakan status dari context
+  const isAccordionOpen = context ? context.openIndex === index : isOpen;
+  const toggleAccordion = () => {
+    if (context && typeof index === "number") {
+      context.setOpenIndex(context.openIndex === index ? null : index);
+    } else {
+      setIsOpen((prev) => !prev);
+    }
+  };
+
   const contentHeight = useSharedValue<number>(0);
   const animatedHeight = useSharedValue<number>(0);
-
-  const toggleAccordion = () => {
-    setIsOpen((prev) => !prev);
-    animatedHeight.value = withTiming(!isOpen ? contentHeight.value : 0, {
-      duration: 300,
-    });
-  };
 
   const animatedStyle = useAnimatedStyle(() => ({
     height: animatedHeight.value,
@@ -39,24 +50,25 @@ export default function Accordion({ header, children, style }: AccordionProps) {
     (event: LayoutChangeEvent) => {
       const { height } = event.nativeEvent.layout;
       contentHeight.value = height;
-      if (isOpen) {
+      if (isAccordionOpen) {
         animatedHeight.value = withTiming(height, { duration: 300 });
       }
     },
-    [isOpen]
+    [isAccordionOpen]
   );
 
   useEffect(() => {
-    // Update the animated height whenever content height changes and accordion is open
-    if (isOpen) {
-      animatedHeight.value = withTiming(contentHeight.value, { duration: 300 });
-    }
-  }, [contentHeight.value, isOpen]);
+    animatedHeight.value = withTiming(
+      isAccordionOpen ? contentHeight.value : 0,
+      {
+        duration: 300,
+      }
+    );
+  }, [contentHeight.value, isAccordionOpen]);
 
   return (
     <View style={style}>
-      <Pressable onPress={toggleAccordion}>{header(isOpen)}</Pressable>
-      {/* Animated Accordion Content */}
+      <Pressable onPress={toggleAccordion}>{header(isAccordionOpen)}</Pressable>
       <Animated.View
         style={[
           {
@@ -65,7 +77,6 @@ export default function Accordion({ header, children, style }: AccordionProps) {
           animatedStyle,
         ]}
       >
-        {/* Measure the actual content height */}
         <View onLayout={onLayout} style={{ height: "auto" }}>
           {children}
         </View>

@@ -57,6 +57,13 @@ export type dashboardRealisasiResponseSuccess = {
     realisasi_fisik: {
       id: number;
       title: string;
+      no_kontrak: "1249120";
+      no_spmk: "1/2/2024/IV";
+      awal_kontrak: "2024-07-14T17:00:00.000000Z";
+      nilai_kontrak: "1000000000";
+      alamat: "Setia Agung";
+      jenis_pengadaan: "Lelang";
+      penyedia_jasa: "PT Kontraktor Indonesia";
       progres: [
         {
           id: number;
@@ -67,10 +74,26 @@ export type dashboardRealisasiResponseSuccess = {
           nilai: number;
         }
       ];
+      kegiatan?: {
+        id: 3;
+        title: "Penyelenggaraan Jalan Kabupaten/Kota";
+        bidang_id: 6;
+        bidang: {
+          id: 6;
+          name: "Bidang Bina Marga";
+        };
+      };
     }[];
     realisasi_keuangan: {
       id: number;
       title: string;
+      no_kontrak: "1249120";
+      no_spmk: "1/2/2024/IV";
+      awal_kontrak: "2024-07-14T17:00:00.000000Z";
+      nilai_kontrak: "1000000000";
+      alamat: "Setia Agung";
+      jenis_pengadaan: "Lelang";
+      penyedia_jasa: "PT Kontraktor Indonesia";
       progres: [
         {
           id: number;
@@ -81,6 +104,15 @@ export type dashboardRealisasiResponseSuccess = {
           nilai: number;
         }
       ];
+      kegiatan?: {
+        id: 3;
+        title: "Penyelenggaraan Jalan Kabupaten/Kota";
+        bidang_id: 6;
+        bidang: {
+          id: 6;
+          name: "Bidang Bina Marga";
+        };
+      };
     }[];
     total_paket: number;
     total_paket_belum_mulai: number;
@@ -153,6 +185,10 @@ export type kegiatanResponseSuccess = {
           nilai_kontrak: string;
           jenis_kegiatan: string;
           title: string;
+          verifikasi_admin: string;
+          komentar_admin?: string;
+          verifikasi_pengawas: string;
+          komentar_pengawas?: string;
           progres: {
             id: number;
             nilai: number;
@@ -180,6 +216,10 @@ export type realisasiFisikResponseSuccess = {
     alamat: "Setia Agung";
     jenis_pengadaan: "Lelang";
     penyedia_jasa: "PT Kontraktor Indonesia";
+    no_kontrak: "1249120";
+    no_spmk: "1/2/2024/IV";
+    awal_kontrak: "2024-07-14T17:00:00.000000Z";
+    nilai_kontrak: "1000000000";
     progres: {
       id: number;
       detail_kegiatan_id: number;
@@ -217,6 +257,10 @@ export type realisasiKeuanganResponseSuccess = {
     alamat: "Setia Agung";
     jenis_pengadaan: "Lelang";
     penyedia_jasa: "PT Kontraktor Indonesia";
+    no_kontrak: "1249120";
+    no_spmk: "1/2/2024/IV";
+    awal_kontrak: "2024-07-14T17:00:00.000000Z";
+    nilai_kontrak: "1000000000";
     progres: {
       id: number;
       detail_kegiatan_id: number;
@@ -866,6 +910,31 @@ export const postDetailAnggaranTitikLokasi = async (
   const response = await apiClientSIPP<PostResponseSuccess>({
     method: "POST",
     url: `/detail-anggaran/${id}/titik-lokasi`,
+    data: payload,
+  });
+  return response.data;
+};
+
+export const putKegiatanVerifikasiPengawas = async (payload: {
+  id: string;
+  verifikasi_pengawas: boolean;
+  komentar_pengawas: string;
+}) => {
+  const response = await apiClientSIPP<PostResponseSuccess>({
+    method: "PUT",
+    url: `/kegiatan/verifikasi-pengawas/${payload.id}`,
+    data: payload,
+  });
+  return response.data;
+};
+export const putKegiatanVerifikasiAdmin = async (payload: {
+  id: string;
+  verifikasi_admin: boolean;
+  komentar_admin: string;
+}) => {
+  const response = await apiClientSIPP<PostResponseSuccess>({
+    method: "PUT",
+    url: `/kegiatan/verifikasi-admin/${payload.id}`,
     data: payload,
   });
   return response.data;
