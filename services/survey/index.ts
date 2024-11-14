@@ -7,6 +7,13 @@ import {
     getDashboardTableDrainaseSectionDetail,
     getDashboardTableRoadSection,
     getDashboardTableRoadSectionDetail,
+    getMasterDataDrainase,
+    getMasterDataRuasJalan,
+    getMasterDesa,
+    getStatistikDrainase,
+    getStatistikJembatan,
+    getStatistikKondisi,
+    getStatistikPerkerasan,
 
 } from "@/api/survey";
   import { useAccessToken } from "@/store/sipp";
@@ -123,3 +130,101 @@ export const useGetDetailRuasDrainase = (id?: string) => {
   });
 };
 // get detail ruas jembatan dashboard
+
+//   get statistik perkerasan
+export const useGetStatistikPerkerasan = (query?: string) => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetStatistikPerkerasan", query, accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getStatistikPerkerasan(query),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+//   get statistik perkerasan
+
+//   get statistik kondisi
+export const useGetStatistikKondisi = (query?: string) => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetStatistikKondisi", query, accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getStatistikKondisi(query),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+//   get statistik kondisi
+
+//   get statistik JEMBATAN
+export const useGetStatistikJembatan = (query?: string) => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetStatistikJembatan", query, accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getStatistikJembatan(query),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+//   get statistik JEMBATAN
+
+//   get statistik Drainase
+export const useGetStatistikDrainase = (query?: string) => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetStatistikDrainase", query, accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getStatistikDrainase(query),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+//   get statistik Drainase
+
+//   get master data Drainase
+export const useGetMasterDataDrainase = (query?: string) => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetMasterDataDrainase", query, accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getMasterDataDrainase(query),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+//   get master data Drainase
+
+//   get master data RuasJalan
+export const useGetMasterDataRuasJalan = (query?: string) => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetMasterDataRuasJalan", query, accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getMasterDataRuasJalan(query),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+//   get master data RuasJalan
+
+//   get master data Desa
+export const useGetMasterDataDesa = (query?: string) => {
+  const accessToken = useAccessToken();
+
+  return useQuery({
+    queryKey: ["useGetMasterDataDesa", query, accessToken],
+    // TODO replace with actual get Profile API
+    queryFn: () => getMasterDesa(query),
+    enabled: !!accessToken,
+    refetchOnWindowFocus: true,
+  });
+};
+//   get master data Desa

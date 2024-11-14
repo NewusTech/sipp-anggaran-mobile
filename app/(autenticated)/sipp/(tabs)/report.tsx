@@ -4,6 +4,7 @@ import {
   IconCaretFillDown,
   IconCaretFillLeft,
   IconCaretUp,
+  IconCeretFillUp,
 } from "@/components/icons";
 import Accordion from "@/components/ui/accordion";
 import AccordionGroup from "@/components/ui/accordion/AccordionGroup";

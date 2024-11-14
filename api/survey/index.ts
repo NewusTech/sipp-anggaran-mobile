@@ -116,7 +116,7 @@ export type BridgeDataResponse = {
     current_page: number;
     data: Bridge[];
   };
-}
+};
 
 export type Bridge = {
   id: number;
@@ -146,7 +146,7 @@ export type Bridge = {
   status: string;
   keterangan: string;
   created_at: string;
-}
+};
 
 export const getDashboardTableBridgeSection = async (query?: string) => {
   const response = await apiClientSurvey<BridgeDataResponse>({
@@ -315,7 +315,6 @@ export type RuasDrainaseResponse = {
   message: string;
 };
 
-
 export const getDashboardTableDrainaseSectionDetail = async (id?: string) => {
   const response = await apiClientSurvey<RuasDrainaseResponse>({
     method: "GET",
@@ -324,3 +323,219 @@ export const getDashboardTableDrainaseSectionDetail = async (id?: string) => {
   return response.data;
 };
 // getDetailRuasDrainase
+
+// getReportStatistik
+export type StatistikJenisPerkerasan = {
+  id: number;
+  hotmix_count: string;
+  rigit_count: string;
+  lapen_count: string;
+  telford_count: string;
+  tanah_count: string;
+  created_at: string;
+  total: number;
+};
+
+export type StatistikPerkerasan = {
+  success: boolean;
+  data: StatistikJenisPerkerasan;
+  message: string;
+};
+
+export const getStatistikPerkerasan = async (query?: string) => {
+  const response = await apiClientSurvey<StatistikPerkerasan>({
+    method: "GET",
+    url: `/laporan/statistik/jenis_perkerasan?${query && query}`,
+  });
+  return response.data;
+};
+// getReportJenisPerkerasan
+
+// getReportStatistikKondisi
+export type StatistikKondisi = {
+  baik_percentage: number;
+  sedang_percentage: number;
+  rusak_ringan_percentage: number;
+  rusak_berat_percentage: number;
+  total: number;
+  mantap: number;
+  tmantap: number;
+};
+
+export type StatistikKondisiResponse = {
+  success: boolean;
+  data: StatistikKondisi;
+  message: string;
+};
+
+export const getStatistikKondisi = async (query?: string) => {
+  const response = await apiClientSurvey<StatistikKondisiResponse>({
+    method: "GET",
+    url: `/laporan/statistik/kondisi_perkerasan?${query && query}`,
+  });
+  return response.data;
+};
+// getReportStatistikKondisi
+
+// getReportStatistikJembatan
+export type StatistikJembatan = {
+  B: number;
+  S: number;
+  RR: number;
+  RB: number;
+};
+
+export type StatistikJembatanResponse = {
+  success: boolean;
+  data: {
+    kondisi_count: StatistikJembatan;
+  };
+  message: string;
+};
+
+export const getStatistikJembatan = async (query?: string) => {
+  const response = await apiClientSurvey<StatistikJembatanResponse>({
+    method: "GET",
+    url: `/statistic_jembatan?${query && query}`,
+  });
+  return response.data;
+};
+// getReportStatistikJembatan
+
+// getReportStatistikDrainase
+export type StatistikDrainase = {
+  baik: number;
+  sedang: number;
+  rusak: number;
+  tanah: number;
+};
+
+export type StatistikDrainaseResponse = {
+  success: boolean;
+  data: StatistikDrainase;
+  message: string;
+};
+
+export const getStatistikDrainase = async (query?: string) => {
+  const response = await apiClientSurvey<StatistikDrainaseResponse>({
+    method: "GET",
+    url: `/statistic_drainase?${query && query}`,
+  });
+  return response.data;
+};
+// getReportStatistikDrainase
+
+// getMasterDataDrainase
+export type MasterDataDrainase = {
+  id: number;
+  nama_ruas: string;
+  panjang_ruas: string;
+  desa_id: number;
+  nama_desa: string;
+  nama_kecamatan: string;
+  created_at: string;
+};
+
+export type MasterDataDrainaseResponse = {
+  success: boolean;
+  data: {
+      current_page: number;
+      data: MasterDataDrainase[];
+      first_page_url: string;
+      from: number;
+      last_page: number;
+      last_page_url: string;
+      links: {
+          url: string | null;
+          label: string;
+          active: boolean;
+      }[];
+      next_page_url: string | null;
+      path: string;
+      per_page: number;
+      prev_page_url: string | null;
+      to: number;
+      total: number;
+  };
+  message: string;
+};
+
+
+export const getMasterDataDrainase = async (query?: string) => {
+  const response = await apiClientSurvey<MasterDataDrainaseResponse>({
+    method: "GET",
+    url: `/drainase?${query && query}`,
+  });
+  return response.data;
+};
+// getMasterDataDrainase
+
+// getMasterDataRuasJalan
+export type MasterDataRuasJalan = {
+  id: number;
+  no_ruas: string;
+  nama: string;
+  koridor_id: number | null;
+  name_koridor: string | null;
+  kecamatan_id: string;
+  kabupaten: string | null;
+  panjang_ruas: string;
+  lebar: string;
+  kecamatan: string | null;
+  created_at: string;
+};
+
+export type MasterDataRuasJalanResponse = {
+  success: boolean;
+  message: string;
+  data: {
+      current_page: number;
+      data: MasterDataRuasJalan[];
+      first_page_url: string;
+      last_page: number;
+      last_page_url: string;
+      links: {
+          url: string | null;
+          label: string;
+          active: boolean;
+      }[];
+      next_page_url: string | null;
+      path: string;
+      per_page: number;
+      prev_page_url: string | null;
+      to: number;
+      total: number;
+  };
+};
+
+export const getMasterDataRuasJalan = async (query?: string) => {
+  const response = await apiClientSurvey<MasterDataRuasJalanResponse>({
+    method: "GET",
+    url: `/ruas_jalan/master_ruas_jalan?${query && query}`,
+  });
+  return response.data;
+};
+// getMasterDataRuasJalan
+
+// getMasterDesa
+export type MasterDesa = {
+  id: number;
+  nama: string;
+  kecamatan_id: number;
+  kecamatan_name: string;
+  created_at: string | null;
+};
+
+export type MasterDesaResponse = {
+  success: boolean;
+  data: MasterDesa[];
+};
+
+export const getMasterDesa = async (query?: string) => {
+  const response = await apiClientSurvey<MasterDesaResponse>({
+    method: "GET",
+    url: `/master_desa?${query && query}`,
+  });
+  return response.data;
+};
+// getMasterDesa

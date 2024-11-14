@@ -1,5 +1,4 @@
-import { StyleSheet } from "react-native";
-
+import { StyleSheet, TouchableOpacity, Text } from "react-native";
 import { useAppTheme } from "@/context/theme-context";
 
 import View from "../view";
@@ -11,6 +10,7 @@ export type CheckboxProps = {
   height?: number;
   borderRadius?: number;
 };
+
 export function Checkbox(props: CheckboxProps) {
   const {
     selected = false,
@@ -40,5 +40,10 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     alignItems: "center",
     justifyContent: "center",
+  },
+  label: {
+    marginTop: 4,
+    color: "black", // Change this according to your theme
+    fontSize: 14,
   },
 });

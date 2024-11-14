@@ -4,6 +4,7 @@ import {
     IconCaretFillLeft,
     IconCaretLeft,
     IconCaretRight,
+    IconCeretFillUp,
 } from "@/components/icons";
 import { Typography } from "@/components/ui/typography";
 import View from "@/components/ui/view";
@@ -101,7 +102,7 @@ export default function SurveyTableBridge({ filterYear }: SectionCardSurveyProps
                                         color="Primary Blue" fontSize={15}>
                                         {section?.nama_ruas || "-"}
                                     </Typography>
-                                    {isOpen ? <IconCaretFillDown /> : <IconCaretUp />}
+                                    {isOpen ? <IconCaretFillDown /> : <IconCeretFillUp />}
                                 </View>
                             )}
                         >

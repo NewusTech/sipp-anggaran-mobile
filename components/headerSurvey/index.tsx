@@ -27,7 +27,7 @@ export default function HeaderSurvey() {
                     height={100}
                     style={{ width: 200, height: 40 }}
                 />
-                <Pressable onPress={() => router.push("/(autenticated)/sipp/profile")}>
+                <Pressable onPress={() => router.push("/(autenticated)/survey/profile")}>
                     <Image
                         source={require("@/assets/images/dummy1.jpg")}
                         style={{ width: 50, height: 50, borderRadius: 100 }}

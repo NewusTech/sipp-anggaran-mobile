@@ -3,17 +3,27 @@ import Separator from '@/components/ui/separator';
 import { Typography } from '@/components/ui/typography';
 import View from '@/components/ui/view';
 import { useAppTheme } from '@/context';
+import { useGetStatistikKondisi } from '@/services/survey';
 import React from 'react';
 import { PieChart } from "react-native-gifted-charts";
 
-export default function TypeRoadChartCondition() {
+interface SectionCardSurveyProps {
+    filterYear?: string | undefined;
+}
+
+export default function TypeRoadChartCondition({ filterYear }: SectionCardSurveyProps) {
     const { Colors } = useAppTheme();
-    const pieData = [
-        { value: 54, color: '#22C55E', text: '54%' },
-        { value: 40, color: '#C084FC', text: '30%' },
-        { value: 20, color: '#2563EB', text: '26%' },
-        { value: 25, color: '#FB923C', text: '25%' }, // Warna baru
-    ];
+    // Fetch data from the API
+    const { data, isLoading, error } = useGetStatistikKondisi(filterYear ? "year=" + filterYear : "");
+
+    // Fallback to default data for chart if data is not available yet
+    const pieData = data ? [
+        { value: parseFloat(data?.data?.baik_percentage.toString()), color: '#22C55E', text: `${(parseFloat(data?.data?.baik_percentage.toString()) || 0).toFixed(1)}` },
+        { value: parseFloat(data?.data?.sedang_percentage.toString()), color: '#C084FC', text: `${(parseFloat(data?.data?.sedang_percentage.toString()) || 0).toFixed(1)}` },
+        { value: parseFloat(data?.data?.rusak_ringan_percentage.toString()), color: '#2563EB', text: `${(parseFloat(data?.data?.rusak_ringan_percentage.toString()) || 0).toFixed(1)}` },
+        { value: parseFloat(data?.data?.rusak_berat_percentage.toString()), color: '#FB923C', text: `${(parseFloat(data?.data?.rusak_berat_percentage.toString()) || 0).toFixed(1)}` },
+    ] : [];
+
     return (
         <View
             style={{
@@ -50,16 +60,22 @@ export default function TypeRoadChartCondition() {
                         paddingTop: 20,
                     }}
                 >
-                    <PieChart
-                        donut
-                        showText
-                        textColor="black"
-                        radius={140}
-                        textSize={12}
-                        showTextBackground
-                        textBackgroundRadius={23}
-                        data={pieData}
-                    />
+                    {isLoading ? (
+                        <Typography>Loading...</Typography>
+                    ) : error ? (
+                        <Typography>Error loading data</Typography>
+                    ) : (
+                        <PieChart
+                            donut
+                            showText
+                            textColor="black"
+                            radius={140}
+                            textSize={10}
+                            showTextBackground
+                            textBackgroundRadius={25}
+                            data={pieData}
+                        />
+                    )}
                 </View>
                 <View
                     style={{
@@ -79,7 +95,7 @@ export default function TypeRoadChartCondition() {
                                 padding: 10,
                                 borderRadius: 10,
                                 color: Colors["Background 100"],
-                                backgroundColor: pieData[index].color,
+                                backgroundColor: pieData[index]?.color,
                             }}
                         >
                             {text}
@@ -116,7 +132,7 @@ export default function TypeRoadChartCondition() {
                             Baik
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            50.329%
+                        {data?.data?.baik_percentage ?? '0'}%
                         </Typography>
                     </View>
                     <View
@@ -128,7 +144,7 @@ export default function TypeRoadChartCondition() {
                             Sedang
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            17.285%
+                        {data?.data?.sedang_percentage ?? '0'}%
                         </Typography>
                     </View>
                 </View>
@@ -150,7 +166,7 @@ export default function TypeRoadChartCondition() {
                             Rusak Ringan
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            15.588%
+                        {data?.data?.rusak_ringan_percentage ?? '0'}%
                         </Typography>
                     </View>
                     <View
@@ -162,7 +178,7 @@ export default function TypeRoadChartCondition() {
                             Rusak Berat
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            16.797%
+                        {data?.data?.rusak_berat_percentage ?? '0'}%
                         </Typography>
                     </View>
                 </View>
@@ -184,7 +200,7 @@ export default function TypeRoadChartCondition() {
                             Mantap
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            185%
+                        {data?.data?.mantap ?? '0'}%
                         </Typography>
                     </View>
                     <View
@@ -196,7 +212,7 @@ export default function TypeRoadChartCondition() {
                             Tidak Mantap
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15} color="Text 900">
-                            89%
+                        {data?.data?.tmantap ?? '0'}%
                         </Typography>
                     </View>
                 </View>

@@ -1,4 +1,4 @@
-import { IconCaretDown, IconCaretLeft, IconPlus } from "@/components/icons";
+import { IconCaretDown, IconCaretLeft, IconCeretFillUp, IconPlus } from "@/components/icons";
 import IconFile from "@/components/icons/IconFile";
 import { Button } from "@/components/ui/button";
 import { SearchBox } from "@/components/ui/searchBox";
@@ -158,7 +158,7 @@ export default function TabDetailDrainase() {
                                                 color="Primary Blue" fontSize={15}>
                                                 {section?.nama_ruas || "-"}
                                             </Typography>
-                                            {isOpen ? <IconCaretFillDown /> : <IconCaretUp />}
+                                            {isOpen ? <IconCaretFillDown /> : <IconCeretFillUp />}
                                         </View>
                                     )}
                                 >
