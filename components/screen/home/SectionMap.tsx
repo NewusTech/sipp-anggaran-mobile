@@ -35,7 +35,7 @@ export default function SectionMap({
 
   return (
     <View
-      style={{ flex: 1, width: "100%", height: 400 }}
+      style={{ flex: 1, width: "100%", height: 400, marginTop: 20 }}
       onTouchStart={handleTouchStart} // Ketika View ditekan
       onTouchEnd={handleTouchEnd} // Ketika View dilepaskan
     >
@@ -51,7 +51,10 @@ export default function SectionMap({
             // console.log(data.latitude, "-", data.longitude);
             return (
               <CustomMarkerView
-                coordinate={[data.longitude, data.latitude]}
+                coordinate={[
+                  Number.parseInt(data.longitude),
+                  Number.parseInt(data.latitude),
+                ]}
                 key={index}
               >
                 <View
