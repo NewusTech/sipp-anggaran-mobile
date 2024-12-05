@@ -89,7 +89,7 @@ export default function SectionFinancialRealization(
           color={Colors["Success 600"]}
         />
       </View>
-      <View style={{ marginTop: 20 }}>
+      <View style={{ marginTop: 25 }}>
         <Typography fontSize={18} fontFamily="Poppins-Medium">
           Progress Keuangan
         </Typography>
@@ -296,7 +296,7 @@ export default function SectionFinancialRealization(
               </View>
             </Pressable>
           )}
-          style={{ width: "100%", paddingBottom: 20 }}
+          style={{ width: "100%", paddingBottom: 15, marginTop: 5 }}
           contentContainerStyle={{
             alignItems: "center",
             paddingHorizontal: 0,

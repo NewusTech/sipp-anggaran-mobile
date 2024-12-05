@@ -136,10 +136,10 @@ export type dashboardTableDataResponseSuccess = {
     data: {
       id: number;
       title: string;
-      progress: null;
+      progress?: string;
       akhir_kontrak: string;
-      latitude: null;
-      longitude: null;
+      latitude?: string;
+      longitude?: string;
       kegiatan: {
         bidang: {
           name: string;
