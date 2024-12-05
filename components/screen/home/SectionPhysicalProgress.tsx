@@ -21,7 +21,7 @@ export default function SectionPhysicalProgress(
   props: SectionPhysicalProgress
 ) {
   const { Colors } = useAppTheme();
-  const { chartDdata, chartLabel, data } = props;
+  const { chartDdata, data } = props;
 
   const dataChart = chartDdata.map((data, index) => {
     return {
@@ -39,7 +39,7 @@ export default function SectionPhysicalProgress(
       <View
         style={{
           backgroundColor: Colors["Background 100"],
-          marginTop: 20,
+          marginTop: 40,
           width: "100%",
           height: 350,
           padding: 10,
@@ -87,7 +87,7 @@ export default function SectionPhysicalProgress(
           color={Colors["Info 600"]}
         />
       </View>
-      <View style={{ marginTop: 20 }}>
+      <View style={{ marginTop: 25 }}>
         <Typography fontSize={18} fontFamily="Poppins-Medium">
           Progress Fisik
         </Typography>
@@ -294,7 +294,7 @@ export default function SectionPhysicalProgress(
               </View>
             </Pressable>
           )}
-          style={{ width: "100%", paddingBottom: 20 }}
+          style={{ width: "100%", paddingBottom: 15, marginTop: 5 }}
           contentContainerStyle={{
             alignItems: "center",
             paddingHorizontal: 0,

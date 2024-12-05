@@ -27,7 +27,8 @@ export default function SectionPackage(props: SectionPackage) {
         flexDirection: "row",
         width: "100%",
         marginVertical: 20,
-        gap: 10,
+        marginTop: 40,
+        gap: 15,
         justifyContent: "center",
       }}
     >
