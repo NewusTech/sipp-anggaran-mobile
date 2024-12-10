@@ -8,15 +8,15 @@ import View from "@/components/ui/view";
 import { formatDate, formatDateYMD } from "@/constants";
 import { useAppTheme } from "@/context";
 import { getLastYears } from "@/helper";
-import { useGetRealisasiKeuangan } from "@/services/sipp";
+import { useGetRealisasiFisik } from "@/services/sipp";
 import { usePermission } from "@/store/sipp";
-import { formatCurrency, getMonthName, substring } from "@/utils";
+import { formatCurrency, getMonthName } from "@/utils";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Dimensions, Pressable, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-export default function financialRealization() {
+export default function physicalProgress() {
   const router = useRouter();
   const { Colors } = useAppTheme();
   const inset = useSafeAreaInsets();
@@ -24,19 +24,19 @@ export default function financialRealization() {
   const [filterYear, setFilterYear] = useState<number | string>("");
   const [filterDateStart, setFilterDateStart] = useState<Date | null>(null);
   const [filterDateEnd, setFilterDateEnd] = useState<Date | null>(null);
-  // const [filterStatus, setFilterStatus] = useState<number | string>("");
+  const [filterStatus, setFilterStatus] = useState<number | string>("");
 
   const userPermissions = usePermission();
 
-  const getKeuangan = useGetRealisasiKeuangan(
-    `tahun=${filterYear}&start_date=${
+  const getRealisaiFisik = useGetRealisasiFisik(
+    `status=${filterStatus}&tahun=${filterYear}&start_date=${
       filterDateStart ? formatDateYMD(filterDateStart) : ""
     }&end_date=${filterDateEnd ? formatDateYMD(filterDateEnd) : ""}`
   );
 
   return (
     <View style={{ flex: 1 }} backgroundColor="Background 100">
-      <Appbar title={"Realisasi Keuangan"} variant="light" />
+      <Appbar title={"Progres Fisik"} variant="light" backIconPress={()=>router.back()} />
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: 20,
@@ -45,17 +45,26 @@ export default function financialRealization() {
         }}
       >
         <View style={{ gap: 10 }}>
-          {/* <SelectInput
-            data={getLastYears(24).map((d) => {
-              return {
-                title: d,
-              };
-            })}
-            value={""}
-            onSelect={(data) => console.log("")}
+          <SelectInput
+            data={[
+              {
+                title: "-",
+              },
+              {
+                title: "sedang dikerjakan",
+              },
+              {
+                title: "selesai",
+              },
+              {
+                title: "belum dikerjakan",
+              },
+            ]}
+            value={filterStatus}
+            onSelect={(data) => setFilterStatus(data.title)}
             placeholder="Staus"
             trailingIcon={<IconCaretDown />}
-          /> */}
+          />
           <SelectInput
             data={getLastYears(24).map((d) => {
               return {
@@ -80,8 +89,6 @@ export default function financialRealization() {
               }
               onChange={(date) => setFilterDateStart(date || new Date())}
               value={filterDateStart || ""}
-              // errorMessage={fieldState.error?.message}
-              // disabled={isNonExpire}
             />
             <DateInput
               withBorder
@@ -94,14 +101,12 @@ export default function financialRealization() {
               }
               onChange={(date) => setFilterDateEnd(date || new Date())}
               value={filterDateEnd || ""}
-              // errorMessage={fieldState.error?.message}
-              // disabled={isNonExpire}
             />
           </View>
           {/* <Button style={{ marginTop: 10 }}>Download</Button> */}
         </View>
-        {!getKeuangan.isFetching &&
-          getKeuangan.data?.data.map(
+        {!getRealisaiFisik.isFetching &&
+          getRealisaiFisik.data?.data.map(
             (data, index) =>
               data.kegiatan && (
                 <Pressable
@@ -287,7 +292,7 @@ export default function financialRealization() {
                           fontSize={14}
                           color="Text 500"
                         >
-                          {data.progres[0]?.jenis_progres || "jenis progres"}%
+                          {data.progres[0]?.jenis_progres || "Jenis Progres"}%
                         </Typography>
                         <Typography fontFamily="Poppins-Regular" fontSize={15}>
                           {data.progres[0]?.nilai || "-"}%
@@ -298,7 +303,7 @@ export default function financialRealization() {
                 </Pressable>
               )
           )}
-        {getKeuangan.isFetching && (
+        {getRealisaiFisik.isFetching && (
           <View
             style={{
               height: 200,

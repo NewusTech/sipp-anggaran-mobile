@@ -26,3 +26,5 @@ export * from "./IconCeretFillUp";
 export * from "./IconMoneyHand";
 export * from "./IconSaving";
 export * from "./IconForm";
+export * from "./IconGear"
+export * from "./IconCalenderCheck"

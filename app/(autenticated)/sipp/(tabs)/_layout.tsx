@@ -1,7 +1,9 @@
 import {
   IconAddBox,
+  IconCalenderCheck,
   IconFileReport,
   IconFisik,
+  IconGear,
   IconMonyBag,
 } from "@/components/icons";
 import { IconHome } from "@/components/icons/IconHome";
@@ -35,22 +37,22 @@ export default function TabLayout() {
       permission: "lihat dasbor", // Tambahkan izin yang sesuai
     },
     {
+      name: "realization",
+      title: "Realisasi",
+      icon: IconCalenderCheck,
+      permission: "lihat kegiatan",
+    },
+    {
       name: "activities",
       title: "Kegiatan",
       icon: IconAddBox,
       permission: "lihat kegiatan",
     },
     {
-      name: "physicalProgress",
-      title: "Fisik",
-      icon: IconFisik,
+      name: "master",
+      title: "Master",
+      icon: IconGear,
       permission: "lihat kegiatan",
-    },
-    {
-      name: "financialRealization",
-      title: "Keuangan",
-      icon: IconMonyBag,
-      permission: "lihat sumber dana",
     },
     {
       name: "report",

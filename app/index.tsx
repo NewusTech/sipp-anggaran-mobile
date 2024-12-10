@@ -43,14 +43,15 @@ export default function InitialScreen() {
       if (storageAccessToken) {
         setAccessToken(storageAccessToken);
         if (appName && appName === "SIPP-Anggaran") {
-          router.replace("/(autenticated)/sipp/(tabs)/home");
+          // router.replace("/(autenticated)/sipp/(tabs)/home");ß
+          router.replace("/(autenticated)/sipp/master/fieldSettings");
         } else {
           router.replace("/(autenticated)/survey/(tabs)/home");
         }
       } else {
         router.replace("/(public)/home");
       }
-      // router.replace("/(autenticated)/sipp/(tabs)/report");
+      // router.replace("/(autenticated)/sipp/master/fieldSettings");
     };
 
     initAuth();
